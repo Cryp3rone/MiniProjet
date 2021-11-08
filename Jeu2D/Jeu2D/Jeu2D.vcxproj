@@ -154,6 +154,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Jeu2D.cpp" />
+    <ClCompile Include="LevelGenerator.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="LevelGenerator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
