@@ -12,16 +12,11 @@ World* GenerateLevel() {
 	CreateRectangleShape(sf::RectangleShape (sf::Vector2f(50, 100)), sf::Color::Black, sf::Vector2f(1100, 375), 3, sf::Color::Yellow, level);
 	CreateRectangleShape(sf::RectangleShape (sf::Vector2f(250, 13)), sf::Color::Black, sf::Vector2f(2000, 375), 3, sf::Color::Yellow, level);
 	CreateRectangleShape(sf::RectangleShape (sf::Vector2f(250, 13)), sf::Color::Black, sf::Vector2f(2500, 375), 3, sf::Color::Yellow, level);
-
-	// Création des ennemis ici
-
-	//sf::CircleShape shape = CreateCircleShape(sf::CircleShape(15, 3), sf::Color::Black, sf::Vector2f(1500, 450),3, sf::Color::Yellow, level);
-	//CreateCircleEnnemy(level,shape,5, sf::Vector2f(1500, 450),true);
 	
 	return level;
 }
 
-void UpdateLevel(sf::RenderWindow& window, World* level) {
+void RefreshWorld(World* level,sf::RenderWindow& window) {
 	for (sf::RectangleShape rectangle : (*level).rectangles) 
 		window.draw(rectangle);
 }

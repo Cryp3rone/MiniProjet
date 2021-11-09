@@ -16,8 +16,8 @@ int main() {
 	sf::Clock clock;
 	sf::View camera(sf::Vector2f(window.getSize().x / 2, window.getSize().y / 2), sf::Vector2f(window.getSize().x,window.getSize().y));
 	
-	World* world = GenerateLevel();
-
+	World* world = nullptr;
+	bool firstFrame = true;
 
 	// Inputs
 	while (window.isOpen()) {
@@ -32,15 +32,21 @@ int main() {
 			}
 		}
 
-		// DRAW SECTION
 
 		//Logique
+		
 		sf::Time elapsedTime = clock.restart();
+		if (firstFrame) {
+			world = GenerateLevel();
+			CreateEnnemies(world);
+			firstFrame = false;
+		}
 
 		//Rendu
 		window.clear();
 		
-		UpdateLevel(window,world);
+		RefreshWorld(world,window);
+		RefreshEnnemies(world,window);
 
 		Zoom(camera, window);
 		window.setView(camera);
