@@ -15,8 +15,8 @@ int main() {
 
 	sf::Clock clock;
 	sf::View camera(sf::Vector2f(window.getSize().x / 2, window.getSize().y / 2), sf::Vector2f(window.getSize().x,window.getSize().y));
-	std::vector<Ennemy*> ennemiesList;
-	Level* level = GenerateLevel();
+	
+	World* world = GenerateLevel();
 
 
 	// Inputs
@@ -25,8 +25,6 @@ int main() {
 		while (window.pollEvent(event)) {
 			switch (event.type) {
 				case sf::Event::Closed:
-					for (Ennemy* ennemy : ennemiesList)
-						delete ennemy;
 
 					window.close();
 					break;
@@ -42,11 +40,11 @@ int main() {
 		//Rendu
 		window.clear();
 		
-		UpdateLevel(window,level);
+		UpdateLevel(window,world);
 
-	/*	Zoom(camera, window);
+		Zoom(camera, window);
 		window.setView(camera);
-	*/
+
 
 		window.display();
 	}

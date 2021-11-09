@@ -159,6 +159,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ennemy.h" />
+    <ClInclude Include="EnnemyStr.h" />
     <ClInclude Include="LevelGenerator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
