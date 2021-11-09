@@ -1,2 +1,41 @@
-﻿  LevelGenerator.cpp
-  Jeu2D.vcxproj -> D:\IIM\A2_2021_2022\C++\Projet\MiniProjet\Jeu2D\Debug\Jeu2D.exe
+﻿  Ennemy.cpp
+  Jeu2D.cpp
+D:\IIM\A1_2021_2022\C++\Projet\MiniProjet\Jeu2D\Jeu2D\Jeu2D.cpp(17,74): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+          and
+          [
+              T=float
+          ]
+D:\IIM\A1_2021_2022\C++\Projet\MiniProjet\Jeu2D\Jeu2D\Jeu2D.cpp(17,50): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+          and
+          [
+              T=float
+          ]
+D:\IIM\A1_2021_2022\C++\Projet\MiniProjet\Jeu2D\Jeu2D\Jeu2D.cpp(17,128): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+          and
+          [
+              T=float
+          ]
+D:\IIM\A1_2021_2022\C++\Projet\MiniProjet\Jeu2D\Jeu2D\Jeu2D.cpp(17,109): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+          and
+          [
+              T=float
+          ]
+  LevelGenerator.cpp
+  Generating Code...
+  Jeu2D.vcxproj -> D:\IIM\A1_2021_2022\C++\Projet\MiniProjet\Jeu2D\Debug\Jeu2D.exe

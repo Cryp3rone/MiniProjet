@@ -1,6 +1,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "LevelGenerator.h"
+#include "Ennemy.h"
 
 void Zoom(sf::View& view,sf::RenderWindow& window) {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) 
@@ -14,7 +15,9 @@ int main() {
 
 	sf::Clock clock;
 	sf::View camera(sf::Vector2f(window.getSize().x / 2, window.getSize().y / 2), sf::Vector2f(window.getSize().x,window.getSize().y));
-	
+	std::vector<Ennemy*> ennemiesList;
+	Level* level = GenerateLevel();
+
 
 	// Inputs
 	while (window.isOpen()) {
@@ -22,6 +25,9 @@ int main() {
 		while (window.pollEvent(event)) {
 			switch (event.type) {
 				case sf::Event::Closed:
+					for (Ennemy* ennemy : ennemiesList)
+						delete ennemy;
+
 					window.close();
 					break;
 				
@@ -32,14 +38,16 @@ int main() {
 
 		//Logique
 		sf::Time elapsedTime = clock.restart();
-		
-
 
 		//Rendu
 		window.clear();
-		Zoom(camera, window);
+		
+		UpdateLevel(window,level);
+
+	/*	Zoom(camera, window);
 		window.setView(camera);
-		GenerateLevel(window);
+	*/
+
 		window.display();
 	}
 }
