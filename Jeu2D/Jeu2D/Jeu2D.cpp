@@ -1,19 +1,25 @@
 #include <iostream>
+#include "Player.h"
 #include <SFML/Graphics.hpp>
+
+const float GROUND_Y = 400.f;
 
 int main() {
 
 	sf::Clock clock;
 	float dt;
 
-	sf::Vector2f velocity;
-
+	sf::Vector2f velocity(0.f, 0.f);
 	float speed = 100.f;
 
 	//Player
-	sf::CircleShape player(100.f);
+	Player player = newPlayer();
 
-	sf::RenderWindow window(sf::VideoMode(800, 600), "Jeu2D");
+	sf::RectangleShape ground(sf::Vector2f(3000.f, 400.f));
+	ground.setPosition(0.f, 400.f);
+
+
+	sf::RenderWindow window(sf::VideoMode(1000, 800), "Jeu2D");
 	while (window.isOpen()) {
 		dt = clock.restart().asSeconds();
 
@@ -28,22 +34,14 @@ int main() {
 			}
 		}
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-			player.move(sf::Vector2f(0.f, -speed * dt));
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-			player.move(sf::Vector2f(0.f, speed * dt));
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-			player.move(sf::Vector2f(-speed * dt, 0.f));
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-			player.move(sf::Vector2f(speed * dt, 0.f));
+		MovePlayer(player, dt);
+		applyGravity(player, dt, velocity);
 
 		window.clear();
 
 		// DRAW SECTION
-		window.draw(player);
+		window.draw(ground);
+		window.draw(player.body);
 
 		window.display();
 	}
