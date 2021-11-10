@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "LevelGenerator.h"
 #include "Ennemy.h"
-
+ 
 World* GenerateLevel(sf::RenderWindow& window) {
 	World* level = new World;
 	//DrawBackGround();
@@ -22,7 +22,11 @@ World* GenerateLevel(sf::RenderWindow& window) {
 	
 	return level;
 }
+void randomPF()
+{
+	int max
 
+}
 void RefreshWorld(World* level,sf::RenderWindow& window) {
 	for (sf::RectangleShape rectangle : (*level).rectangles) 
 		window.draw(rectangle);

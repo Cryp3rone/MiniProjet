@@ -5,8 +5,10 @@
 Player newPlayer()
 {
 	Player p;
-	p.body = sf::CircleShape(50.f);
+	p.body = sf::CircleShape(20.f);
+	p.body.setFillColor(sf::Color::Red);
 	p.body.setOrigin(p.body.getRadius(), p.body.getRadius());
+	p.body.setPosition(40.f, 10.f);
 	p.health = 100.f;
 	return p;
 }
