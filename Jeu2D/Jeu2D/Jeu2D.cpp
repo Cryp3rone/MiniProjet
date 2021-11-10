@@ -34,8 +34,7 @@ int main() {
 			}
 		}
 
-		MovePlayer(player, dt);
-		applyGravity(player, dt, velocity);
+		MovePlayer(player, dt, velocity);
 
 		window.clear();
 
