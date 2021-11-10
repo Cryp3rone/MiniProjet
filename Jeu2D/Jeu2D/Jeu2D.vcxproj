@@ -156,11 +156,13 @@
     <ClCompile Include="Ennemy.cpp" />
     <ClCompile Include="Jeu2D.cpp" />
     <ClCompile Include="LevelGenerator.cpp" />
+    <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ennemy.h" />
     <ClInclude Include="EnnemyStr.h" />
     <ClInclude Include="LevelGenerator.h" />
+    <ClInclude Include="Player.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
