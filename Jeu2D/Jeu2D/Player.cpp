@@ -31,6 +31,10 @@ void MovePlayer(Player& player, float& dt, sf::Vector2f& velocity)
 			velocity.y = jumpForce;
 			player.body.move(velocity);
 		}
+		else
+		{
+			velocity.y = 0.f;
+		}
 	}
 	else
 	{
