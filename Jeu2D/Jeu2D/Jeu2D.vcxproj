@@ -153,11 +153,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Ennemy.cpp" />
     <ClCompile Include="Jeu2D.cpp" />
-    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="LevelGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Player.h" />
+    <ClInclude Include="Ennemy.h" />
+    <ClInclude Include="EnnemyStr.h" />
+    <ClInclude Include="LevelGenerator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
