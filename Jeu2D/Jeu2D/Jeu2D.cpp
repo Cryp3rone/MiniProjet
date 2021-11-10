@@ -42,6 +42,8 @@ int main() {
 			firstFrame = false;
 		}
 
+		UpdateEnnemies(world, elapsedTime.asSeconds());
+
 		//Rendu
 		window.clear();
 		

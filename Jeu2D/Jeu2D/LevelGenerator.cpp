@@ -21,6 +21,15 @@ void RefreshWorld(World* level,sf::RenderWindow& window) {
 		window.draw(rectangle);
 }
 
+void CreateRectangleShape(sf::RectangleShape* shape, sf::Color color, sf::Vector2f position, float thickness, sf::Color thicknessColor, World* level) {
+	shape->setPosition(position);
+	shape->setFillColor(color);
+	shape->setOutlineThickness(thickness);
+	shape->setOutlineColor(thicknessColor);
+	level->rectangles.push_back(*shape);
+
+	//window.draw(shape);
+}
 void CreateRectangleShape(sf::RectangleShape shape, sf::Color color, sf::Vector2f position, float thickness, sf::Color thicknessColor, World* level) {
 	shape.setPosition(position);
 	shape.setFillColor(color);
@@ -31,12 +40,12 @@ void CreateRectangleShape(sf::RectangleShape shape, sf::Color color, sf::Vector2
 	//window.draw(shape);
 }
 
-sf::CircleShape CreateCircleShape(sf::CircleShape shape, sf::Color color, sf::Vector2f position, float thickness, sf::Color thicknessColor, World* level) {
-	shape.setPosition(position);
-	shape.setFillColor(color);
-	shape.setOutlineThickness(thickness);
-	shape.setOutlineColor(thicknessColor);
 
+sf::CircleShape* CreateCircleShape(sf::CircleShape* shape, sf::Color color, sf::Vector2f position, float thickness, sf::Color thicknessColor, World* level) {
+	shape->setPosition(position);
+	shape->setFillColor(color);
+	shape->setOutlineThickness(thickness);
+	shape->setOutlineColor(thicknessColor);
 	return shape;
 	//window.draw(shape);
 }
