@@ -15,6 +15,7 @@ void CreateCEnnemy(World* world, sf::CircleShape* circle, float speed, sf::Vecto
 
 	Ennemy ennemy = CreateEnnemy(world,speed,position,canMoove,min,max);
 	ennemy.circle = circle;
+	ennemy.collision = sf::FloatRect(position.x, position.y, ennemy.circle->getScale().x, ennemy.circle->getScale().y);
 	world->ennemies.push_back(ennemy);
 
 }
@@ -23,6 +24,7 @@ void CreateREnnemy(World* world, sf::RectangleShape rectangle, float speed, sf::
 
 	Ennemy ennemy = CreateEnnemy(world, speed, position, canMoove,min,max);
 	ennemy.rectangle = &rectangle;
+	ennemy.collision = sf::FloatRect(position.x, position.y, ennemy.rectangle->getScale().x, ennemy.rectangle->getScale().y);
 	world->ennemies.push_back(ennemy);
 
 }
@@ -37,6 +39,8 @@ Ennemy CreateEnnemy(World* world, float speed, sf::Vector2f position, bool canMo
 	ennemy.min = min;
 	ennemy.max = max;
 	ennemy.returnBack = false;
+
+	
 
 	return ennemy;
 }
@@ -62,10 +66,7 @@ void MooveEnnemy(Ennemy& ennemy, float deltaTime) {
 	if (ennemy.circle != nullptr) {
 		sf::CircleShape& circle = *(ennemy).circle;
 
-		//if (ennemy.min.y == ennemy.min.y) { // On fait un mouvement horizontal{
-			std::cout << "posX: " << (int)circle.getPosition().x << " maxX: " << (int)ennemy.max.x << std::endl;
-			std::cout << "value: " << ennemy.returnBack << std::endl;
-
+		if (ennemy.min.y == ennemy.min.y) { // On fait un mouvement horizontal{
 			if ((int)circle.getPosition().x < (int)ennemy.max.x && !ennemy.returnBack) {
 				circle.move(sf::Vector2f(ennemy.speed * deltaTime, 0.f));
 				ennemy.returnBack = (int)circle.getPosition().x >= (int)ennemy.max.x;
@@ -73,13 +74,24 @@ void MooveEnnemy(Ennemy& ennemy, float deltaTime) {
 			else if ((int)circle.getPosition().x >= (int)ennemy.min.x && ennemy.returnBack) {
 				circle.move(sf::Vector2f(-ennemy.speed * deltaTime, 0.f));
 				
-				ennemy.returnBack = (int)circle.getPosition().x <= (int)ennemy.min.x;
+				if ((int)circle.getPosition().x <= (int)ennemy.min.x)
+					ennemy.returnBack = false;
 			}
 			
-		//}
+		}
+		else { // l'ennemi se déplace verticalement
+			if ((int)circle.getPosition().x < (int)ennemy.max.x && !ennemy.returnBack) {
+				circle.move(sf::Vector2f(0.f, ennemy.speed * deltaTime));
+				ennemy.returnBack = (int)circle.getPosition().x >= (int)ennemy.max.x;
+			}
+			else if ((int)circle.getPosition().x >= (int)ennemy.min.x && ennemy.returnBack) {
+				circle.move(sf::Vector2f(0.f, -ennemy.speed * deltaTime));
+
+				if ((int)circle.getPosition().x <= (int)ennemy.min.x)
+					ennemy.returnBack = false;
+			}
+		}
 	}
-	else {
-		sf::RectangleShape rectangle = *(ennemy).rectangle;
-		rectangle.move(sf::Vector2f(ennemy.speed * deltaTime, 0.f));
-	}
+	else {} // l'ennemi est un rectangle
+	
 }

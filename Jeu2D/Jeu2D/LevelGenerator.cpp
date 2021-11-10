@@ -31,6 +31,8 @@ void CreateRectangleShape(sf::RectangleShape* shape, sf::Color color, sf::Vector
 	shape->setOutlineColor(thicknessColor);
 	level->rectangles.push_back(*shape);
 
+	
+
 	//window.draw(shape);
 }
 void CreateRectangleShape(sf::RectangleShape shape, sf::Color color, sf::Vector2f position, float thickness, sf::Color thicknessColor, World* level) {
