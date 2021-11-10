@@ -11,19 +11,27 @@ Player newPlayer()
 	return p;
 }
 
-void MovePlayer(Player& player, float& dt, sf::Vector2f& velocity)
+void MovePlayer(Player& player, float dt, sf::Vector2f& velocity,sf::View& view)
 {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
 		player.body.move(sf::Vector2f(0.f, -speed * dt));
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+		view.move(sf::Vector2f(0.f, -speed * dt));
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
 		player.body.move(sf::Vector2f(0.f, speed * dt));
+		view.move(sf::Vector2f(0.f, speed * dt));
+}
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
 		player.body.move(sf::Vector2f(-speed * dt, 0.f));
+		view.move(sf::Vector2f(-speed * dt, 0.f));
+	}
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
 		player.body.move(sf::Vector2f(speed * dt, 0.f));
+		view.move(sf::Vector2f(speed * dt, 0.f));
+	}
+
 
 
 	if (isGrounded(player))

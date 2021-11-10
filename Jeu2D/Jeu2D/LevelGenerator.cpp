@@ -4,10 +4,10 @@
 #include "LevelGenerator.h"
 #include "Ennemy.h"
 
-World* GenerateLevel() {
+World* GenerateLevel(sf::RenderWindow& window) {
 	World* level = new World;
 	//DrawBackGround();
-	CreateRectangleShape(sf::RectangleShape (sf::Vector2f(/*window.getSize().x*/ 3000, 125)),sf::Color::Black,sf::Vector2f(0,475),3,sf::Color::Blue,level);
+	CreateRectangleShape(sf::RectangleShape (sf::Vector2f(100000000, 125)),sf::Color::Black,sf::Vector2f(0,475),3,sf::Color::Blue,level);
 	CreateRectangleShape(sf::RectangleShape(sf::Vector2f(80, 45)), sf::Color::Black, sf::Vector2f(800, 425), 3, sf::Color::Yellow, level);
 	CreateRectangleShape(sf::RectangleShape (sf::Vector2f(50, 45)), sf::Color::Black, sf::Vector2f(900, 425), 3, sf::Color::Yellow, level);
 	CreateRectangleShape(sf::RectangleShape (sf::Vector2f(50, 100)), sf::Color::Black, sf::Vector2f(1100, 375), 3, sf::Color::Yellow, level);
@@ -15,8 +15,10 @@ World* GenerateLevel() {
 	CreateRectangleShape(sf::RectangleShape(sf::Vector2f(250, 13)), sf::Color::Black, sf::Vector2f(1500, 350), 3, sf::Color::Yellow, level);
 	CreateRectangleShape(sf::RectangleShape (sf::Vector2f(250, 13)), sf::Color::Black, sf::Vector2f(2000, 375), 3, sf::Color::Yellow, level);
 	CreateRectangleShape(sf::RectangleShape (sf::Vector2f(250, 13)), sf::Color::Black, sf::Vector2f(2500, 375), 3, sf::Color::Yellow, level);
-	CreateRectangleShape(sf::RectangleShape(sf::Vector2f(80, 13)), sf::Color::Black, sf::Vector2f(2600, 300), 3, sf::Color::Yellow, level);
-	CreateRectangleShape(sf::RectangleShape(sf::Vector2f(50, 13)), sf::Color::Black, sf::Vector2f(2670, 200), 3, sf::Color::Yellow, level);
+	CreateRectangleShape(sf::RectangleShape(sf::Vector2f(100, 13)), sf::Color::Black, sf::Vector2f(2600, 300), 3, sf::Color::Yellow, level);
+	CreateRectangleShape(sf::RectangleShape(sf::Vector2f(80, 13)), sf::Color::Black, sf::Vector2f(2670, 200), 3, sf::Color::Yellow, level);
+	CreateRectangleShape(sf::RectangleShape(sf::Vector2f(90, 13)), sf::Color::Black, sf::Vector2f(2800, 270), 3, sf::Color::Yellow, level);
+	CreateRectangleShape(sf::RectangleShape(sf::Vector2f(110, 40)), sf::Color::Black, sf::Vector2f(3000, 270), 3, sf::Color::Yellow, level);
 	
 	return level;
 }
