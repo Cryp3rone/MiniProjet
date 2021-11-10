@@ -14,6 +14,6 @@ struct Player
 
 Player newPlayer();
 
-void MovePlayer(Player&, float&, sf::Vector2f&);
+void MovePlayer(Player&, float, sf::Vector2f&,sf::View& view);
 
 bool isGrounded(Player&);

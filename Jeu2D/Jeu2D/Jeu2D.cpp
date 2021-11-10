@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "LevelGenerator.h"
 #include "Ennemy.h"
+#include "Player.h"
 
 void Zoom(sf::View& view,sf::RenderWindow& window) {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) 
@@ -18,6 +19,12 @@ int main() {
 	
 	World* world = nullptr;
 	bool firstFrame = true;
+
+	sf::Vector2f velocity(0.f, 0.f);
+	float speed = 100.f;
+
+	//Player
+	Player player = newPlayer();
 
 	// Inputs
 	while (window.isOpen()) {
@@ -43,6 +50,8 @@ int main() {
 		}
 
 		UpdateEnnemies(world, elapsedTime.asSeconds());
+		MovePlayer(player, elapsedTime.asSeconds(), velocity,camera);
+
 
 		//Rendu
 		window.clear();
@@ -53,7 +62,7 @@ int main() {
 		Zoom(camera, window);
 		window.setView(camera);
 
-
+		window.draw(player.body);
 		window.display();
 	}
 }

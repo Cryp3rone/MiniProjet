@@ -4,25 +4,33 @@
 Player newPlayer()
 {
 	Player p;
-	p.body = sf::CircleShape(100.f);
-	p.body.setOrigin(p.body.getRadius(), p.body.getRadius());
+	p.body = sf::CircleShape(20.f);
+	p.body.setFillColor(sf::Color::Red);
+	p.body.setOrigin(p.body.getPosition().x + p.body.getRadius(), p.body.getPosition().y + p.body.getRadius());
 	p.health = 100.f;
 	return p;
 }
 
-void MovePlayer(Player& player, float& dt, sf::Vector2f& velocity)
+void MovePlayer(Player& player, float dt, sf::Vector2f& velocity, sf::View& view)
 {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
 		player.body.move(sf::Vector2f(0.f, -speed * dt));
-	
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+		view.move(sf::Vector2f(0.f, -speed * dt));
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
 		player.body.move(sf::Vector2f(0.f, speed * dt));
+		view.move(sf::Vector2f(0.f, speed * dt));
+	}
 	
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
 		player.body.move(sf::Vector2f(-speed * dt, 0.f));
+		view.move(sf::Vector2f(-speed * dt, 0.f));
+	}
 	
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
 		player.body.move(sf::Vector2f(speed * dt, 0.f));
+		view.move(sf::Vector2f(speed * dt, 0.f));
+	}
 
 	if (isGrounded(player))
 	{
