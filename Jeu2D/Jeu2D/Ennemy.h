@@ -5,12 +5,12 @@
 #include "EnnemyStr.h"
 
 void CreateEnnemies(World* world);
-void CreateCEnnemy(World* world,sf::CircleShape shape, float speed,sf::Vector2f position,bool canMoove);
-void CreateREnnemy(World* world, sf::RectangleShape shape, float speed, sf::Vector2f position, bool canMoove);
-Ennemy CreateEnnemy(World* world, float speed, sf::Vector2f position, bool canMoove);
+void CreateCEnnemy(World* world,sf::CircleShape* shape, float speed,sf::Vector2f position,bool canMoove, sf::Vector2f min, sf::Vector2f max);
+void CreateREnnemy(World* world, sf::RectangleShape shape, float speed, sf::Vector2f position, bool canMoove, sf::Vector2f min, sf::Vector2f max);
+Ennemy CreateEnnemy(World* world, float speed, sf::Vector2f position, bool canMoove, sf::Vector2f min, sf::Vector2f max);
 
-void UpdateEnnemies(World* world);
+void UpdateEnnemies(World* world,float deltaTime);
 
-void MooveEnnemy();
+void MooveEnnemy(Ennemy& ennemy, float deltaTime);
 	
 void RefreshEnnemies(World* world, sf::RenderWindow& window);
