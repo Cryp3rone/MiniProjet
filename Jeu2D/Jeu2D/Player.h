@@ -3,6 +3,7 @@
 
 const float groundY = 400.f;
 const float speed = 400.f;
+const float jumpForce = 400.f;
 const sf::Vector2f gravity(0.f, 0.2f);
 
 struct Player
@@ -13,6 +14,6 @@ struct Player
 
 Player newPlayer();
 
-void MovePlayer(Player&, float&);
+void MovePlayer(Player&, float&, sf::Vector2f&);
 
-void applyGravity(Player&, float&, sf::Vector2f&);
+bool isGrounded(Player&);
