@@ -7,7 +7,8 @@
 
 enum GameState {
 	PLAY,
-	END
+	LOOSE,
+	WIN
 };
 
 
@@ -78,7 +79,7 @@ int main() {
 			MovePlayer(player, elapsedTime.asSeconds(), velocity, camera, world);
 
 			if (player.health == 0)
-				game = END;
+				game = LOOSE;
 		}
 
 		//Rendu
@@ -91,7 +92,13 @@ int main() {
 			window.setView(camera);
 			window.draw(player.body);
 		}
+		else if(game == LOOSE){
+			window.draw(text);
+		}
 		else {
+			text.setString("VICTOIRE");
+			text.setFillColor(sf::Color::Green);
+			text.setPosition(window.getSize().x / 2 - 325, window.getSize().y / 2 - 130);
 			window.draw(text);
 		}
 		window.display();
