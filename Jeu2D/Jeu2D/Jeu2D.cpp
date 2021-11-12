@@ -44,7 +44,7 @@ int main() {
 		
 		sf::Time elapsedTime = clock.restart();
 		if (firstFrame) {
-			world = GenerateLevel(window);
+			world = GenerateLevel();
 			CreateEnnemies(world);
 			firstFrame = false;
 		}
