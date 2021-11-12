@@ -28,8 +28,10 @@ void MovePlayer(Player& player, float dt, sf::Vector2f& velocity, sf::View& view
 		player.direction = sf::Vector2f(-1.f, 0.f);
 
 		if (player.direction.x != player.lastDirection.x || (player.direction.x == player.lastDirection.x && player.mooveX)) { // On regarde si le joueur change de direction ou si il est dans la m�me direction et qu'il peut se d�placer
-			player.body.move(sf::Vector2f(-speed * dt, 0.f));
-			view.move(sf::Vector2f(-speed * dt, 0.f));
+			if(-speed * dt + player.body.getPosition().x >= 5.f) // On place une bordure a 5 pour empecher le joueur d'aller au dela du niveau
+				player.body.move(sf::Vector2f(-speed * dt, 0.f));
+			if((-speed * dt) + view.getCenter().x >= 600.f) 
+				view.move(sf::Vector2f(-speed * dt, 0.f));
 
 			if (player.direction.x != player.lastDirection.x) {
 				player.mooveX = true;
@@ -40,11 +42,11 @@ void MovePlayer(Player& player, float dt, sf::Vector2f& velocity, sf::View& view
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
 		player.direction = sf::Vector2f(1.f, 0.f);
-		//std::cout << "mooveX: " << player.mooveX << std::endl;
 
 		if (player.direction.x != player.lastDirection.x || (player.direction.x == player.lastDirection.x && player.mooveX))  { // On regarde si le joueur change de direction ou si il est dans la m�me direction et qu'il peut se d�placer
 			player.body.move(sf::Vector2f(speed * dt, 0.f));
-			view.move(sf::Vector2f(speed * dt, 0.f));
+			if ((-speed * dt) + player.body.getPosition().x >= 600.f)
+				view.move(sf::Vector2f(speed * dt, 0.f));
 
 			if (player.direction.x != player.lastDirection.x) {
 				player.mooveX = true;

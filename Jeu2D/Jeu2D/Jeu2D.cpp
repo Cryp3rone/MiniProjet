@@ -52,6 +52,8 @@ int main() {
 		UpdateEnnemies(world, elapsedTime.asSeconds());
 		MovePlayer(player, elapsedTime.asSeconds(), velocity,camera,world);
 
+		if (player.health == 0)
+			window.close();
 
 		//Rendu
 		window.clear();

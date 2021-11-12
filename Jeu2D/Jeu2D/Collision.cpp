@@ -4,12 +4,9 @@
 
 
 void OnCollisionEnter(Player& player,Collision& collision, bool isEnnemy,World* world) {
-
-	std::cout << "jumpValue" << player.isJumping << std::endl;
-
 	if (!isEnnemy) {
 		player.collision.isOnCollision = true;
-		
+
 
 		if (player.isJumping) {
 			if (collision.circleCol != nullptr)
@@ -24,6 +21,8 @@ void OnCollisionEnter(Player& player,Collision& collision, bool isEnnemy,World* 
 			player.mooveX = false;
 		}
 	}
+	else
+		player.health = 0;
 
 
 	if (player.isJumping) {
