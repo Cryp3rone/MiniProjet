@@ -1,5 +1,4 @@
 #include "Player.h"
-#include <iostream>
 #include <SFML/Graphics.hpp>
 #include "LevelGenerator.h"
 #include "Collision.h"
@@ -30,7 +29,7 @@ void MovePlayer(Player& player, float dt, sf::Vector2f& velocity, sf::View& view
 		if (player.direction.x != player.lastDirection.x || (player.direction.x == player.lastDirection.x && player.mooveX)) { // On regarde si le joueur change de direction ou si il est dans la m�me direction et qu'il peut se d�placer
 			if(-speed * dt + player.body.getPosition().x >= 5.f) // On place une bordure a 5 pour empecher le joueur d'aller au dela du niveau
 				player.body.move(sf::Vector2f(-speed * dt, 0.f));
-			if((-speed * dt) + view.getCenter().x >= 600.f) 
+			if((-speed * dt) + view.getCenter().x >= 600.f)
 				view.move(sf::Vector2f(-speed * dt, 0.f));
 
 			if (player.direction.x != player.lastDirection.x) {
@@ -73,7 +72,7 @@ void MovePlayer(Player& player, float dt, sf::Vector2f& velocity, sf::View& view
 	else
 	{
 		player.body.move(velocity);
-		velocity += gravity * dt;	
+		velocity += gravity * dt;
 	}
 
 	if (isGrounded(player,world) && player.isJumping) {
@@ -111,7 +110,7 @@ void MovePlayer(Player& player, float dt, sf::Vector2f& velocity, sf::View& view
 				}
 			}
 			else {
-				if (player.collision.isOnCollision && player.collision.circleCol != nullptr && player.collision.circleCol == ennemy.circle) 
+				if (player.collision.isOnCollision && player.collision.circleCol != nullptr && player.collision.circleCol == ennemy.circle)
 					OnCollisionLeave(player, player.collision, world);
 			}
 
@@ -125,12 +124,12 @@ void MovePlayer(Player& player, float dt, sf::Vector2f& velocity, sf::View& view
 				}
 			}
 			else {
-				if (player.collision.isOnCollision && player.collision.rectangleCol != nullptr && player.collision.rectangleCol == ennemy.rectangle) 
+				if (player.collision.isOnCollision && player.collision.rectangleCol != nullptr && player.collision.rectangleCol == ennemy.rectangle)
 					OnCollisionLeave(player, player.collision, world);
 			}
 		}
 	}
-	
+
 
 }
 
