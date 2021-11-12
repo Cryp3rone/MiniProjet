@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "LevelGenerator.h"
 #include "Ennemy.h"
+#include "Player.h"
 
 World* GenerateLevel() {
 	World* level = new World;
@@ -13,6 +14,7 @@ World* GenerateLevel() {
 	CreateRectangleShape(sf::RectangleShape (sf::Vector2f(250, 13)), sf::Color::Black, sf::Vector2f(2000, 375), 3, sf::Color::Yellow, level);
 	CreateRectangleShape(sf::RectangleShape (sf::Vector2f(250, 13)), sf::Color::Black, sf::Vector2f(2500, 375), 3, sf::Color::Yellow, level);
 	
+	level->groundY = originalGroundY;
 	return level;
 }
 
@@ -21,17 +23,7 @@ void RefreshWorld(World* level,sf::RenderWindow& window) {
 		window.draw(rectangle);
 }
 
-void CreateRectangleShape(sf::RectangleShape* shape, sf::Color color, sf::Vector2f position, float thickness, sf::Color thicknessColor, World* level) {
-	shape->setPosition(position);
-	shape->setFillColor(color);
-	shape->setOutlineThickness(thickness);
-	shape->setOutlineColor(thicknessColor);
-	level->rectangles.push_back(*shape);
 
-	
-
-	//window.draw(shape);
-}
 void CreateRectangleShape(sf::RectangleShape shape, sf::Color color, sf::Vector2f position, float thickness, sf::Color thicknessColor, World* level) {
 	shape.setPosition(position);
 	shape.setFillColor(color);

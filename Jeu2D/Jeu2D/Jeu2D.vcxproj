@@ -167,10 +167,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Collision.h" />
+    <ClInclude Include="CollisionStr.h" />
     <ClInclude Include="Ennemy.h" />
     <ClInclude Include="EnnemyStr.h" />
     <ClInclude Include="LevelGenerator.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayerStr.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
