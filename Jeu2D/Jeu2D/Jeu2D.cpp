@@ -65,7 +65,7 @@ int main() {
 				case sf::Event::Closed:
 					window.close();
 					break;
-				case sf::Event::MouseButtonPressed: 
+				case sf::Event::MouseButtonPressed:
 					sf::Vector2i pos = sf::Mouse::getPosition(window);
 					Shoot(player.body.getPosition(), window.mapPixelToCoords(pos), bullets, dt);
 					break;
@@ -87,10 +87,12 @@ int main() {
 			{
 				bullet.body.move(bullet.currVelocity);
 			}
-			
+
 			if (player.health == 0)
 				game = LOOSE;
 		}
+		updateBullet(bullets, camera);
+		std::cout << bullets.size() << std::endl;
 
 		//Rendu
 		window.clear();
@@ -106,7 +108,7 @@ int main() {
 			{
 				window.draw(bullet.body);
 			}
-			
+
 		}
 		else if(game == LOOSE){
 			window.draw(text);
