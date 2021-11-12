@@ -50,7 +50,7 @@ int main() {
 		}
 
 		UpdateEnnemies(world, elapsedTime.asSeconds());
-		MovePlayer(player, elapsedTime.asSeconds(), velocity,camera);
+		MovePlayer(player, elapsedTime.asSeconds(), velocity,camera,world);
 
 
 		//Rendu

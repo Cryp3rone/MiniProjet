@@ -1,39 +1,51 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <ClCompile Include="Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Collision.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Ennemy.cpp">
-      <Filter>Source</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Jeu2D.cpp">
-      <Filter>Source</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="LevelGenerator.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Source</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Collision.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Ennemy.h">
-      <Filter>Header</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="EnnemyStr.h">
-      <Filter>Header</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="LevelGenerator.h">
-      <Filter>Header</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
-      <Filter>Header</Filter>
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerStr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionStr.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Source">
-      <UniqueIdentifier>{0328add2-4895-40f4-bab5-dfffda20fe76}</UniqueIdentifier>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{9fd1d5fc-00b2-4027-9250-4bef0d3e9cd9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header">
-      <UniqueIdentifier>{7181a34a-caef-4d22-9f36-063547ce5172}</UniqueIdentifier>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{9aef336d-f41f-40d2-bd69-cff64aad1869}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
