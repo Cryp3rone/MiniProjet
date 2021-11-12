@@ -2,6 +2,8 @@
 #include <SFML/Graphics.hpp>
 #include "LevelGenerator.h"
 #include "PlayerStr.h"
+#include <list>
+#include "Shoot.h"
 
 const float originalGroundY = 475.f;
 const float speed = 400.f;
@@ -10,7 +12,7 @@ const sf::Vector2f gravity(0.f, 9.8f);
 
 Player newPlayer();
 
-void MovePlayer(Player&, float, sf::Vector2f&,sf::View& view,World* world);
+void MovePlayer(Player&, float, sf::Vector2f&,sf::View& view,World* world, std::list<Bullet> bullets);
 
 bool isGrounded(Player&,World*);
 bool isOnFloor(Player&);

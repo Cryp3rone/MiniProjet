@@ -161,18 +161,22 @@
   <ItemGroup>
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="Ennemy.cpp" />
+    <ClCompile Include="EnnemyBehaviour.cpp" />
     <ClCompile Include="Jeu2D.cpp" />
     <ClCompile Include="LevelGenerator.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Shoot.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Collision.h" />
     <ClInclude Include="CollisionStr.h" />
     <ClInclude Include="Ennemy.h" />
+    <ClInclude Include="EnnemyBehaviour.h" />
     <ClInclude Include="EnnemyStr.h" />
     <ClInclude Include="LevelGenerator.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerStr.h" />
+    <ClInclude Include="Shoot.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

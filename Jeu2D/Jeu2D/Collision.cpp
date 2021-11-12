@@ -1,15 +1,12 @@
 #pragma once
 #include "Player.h"
 #include "LevelGenerator.h"
+#include "Ennemy.h"
 
 
-void OnCollisionEnter(Player& player,Collision& collision, bool isEnnemy,World* world) {
-
-	std::cout << "jumpValue" << player.isJumping << std::endl;
-
+void OnCollisionEnter(Player& player,Collision& collision, bool isEnnemy,bool isBullet,World* world) {
 	if (!isEnnemy) {
 		player.collision.isOnCollision = true;
-		
 
 		if (player.isJumping) {
 			if (collision.circleCol != nullptr)
@@ -20,15 +17,27 @@ void OnCollisionEnter(Player& player,Collision& collision, bool isEnnemy,World* 
 
 			player.mooveX = true;
 		}
-		else {
-			player.mooveX = false;
+		else 
+			player.mooveX = false;	
+	}
+	else
+		player.health = 0;
+
+	if (isBullet) {
+		if (collision.circleCol != nullptr) {
+			Ennemy& targetEnnemy = GetEnnemyWithShape(collision.circleCol,world);
+			targetEnnemy.isAlive = false; // A CHANGER : Retirer l'ennemi de la liste des ennemis
+
 		}
+		else {
+			Ennemy& targetEnnemy = GetEnnemyWithShape(collision.rectangleCol,world);
+			targetEnnemy.isAlive = false; // A CHANGER : Retirer l'ennemi de la liste des ennemis
+		}
+
 	}
 
-
-	if (player.isJumping) {
+	if (player.isJumping) 
 		player.isJumping = false;
-	}
 	
 }
 

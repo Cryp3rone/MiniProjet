@@ -1,11 +1,12 @@
 #pragma once
 #include <iostream>
+#include <list>
 #include <SFML/Graphics.hpp>
 #include "EnnemyStr.h"
 
 struct World {
 	std::vector<sf::RectangleShape> rectangles;
-	std::vector<Ennemy> ennemies;
+	std::list<Ennemy> ennemies;
 	float groundY;
 };
 

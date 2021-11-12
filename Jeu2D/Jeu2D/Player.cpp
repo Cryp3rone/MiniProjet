@@ -1,8 +1,9 @@
+#pragma once
 #include "Player.h"
-#include <iostream>
 #include <SFML/Graphics.hpp>
 #include "LevelGenerator.h"
 #include "Collision.h"
+#include <list>
 
 Player newPlayer()
 {
@@ -21,15 +22,17 @@ Player newPlayer()
 	return p;
 }
 
-void MovePlayer(Player& player, float dt, sf::Vector2f& velocity, sf::View& view,World* world)
+void MovePlayer(Player& player, float dt, sf::Vector2f& velocity, sf::View& view,World* world, std::list<Bullet> bullets)
 {
 	// MOVEMENT
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
 		player.direction = sf::Vector2f(-1.f, 0.f);
 
 		if (player.direction.x != player.lastDirection.x || (player.direction.x == player.lastDirection.x && player.mooveX)) { // On regarde si le joueur change de direction ou si il est dans la m�me direction et qu'il peut se d�placer
-			player.body.move(sf::Vector2f(-speed * dt, 0.f));
-			view.move(sf::Vector2f(-speed * dt, 0.f));
+			if(-speed * dt + player.body.getPosition().x >= 5.f) // On place une bordure a 5 pour empecher le joueur d'aller au dela du niveau
+				player.body.move(sf::Vector2f(-speed * dt, 0.f));
+			if((-speed * dt) + view.getCenter().x >= 600.f)
+				view.move(sf::Vector2f(-speed * dt, 0.f));
 
 			if (player.direction.x != player.lastDirection.x) {
 				player.mooveX = true;
@@ -40,11 +43,11 @@ void MovePlayer(Player& player, float dt, sf::Vector2f& velocity, sf::View& view
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
 		player.direction = sf::Vector2f(1.f, 0.f);
-		//std::cout << "mooveX: " << player.mooveX << std::endl;
 
 		if (player.direction.x != player.lastDirection.x || (player.direction.x == player.lastDirection.x && player.mooveX))  { // On regarde si le joueur change de direction ou si il est dans la m�me direction et qu'il peut se d�placer
 			player.body.move(sf::Vector2f(speed * dt, 0.f));
-			view.move(sf::Vector2f(speed * dt, 0.f));
+			if ((-speed * dt) + player.body.getPosition().x >= 600.f)
+				view.move(sf::Vector2f(speed * dt, 0.f));
 
 			if (player.direction.x != player.lastDirection.x) {
 				player.mooveX = true;
@@ -71,7 +74,7 @@ void MovePlayer(Player& player, float dt, sf::Vector2f& velocity, sf::View& view
 	else
 	{
 		player.body.move(velocity);
-		velocity += gravity * dt;	
+		velocity += gravity * dt;
 	}
 
 	if (isGrounded(player,world) && player.isJumping) {
@@ -90,7 +93,7 @@ void MovePlayer(Player& player, float dt, sf::Vector2f& velocity, sf::View& view
 			if (rectangle.getGlobalBounds().intersects(player.body.getGlobalBounds())) {
 				if (!player.collision.isOnCollision) {
 					CreateCollision(player, &rectangle, nullptr);
-					OnCollisionEnter(player, player.collision, false, world);
+					OnCollisionEnter(player, player.collision, false,false, world);
 				}
 			}
 			else {
@@ -100,35 +103,53 @@ void MovePlayer(Player& player, float dt, sf::Vector2f& velocity, sf::View& view
 		}
 	}
 
-	for (Ennemy ennemy : world->ennemies) {
-		if (ennemy.circle != nullptr) {
-			if (ennemy.circle->getGlobalBounds().intersects(player.body.getGlobalBounds())) {
-				if (!player.collision.isOnCollision) {
-					CreateCollision(player, nullptr, ennemy.circle);
-					OnCollisionEnter(player, player.collision, true, world);
+	for (Ennemy& ennemy : world->ennemies) {
+		if (ennemy.isAlive) {
+			for (Bullet& bullet : bullets) {
+				if (ennemy.circle != nullptr) {
+					if (bullet.body.getGlobalBounds().intersects(ennemy.circle->getGlobalBounds())) {
+						if (!player.collision.isOnCollision) {
+							CreateCollision(player, nullptr, ennemy.circle);
+							OnCollisionEnter(player, player.collision, false, true, world);
+						}
+					}
+					else {
+						if (player.collision.isOnCollision && player.collision.circleCol != nullptr && player.collision.circleCol == &bullet.body)
+							OnCollisionLeave(player, player.collision, world);
+					}
 				}
-			}
-			else {
-				if (player.collision.isOnCollision && player.collision.circleCol != nullptr && player.collision.circleCol == ennemy.circle) 
-					OnCollisionLeave(player, player.collision, world);
 			}
 
 
-		}
-		else {
-			if (ennemy.rectangle->getGlobalBounds().intersects(player.body.getGlobalBounds())) {
-				if (!player.collision.isOnCollision) {
-					CreateCollision(player, ennemy.rectangle, nullptr);
-					OnCollisionEnter(player, player.collision, true, world);
+			if (ennemy.circle != nullptr) {
+				if (ennemy.circle->getGlobalBounds().intersects(player.body.getGlobalBounds())) {
+					if (!player.collision.isOnCollision) {
+						CreateCollision(player, nullptr, ennemy.circle);
+						OnCollisionEnter(player, player.collision, true, false, world);
+					}
 				}
+				else {
+					if (player.collision.isOnCollision && player.collision.circleCol != nullptr && player.collision.circleCol == ennemy.circle)
+						OnCollisionLeave(player, player.collision, world);
+				}
+
+
 			}
 			else {
-				if (player.collision.isOnCollision && player.collision.rectangleCol != nullptr && player.collision.rectangleCol == ennemy.rectangle) 
-					OnCollisionLeave(player, player.collision, world);
+				if (ennemy.rectangle->getGlobalBounds().intersects(player.body.getGlobalBounds())) {
+					if (!player.collision.isOnCollision) {
+						CreateCollision(player, ennemy.rectangle, nullptr);
+						OnCollisionEnter(player, player.collision, true, false, world);
+					}
+				}
+				else {
+					if (player.collision.isOnCollision && player.collision.rectangleCol != nullptr && player.collision.rectangleCol == ennemy.rectangle)
+						OnCollisionLeave(player, player.collision, world);
+				}
 			}
 		}
 	}
-	
+
 
 }
 

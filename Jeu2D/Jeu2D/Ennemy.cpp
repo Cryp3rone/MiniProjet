@@ -3,33 +3,34 @@
 #include <SFML/Graphics.hpp>
 #include "LevelGenerator.h"
 #include "Ennemy.h"
+#include "EnnemyBehaviour.h"
 
 void CreateEnnemies(World* world) {
 	// Création des ennemis ici
 	CreateCEnnemy(world, CreateCircleShape(new sf::CircleShape(15, 3), sf::Color::Black, sf::Vector2f(1500, 450), 3, sf::Color::Color(255,204,0), world),
-		50, sf::Vector2f(1500, 450),true,sf::Vector2f(1500,450),sf::Vector2f(1700,450));
+		50, sf::Vector2f(1500, 450),true,sf::Vector2f(1500,450),sf::Vector2f(1700,450),HORIZONTAL);
 
+	CreateCEnnemy(world, CreateCircleShape(new sf::CircleShape(15, 3), sf::Color::Black, sf::Vector2f(650, 300), 3, sf::Color::Color(255, 204, 0), world),
+		150, sf::Vector2f(650, 300), true, sf::Vector2f(650, 300), sf::Vector2f(650, 450), VERTICAL);
 }
 
-void CreateCEnnemy(World* world, sf::CircleShape* circle, float speed, sf::Vector2f position, bool canMoove, sf::Vector2f min, sf::Vector2f max) {
+void CreateCEnnemy(World* world, sf::CircleShape* circle, float speed, sf::Vector2f position, bool canMoove, sf::Vector2f min, sf::Vector2f max, _EnnemyBehaviour behaviour) {
 
-	Ennemy ennemy = CreateEnnemy(world,speed,position,canMoove,min,max);
+	Ennemy ennemy = CreateEnnemy(world,speed,position,canMoove,min,max,behaviour);
 	ennemy.circle = circle;
-	ennemy.collision = sf::FloatRect(position.x, position.y, ennemy.circle->getScale().x, ennemy.circle->getScale().y);
 	world->ennemies.push_back(ennemy);
 
 }
 
-void CreateREnnemy(World* world, sf::RectangleShape rectangle, float speed, sf::Vector2f position, bool canMoove, sf::Vector2f min, sf::Vector2f max) {
+void CreateREnnemy(World* world, sf::RectangleShape rectangle, float speed, sf::Vector2f position, bool canMoove, sf::Vector2f min, sf::Vector2f max, _EnnemyBehaviour behaviour) {
 
-	Ennemy ennemy = CreateEnnemy(world, speed, position, canMoove,min,max);
+	Ennemy ennemy = CreateEnnemy(world, speed, position, canMoove,min,max,behaviour);
 	ennemy.rectangle = &rectangle;
-	ennemy.collision = sf::FloatRect(position.x, position.y, ennemy.rectangle->getScale().x, ennemy.rectangle->getScale().y);
 	world->ennemies.push_back(ennemy);
 
 }
 
-Ennemy CreateEnnemy(World* world, float speed, sf::Vector2f position, bool canMoove,sf::Vector2f min,sf::Vector2f max) {
+Ennemy CreateEnnemy(World* world, float speed, sf::Vector2f position, bool canMoove,sf::Vector2f min,sf::Vector2f max, _EnnemyBehaviour behaviour) {
 	Ennemy ennemy;
 	ennemy.circle = nullptr;
 	ennemy.rectangle = nullptr;
@@ -39,59 +40,64 @@ Ennemy CreateEnnemy(World* world, float speed, sf::Vector2f position, bool canMo
 	ennemy.min = min;
 	ennemy.max = max;
 	ennemy.returnBack = false;
-
-	
+	ennemy.behaviour = behaviour;
+	ennemy.isAlive = true;
 
 	return ennemy;
 }
 
 void RefreshEnnemies(World* world, sf::RenderWindow& window) {
 	for (Ennemy& ennemy : (*world).ennemies) {
-		if (ennemy.circle != nullptr)
-			window.draw(*(ennemy).circle);
-		else
-			window.draw(*(ennemy).rectangle);
+		if (ennemy.isAlive) {
+			if (ennemy.circle != nullptr)
+				window.draw(*(ennemy).circle);
+			else
+				window.draw(*(ennemy).rectangle);
+		}
 	}
-	
 }
 
 void UpdateEnnemies(World* world, float deltaTime) {
 	for (Ennemy& ennemy : world->ennemies) {
-		if (ennemy.canMoove) 
+		if (ennemy.isAlive && ennemy.canMoove) 
 			MooveEnnemy(ennemy, deltaTime);
 	}
 }
 
 void MooveEnnemy(Ennemy& ennemy, float deltaTime) {
-	if (ennemy.circle != nullptr) {
-		sf::CircleShape& circle = *(ennemy).circle;
+	switch (ennemy.behaviour) {
+		case HORIZONTAL:
+			if(ennemy.circle != nullptr)
+				HorizontalBehaviour(ennemy, ennemy.circle,deltaTime);
+			else
+				HorizontalBehaviour(ennemy, ennemy.rectangle, deltaTime);
+			break;
 
-		if (ennemy.min.y == ennemy.min.y) { // On fait un mouvement horizontal{
-			if ((int)circle.getPosition().x < (int)ennemy.max.x && !ennemy.returnBack) {
-				circle.move(sf::Vector2f(ennemy.speed * deltaTime, 0.f));
-				ennemy.returnBack = (int)circle.getPosition().x >= (int)ennemy.max.x;
-			}
-			else if ((int)circle.getPosition().x >= (int)ennemy.min.x && ennemy.returnBack) {
-				circle.move(sf::Vector2f(-ennemy.speed * deltaTime, 0.f));
-				
-				if ((int)circle.getPosition().x <= (int)ennemy.min.x)
-					ennemy.returnBack = false;
-			}
-			
-		}
-		else { // l'ennemi se déplace verticalement
-			if ((int)circle.getPosition().x < (int)ennemy.max.x && !ennemy.returnBack) {
-				circle.move(sf::Vector2f(0.f, ennemy.speed * deltaTime));
-				ennemy.returnBack = (int)circle.getPosition().x >= (int)ennemy.max.x;
-			}
-			else if ((int)circle.getPosition().x >= (int)ennemy.min.x && ennemy.returnBack) {
-				circle.move(sf::Vector2f(0.f, -ennemy.speed * deltaTime));
-
-				if ((int)circle.getPosition().x <= (int)ennemy.min.x)
-					ennemy.returnBack = false;
-			}
-		}
+		case VERTICAL:
+			if (ennemy.circle != nullptr)
+				VerticalBehaviour(ennemy, ennemy.circle, deltaTime);
+			else
+				VerticalBehaviour(ennemy, ennemy.rectangle, deltaTime);
+			break;
 	}
-	else {} // l'ennemi est un rectangle
-	
+}
+
+
+Ennemy& GetEnnemyWithShape(sf::Shape* shape,World* world) {
+	for (Ennemy& ennemy : world->ennemies) {
+		if (ennemy.circle != nullptr) {
+			sf::Vector2f circlePos = ennemy.circle->getPosition();
+
+			if (circlePos.x == shape->getPosition().x && circlePos.y == shape->getPosition().y)
+				return ennemy;
+		}
+		else {
+			sf::Vector2f rectanglePos = ennemy.rectangle->getPosition();
+
+			if (rectanglePos.x == shape->getPosition().x && rectanglePos.y == shape->getPosition().y)
+				return ennemy;
+		}
+
+	}
+
 }
