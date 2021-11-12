@@ -6,12 +6,8 @@
 #include "Ennemy.h"
 #include "Player.h"
 #include "Shoot.h"
+#include "GameState.h"
 
-enum GameState {
-	PLAY,
-	LOOSE,
-	WIN
-};
 
 
 std::string getAppPath() {
@@ -39,7 +35,7 @@ int main() {
 
 	sf::Text text;
 	text.setFont(font);
-	text.setPosition(window.getSize().x / 2 - 180,window.getSize().y / 2 - 130);
+	text.setPosition(camera.getCenter().x  - 180, camera.getCenter().y  - 130);
 	text.setString("GAME \n OVER ");
 	text.setFillColor(sf::Color::Yellow);
 	text.setScale(4.f, 4.f);
@@ -48,7 +44,7 @@ int main() {
 	bool firstFrame = true;
 
 	//Player
-	sf::Vector2f velocity(0.f, 0.f);
+	sf::Vector2f velocity(0.f,  5.f);
 	float speed = 100.f;
 	Player player = newPlayer();
 
@@ -81,7 +77,7 @@ int main() {
 
 		if (game == PLAY) {
 			UpdateEnnemies(world, elapsedTime.asSeconds());
-			MovePlayer(player, elapsedTime.asSeconds(), velocity, camera, world,bullets);
+			MovePlayer(player, elapsedTime.asSeconds(), velocity, camera, world,bullets,game);
 
 			for (Bullet& bullet : bullets)
 			{
@@ -92,7 +88,6 @@ int main() {
 				game = LOOSE;
 		}
 		updateBullet(bullets, camera);
-		std::cout << bullets.size() << std::endl;
 
 		//Rendu
 		window.clear();
@@ -116,7 +111,7 @@ int main() {
 		else {
 			text.setString("VICTOIRE");
 			text.setFillColor(sf::Color::Green);
-			text.setPosition(window.getSize().x / 2 - 325, window.getSize().y / 2 - 130);
+			text.setPosition(camera.getCenter().x - 50, camera.getCenter().y - 50);
 			window.draw(text);
 		}
 		window.display();

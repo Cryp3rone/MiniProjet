@@ -4,12 +4,13 @@
 #include "LevelGenerator.h"
 #include "Collision.h"
 #include <list>
+#include "GameState.h"
 
 Player newPlayer()
 {
 	Player p;
 	p.body = sf::CircleShape(20.f);
-	p.body.setPosition(600.f, originalGroundY);
+	p.body.setPosition(600.f, originalGroundY - 20);
 	p.body.setFillColor(sf::Color::Red);
 	p.body.setOrigin(p.body.getRadius(), p.body.getRadius());
 	p.health = 100.f;
@@ -22,7 +23,7 @@ Player newPlayer()
 	return p;
 }
 
-void MovePlayer(Player& player, float dt, sf::Vector2f& velocity, sf::View& view,World* world, std::list<Bullet> bullets)
+void MovePlayer(Player& player, float dt, sf::Vector2f& velocity, sf::View& view,World* world, std::list<Bullet> bullets,GameState& state)
 {
 	// MOVEMENT
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
@@ -88,6 +89,13 @@ void MovePlayer(Player& player, float dt, sf::Vector2f& velocity, sf::View& view
 
 
 	// COLLISION
+	if ( world->endFlag.getGlobalBounds().intersects(player.body.getGlobalBounds())) {
+		//	if (!player.collision.isOnCollision) {
+		state = WIN;
+		//	}
+	}
+	
+
 	for (sf::RectangleShape& rectangle : world->rectangles) {
 		if (rectangle.getOutlineColor() != sf::Color::Blue) { // On skip la collision du bas
 			if (rectangle.getGlobalBounds().intersects(player.body.getGlobalBounds())) {

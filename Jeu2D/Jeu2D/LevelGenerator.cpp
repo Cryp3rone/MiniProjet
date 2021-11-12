@@ -39,11 +39,14 @@ World* GenerateLevel() {
 		pos += sizeL + offset;
 		CreateRectangleShape(sf::RectangleShape(sf::Vector2f(100000000, 125)), sf::Color::Black, sf::Vector2f(0, 475), 3, sf::Color::Blue, level);
 	}
+
 	CreateRectangleShape(sf::RectangleShape(sf::Vector2f(40, 20)), sf::Color::Black, sf::Vector2f(pos + 35, 200), 3, sf::Color::Green, level);
-	CreateRectangleShape(sf::RectangleShape(sf::Vector2f(10, 300)), sf::Color::Black, sf::Vector2f(pos + 35, 200), 3, sf::Color::Green, level);
+	level->endFlag = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(10, 300)), sf::Color::Black, sf::Vector2f(pos + 35, 200), 3, sf::Color::Green, level);
 	CreateRectangleShape(sf::RectangleShape(sf::Vector2f(50, 30)), sf::Color::Black, sf::Vector2f(pos+15, 450), 3, sf::Color::Green, level);
 	CreateRectangleShape(sf::RectangleShape(sf::Vector2f(80, 30)), sf::Color::Black, sf::Vector2f(pos, 475), 3, sf::Color::Green, level);
 	
+
+	level->groundY = 471.5f;
 	//affiche le sol après comme ça il passe devant les autres platformes
 
 	return level;
@@ -55,7 +58,7 @@ void RefreshWorld(World* level, sf::RenderWindow& window) {
 }
 
 
-void CreateRectangleShape(sf::RectangleShape shape, sf::Color color, sf::Vector2f position, float thickness, sf::Color thicknessColor, World* level) {
+sf::RectangleShape CreateRectangleShape(sf::RectangleShape shape, sf::Color color, sf::Vector2f position, float thickness, sf::Color thicknessColor, World* level) {
 	shape.setPosition(position);
 	shape.setFillColor(color);
 	shape.setOutlineThickness(thickness);
@@ -63,6 +66,8 @@ void CreateRectangleShape(sf::RectangleShape shape, sf::Color color, sf::Vector2
 	level->rectangles.push_back(shape);
 
 	//window.draw(shape);
+
+	return shape;
 }
 
 sf::CircleShape* CreateCircleShape(sf::CircleShape* shape, sf::Color color, sf::Vector2f position, float thickness, sf::Color thicknessColor, World* level) {
