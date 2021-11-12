@@ -1,8 +1,10 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include <List>
 #include "LevelGenerator.h"
 #include "Ennemy.h"
 #include "Player.h"
+#include "Shoot.h"
 
 void Zoom(sf::View& view,sf::RenderWindow& window) {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) 
@@ -20,11 +22,12 @@ int main() {
 	World* world = nullptr;
 	bool firstFrame = true;
 
+	//Player
 	sf::Vector2f velocity(0.f, 0.f);
 	float speed = 100.f;
-
-	//Player
 	Player player = newPlayer();
+
+	std::list<Bullet> bullets;
 
 	// Inputs
 	while (window.isOpen()) {
@@ -38,10 +41,7 @@ int main() {
 				
 			}
 		}
-
-
-		//Logique
-		
+		//Logique	
 		sf::Time elapsedTime = clock.restart();
 		if (firstFrame) {
 			world = GenerateLevel();
@@ -52,6 +52,15 @@ int main() {
 		UpdateEnnemies(world, elapsedTime.asSeconds());
 		MovePlayer(player, elapsedTime.asSeconds(), velocity,camera,world);
 
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		{
+			Shoot(player.body.getPosition(), (sf::Vector2f)sf::Mouse::getPosition(window), bullets);
+		}
+
+		for (Bullet bullet : bullets)
+		{
+			bullet.body.move(bullet.currVelocity);
+		}
 
 		//Rendu
 		window.clear();
@@ -63,6 +72,11 @@ int main() {
 		window.setView(camera);
 
 		window.draw(player.body);
+		for (Bullet bullet: bullets)
+		{
+			window.draw(bullet.body);
+		}
+
 		window.display();
 	}
 }
