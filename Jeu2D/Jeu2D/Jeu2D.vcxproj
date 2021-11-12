@@ -165,6 +165,7 @@
     <ClCompile Include="Jeu2D.cpp" />
     <ClCompile Include="LevelGenerator.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Shoot.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Collision.h" />
@@ -175,6 +176,7 @@
     <ClInclude Include="LevelGenerator.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerStr.h" />
+    <ClInclude Include="Shoot.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

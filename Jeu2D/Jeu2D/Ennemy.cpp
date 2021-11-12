@@ -41,25 +41,25 @@ Ennemy CreateEnnemy(World* world, float speed, sf::Vector2f position, bool canMo
 	ennemy.max = max;
 	ennemy.returnBack = false;
 	ennemy.behaviour = behaviour;
-
-	
+	ennemy.isAlive = true;
 
 	return ennemy;
 }
 
 void RefreshEnnemies(World* world, sf::RenderWindow& window) {
 	for (Ennemy& ennemy : (*world).ennemies) {
-		if (ennemy.circle != nullptr)
-			window.draw(*(ennemy).circle);
-		else
-			window.draw(*(ennemy).rectangle);
+		if (ennemy.isAlive) {
+			if (ennemy.circle != nullptr)
+				window.draw(*(ennemy).circle);
+			else
+				window.draw(*(ennemy).rectangle);
+		}
 	}
-	
 }
 
 void UpdateEnnemies(World* world, float deltaTime) {
 	for (Ennemy& ennemy : world->ennemies) {
-		if (ennemy.canMoove) 
+		if (ennemy.isAlive && ennemy.canMoove) 
 			MooveEnnemy(ennemy, deltaTime);
 	}
 }
@@ -80,4 +80,24 @@ void MooveEnnemy(Ennemy& ennemy, float deltaTime) {
 				VerticalBehaviour(ennemy, ennemy.rectangle, deltaTime);
 			break;
 	}
+}
+
+
+Ennemy& GetEnnemyWithShape(sf::Shape* shape,World* world) {
+	for (Ennemy& ennemy : world->ennemies) {
+		if (ennemy.circle != nullptr) {
+			sf::Vector2f circlePos = ennemy.circle->getPosition();
+
+			if (circlePos.x == shape->getPosition().x && circlePos.y == shape->getPosition().y)
+				return ennemy;
+		}
+		else {
+			sf::Vector2f rectanglePos = ennemy.rectangle->getPosition();
+
+			if (rectanglePos.x == shape->getPosition().x && rectanglePos.y == shape->getPosition().y)
+				return ennemy;
+		}
+
+	}
+
 }

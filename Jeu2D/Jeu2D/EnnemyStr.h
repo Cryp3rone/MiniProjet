@@ -16,4 +16,5 @@ struct Ennemy {
 	sf::Vector2f min;
 	bool returnBack;
 	_EnnemyBehaviour behaviour;
+	bool isAlive;
 };

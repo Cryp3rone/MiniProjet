@@ -6,8 +6,6 @@
 
 void Shoot(sf::Vector2f playerPos, sf::Vector2f mousePos, std::list<Bullet>& bullets, float& dt)
 {
-	mousePos.x += playerPos.x;
-
 	sf::Vector2f dir = mousePos - playerPos;
 	sf::Vector2f dirNorm = dir / (float)sqrt(pow(dir.x, 2) + pow(dir.y, 2));
 

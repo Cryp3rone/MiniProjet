@@ -14,3 +14,5 @@ void UpdateEnnemies(World* world,float deltaTime);
 void MooveEnnemy(Ennemy& ennemy, float deltaTime);
 	
 void RefreshEnnemies(World* world, sf::RenderWindow& window);
+
+Ennemy& GetEnnemyWithShape(sf::Shape* shape,World* world);

@@ -1,6 +1,6 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include <List>
+#include <list>
 #include <windows.h>
 #include "LevelGenerator.h"
 #include "Ennemy.h"
@@ -65,8 +65,10 @@ int main() {
 				case sf::Event::Closed:
 					window.close();
 					break;
-				case sf::Event::MouseButtonPressed:
-					Shoot(player.body.getPosition(), (sf::Vector2f)sf::Mouse::getPosition(window), bullets, dt);
+				case sf::Event::MouseButtonPressed: 
+					sf::Vector2i pos = sf::Mouse::getPosition(window);
+					Shoot(player.body.getPosition(), window.mapPixelToCoords(pos), bullets, dt);
+					break;
 			}
 		}
 		//Logique
@@ -79,13 +81,13 @@ int main() {
 
 		if (game == PLAY) {
 			UpdateEnnemies(world, elapsedTime.asSeconds());
-			MovePlayer(player, elapsedTime.asSeconds(), velocity, camera, world);
+			MovePlayer(player, elapsedTime.asSeconds(), velocity, camera, world,bullets);
 
 			for (Bullet& bullet : bullets)
 			{
 				bullet.body.move(bullet.currVelocity);
 			}
-
+			
 			if (player.health == 0)
 				game = LOOSE;
 		}
@@ -104,6 +106,7 @@ int main() {
 			{
 				window.draw(bullet.body);
 			}
+			
 		}
 		else if(game == LOOSE){
 			window.draw(text);
