@@ -105,9 +105,8 @@ int main() {
 			}
 
 		}
-		else if(game == LOOSE){
-			window.draw(text);
-		}
+		else if(game == LOOSE)
+			window.draw(text);	
 		else {
 			text.setString("VICTOIRE");
 			text.setFillColor(sf::Color::Green);

@@ -7,5 +7,6 @@
 #include "CollisionStr.h"
 
 void OnCollisionEnter(Player&, Collision&, bool, bool,World*);
+void OnCollisionStay(Player&, Collision&, bool, bool, World*);
 void OnCollisionLeave(Player&,Collision&,World* );
 void CreateCollision(Player&,sf::RectangleShape*,sf::CircleShape*);

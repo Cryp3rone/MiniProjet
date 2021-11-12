@@ -10,17 +10,19 @@ void OnCollisionEnter(Player& player,Collision& collision, bool isEnnemy,bool is
 
 		if (player.isJumping) {
 			if (collision.circleCol != nullptr) {
+				player.mooveX = true;
 				world->groundY = collision.circleCol->getPosition().y - 5;
 				if (world->groundY <= 0)
 					world->groundY = originalGroundY;
 			}
 			else {
+				player.mooveX = true;
 				world->groundY = collision.rectangleCol->getPosition().y - 5;
 				if (world->groundY <= 0)
 					world->groundY = originalGroundY;
 			}
 
-			player.mooveX = true;
+			//player.mooveX = true;
 		}
 		else 
 			player.mooveX = false;	
@@ -43,6 +45,21 @@ void OnCollisionEnter(Player& player,Collision& collision, bool isEnnemy,bool is
 	if (player.isJumping) 
 		player.isJumping = false;
 	
+}
+
+void OnCollisionStay(Player& player, Collision& collision, bool isEnnemy, bool isBullet, World* world) {
+	if (collision.circleCol != nullptr) {
+		if (player.body.getGlobalBounds().top <= collision.rectangleCol->getGlobalBounds().top) { // On check si le joueur est au dessus de la collision
+			if (!player.mooveX)
+				player.mooveX = true;
+		}
+	}
+	else {
+		if (player.body.getGlobalBounds().top <= collision.rectangleCol->getGlobalBounds().top) { // On check si le joueur est au dessus de la collision
+			if (!player.mooveX)
+				player.mooveX = true;
+		}
+	}
 }
 
 

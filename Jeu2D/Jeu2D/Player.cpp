@@ -68,7 +68,7 @@ void MovePlayer(Player& player, float dt, sf::Vector2f& velocity, sf::View& view
 			velocity.y = jumpForce;
 			player.body.move(velocity);
 			player.isJumping = true;
-			player.mooveX = true;
+			//player.mooveX = true;
 		}
 
 	}
@@ -103,6 +103,7 @@ void MovePlayer(Player& player, float dt, sf::Vector2f& velocity, sf::View& view
 					CreateCollision(player, &rectangle, nullptr);
 					OnCollisionEnter(player, player.collision, false,false, world);
 				}
+				OnCollisionStay(player, player.collision, false, false, world);
 			}
 			else {
 				if (player.collision.isOnCollision && player.collision.rectangleCol != nullptr && player.collision.rectangleCol == &rectangle)
@@ -119,6 +120,7 @@ void MovePlayer(Player& player, float dt, sf::Vector2f& velocity, sf::View& view
 						CreateCollision(player, nullptr, ennemy.circle);
 						OnCollisionEnter(player, player.collision, false, true, world);
 					}
+					OnCollisionStay(player, player.collision, false, true, world);
 				}
 				else {
 					if (player.collision.isOnCollision && player.collision.circleCol != nullptr && player.collision.circleCol == &bullet.body)
@@ -134,6 +136,7 @@ void MovePlayer(Player& player, float dt, sf::Vector2f& velocity, sf::View& view
 					CreateCollision(player, nullptr, ennemy.circle);
 					OnCollisionEnter(player, player.collision, true, false, world);
 				}
+				OnCollisionStay(player, player.collision, true, false, world);
 			}
 			else {
 				if (player.collision.isOnCollision && player.collision.circleCol != nullptr && player.collision.circleCol == ennemy.circle)
@@ -148,6 +151,7 @@ void MovePlayer(Player& player, float dt, sf::Vector2f& velocity, sf::View& view
 					CreateCollision(player, ennemy.rectangle, nullptr);
 					OnCollisionEnter(player, player.collision, true, false, world);
 				}
+				OnCollisionStay(player, player.collision, true, false, world);
 			}
 			else {
 				if (player.collision.isOnCollision && player.collision.rectangleCol != nullptr && player.collision.rectangleCol == ennemy.rectangle)
