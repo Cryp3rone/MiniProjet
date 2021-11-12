@@ -14,19 +14,19 @@ World* GenerateLevel() {
 	//int randH;//futur var pour gestion du c
 	int H;//taill final de la PF après gestion de la hauteur de saut de joueur (In proges)
 	int preceH = 0;//contien la hauteur de la PF avant celle qui spawn
-
+	int growsize = 0;
 	srand(time(NULL));
-
 	for (size_t i = 0; i < 100; i++) //entre le nombre de PF que tu veux faire spawn
 	{
+		
 		pFType = rand() % 2;
 		sizeL = rand() % 210 + 50;
 		offset = rand() % 150 + 100;
 		H = rand() % 330 + 200;
-
 		switch (pFType)
 		{
 		case(0):
+
 			CreateRectangleShape(sf::RectangleShape(sf::Vector2f(sizeL, 1000)), sf::Color::Black, sf::Vector2f(pos, H), 3, sf::Color::Yellow, level);
 			preceH = H;
 			break;
