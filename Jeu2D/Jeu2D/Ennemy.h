@@ -15,4 +15,6 @@ void MooveEnnemy(Ennemy& ennemy, float deltaTime);
 	
 void RefreshEnnemies(World* world, sf::RenderWindow& window);
 
+void DestroyEnnemies(World* world);
+
 Ennemy& GetEnnemyWithShape(sf::Shape* shape,World* world);

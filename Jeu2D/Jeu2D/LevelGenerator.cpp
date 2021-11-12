@@ -16,7 +16,7 @@ World* GenerateLevel() {
 	int preceH = 0;//contien la hauteur de la PF avant celle qui spawn
 	int growsize = 0;
 	srand(time(NULL));
-	for (size_t i = 0; i < 100; i++) //entre le nombre de PF que tu veux faire spawn
+	for (size_t i = 0; i < 20; i++) //entre le nombre de PF que tu veux faire spawn
 	{
 		
 		pFType = rand() % 2;

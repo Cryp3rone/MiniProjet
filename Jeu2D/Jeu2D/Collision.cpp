@@ -26,12 +26,11 @@ void OnCollisionEnter(Player& player,Collision& collision, bool isEnnemy,bool is
 	if (isBullet) {
 		if (collision.circleCol != nullptr) {
 			Ennemy& targetEnnemy = GetEnnemyWithShape(collision.circleCol,world);
-			targetEnnemy.isAlive = false; // A CHANGER : Retirer l'ennemi de la liste des ennemis
-
+			world->eraseEnnemies.push_back(&targetEnnemy);
 		}
 		else {
 			Ennemy& targetEnnemy = GetEnnemyWithShape(collision.rectangleCol,world);
-			targetEnnemy.isAlive = false; // A CHANGER : Retirer l'ennemi de la liste des ennemis
+			world->eraseEnnemies.push_back(&targetEnnemy);
 		}
 
 	}
@@ -46,7 +45,6 @@ void OnCollisionLeave(Player& player, Collision& collision, World* world) {
 	player.collision.isOnCollision = false;
 	player.collision.circleCol = nullptr;
 	player.collision.rectangleCol = nullptr;
-	std::cout << "leave" << std::endl;
 
 	world->groundY = originalGroundY;
 }

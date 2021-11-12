@@ -104,53 +104,51 @@ void MovePlayer(Player& player, float dt, sf::Vector2f& velocity, sf::View& view
 	}
 
 	for (Ennemy& ennemy : world->ennemies) {
-		if (ennemy.isAlive) {
-			for (Bullet& bullet : bullets) {
-				if (ennemy.circle != nullptr) {
-					if (bullet.body.getGlobalBounds().intersects(ennemy.circle->getGlobalBounds())) {
-						if (!player.collision.isOnCollision) {
-							CreateCollision(player, nullptr, ennemy.circle);
-							OnCollisionEnter(player, player.collision, false, true, world);
-						}
-					}
-					else {
-						if (player.collision.isOnCollision && player.collision.circleCol != nullptr && player.collision.circleCol == &bullet.body)
-							OnCollisionLeave(player, player.collision, world);
-					}
-				}
-			}
-
-
+		for (Bullet& bullet : bullets) {
 			if (ennemy.circle != nullptr) {
-				if (ennemy.circle->getGlobalBounds().intersects(player.body.getGlobalBounds())) {
+				if (bullet.body.getGlobalBounds().intersects(ennemy.circle->getGlobalBounds())) {
 					if (!player.collision.isOnCollision) {
 						CreateCollision(player, nullptr, ennemy.circle);
-						OnCollisionEnter(player, player.collision, true, false, world);
+						OnCollisionEnter(player, player.collision, false, true, world);
 					}
 				}
 				else {
-					if (player.collision.isOnCollision && player.collision.circleCol != nullptr && player.collision.circleCol == ennemy.circle)
-						OnCollisionLeave(player, player.collision, world);
-				}
-
-
-			}
-			else {
-				if (ennemy.rectangle->getGlobalBounds().intersects(player.body.getGlobalBounds())) {
-					if (!player.collision.isOnCollision) {
-						CreateCollision(player, ennemy.rectangle, nullptr);
-						OnCollisionEnter(player, player.collision, true, false, world);
-					}
-				}
-				else {
-					if (player.collision.isOnCollision && player.collision.rectangleCol != nullptr && player.collision.rectangleCol == ennemy.rectangle)
+					if (player.collision.isOnCollision && player.collision.circleCol != nullptr && player.collision.circleCol == &bullet.body)
 						OnCollisionLeave(player, player.collision, world);
 				}
 			}
 		}
+
+
+		if (ennemy.circle != nullptr) {
+			if (ennemy.circle->getGlobalBounds().intersects(player.body.getGlobalBounds())) {
+				if (!player.collision.isOnCollision) {
+					CreateCollision(player, nullptr, ennemy.circle);
+					OnCollisionEnter(player, player.collision, true, false, world);
+				}
+			}
+			else {
+				if (player.collision.isOnCollision && player.collision.circleCol != nullptr && player.collision.circleCol == ennemy.circle)
+					OnCollisionLeave(player, player.collision, world);
+			}
+
+
+		}
+		else {
+			if (ennemy.rectangle->getGlobalBounds().intersects(player.body.getGlobalBounds())) {
+				if (!player.collision.isOnCollision) {
+					CreateCollision(player, ennemy.rectangle, nullptr);
+					OnCollisionEnter(player, player.collision, true, false, world);
+				}
+			}
+			else {
+				if (player.collision.isOnCollision && player.collision.rectangleCol != nullptr && player.collision.rectangleCol == ennemy.rectangle)
+					OnCollisionLeave(player, player.collision, world);
+			}
+		}
 	}
 
-
+	DestroyEnnemies(world);
 }
 
 bool isGrounded(Player& p,World* world)

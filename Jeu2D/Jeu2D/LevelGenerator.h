@@ -7,6 +7,7 @@
 struct World {
 	std::vector<sf::RectangleShape> rectangles;
 	std::list<Ennemy> ennemies;
+	std::vector<Ennemy*> eraseEnnemies;
 	float groundY;
 };
 

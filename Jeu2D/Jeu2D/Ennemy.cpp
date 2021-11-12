@@ -41,25 +41,22 @@ Ennemy CreateEnnemy(World* world, float speed, sf::Vector2f position, bool canMo
 	ennemy.max = max;
 	ennemy.returnBack = false;
 	ennemy.behaviour = behaviour;
-	ennemy.isAlive = true;
 
 	return ennemy;
 }
 
 void RefreshEnnemies(World* world, sf::RenderWindow& window) {
 	for (Ennemy& ennemy : (*world).ennemies) {
-		if (ennemy.isAlive) {
-			if (ennemy.circle != nullptr)
-				window.draw(*(ennemy).circle);
-			else
-				window.draw(*(ennemy).rectangle);
-		}
+		if (ennemy.circle != nullptr)
+			window.draw(*(ennemy).circle);
+		else
+			window.draw(*(ennemy).rectangle);
 	}
 }
 
 void UpdateEnnemies(World* world, float deltaTime) {
 	for (Ennemy& ennemy : world->ennemies) {
-		if (ennemy.isAlive && ennemy.canMoove) 
+		if (ennemy.canMoove) 
 			MooveEnnemy(ennemy, deltaTime);
 	}
 }
@@ -100,4 +97,19 @@ Ennemy& GetEnnemyWithShape(sf::Shape* shape,World* world) {
 
 	}
 
+}
+
+void DestroyEnnemies(World* world) {
+	for (Ennemy* ennemy : world->eraseEnnemies) {
+		auto it = world->ennemies.begin();
+
+		while (it != world->ennemies.end()) {
+			if (&(*it) == ennemy) 
+				it = world->ennemies.erase(it);	
+			else 
+				it++;
+		}
+	}
+
+	world->eraseEnnemies.clear();
 }
