@@ -1,14 +1,24 @@
 #include <iostream>
-#include "Player.h"
 #include <SFML/Graphics.hpp>
 #include "LevelGenerator.h"
 #include "Ennemy.h"
+#include "Player.h"
 
-const float GROUND_Y = 400.f;
+void Zoom(sf::View& view,sf::RenderWindow& window) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) 
+		view.zoom(1.05f);
+}
 
 int main() {
+
+	sf::RenderWindow window(sf::VideoMode(1200, 600), "Jeu2D");
+	window.setVerticalSyncEnabled(true); // Cap les fps au fps du pc
+
 	sf::Clock clock;
-	float dt;
+	sf::View camera(sf::Vector2f(window.getSize().x / 2, window.getSize().y / 2), sf::Vector2f(window.getSize().x,window.getSize().y));
+	
+	World* world = nullptr;
+	bool firstFrame = true;
 
 	sf::Vector2f velocity(0.f, 0.f);
 	float speed = 100.f;
@@ -17,16 +27,7 @@ int main() {
 	Player player = newPlayer();
 
 	// Inputs
-	sf::RectangleShape ground(sf::Vector2f(3000.f, 400.f));
-	ground.setPosition(0.f, 400.f);
-
-
-	sf::RenderWindow window(sf::VideoMode(1000, 800), "Jeu2D");
-	window.setVerticalSyncEnabled(true); // Cap les fps au fps du pc
 	while (window.isOpen()) {
-		dt = clock.restart().asSeconds();
-
-
 		sf::Event event;
 		while (window.pollEvent(event)) {
 			switch (event.type) {
@@ -38,13 +39,30 @@ int main() {
 			}
 		}
 
-		MovePlayer(player, dt, velocity);		
 
-		// DRAW SECTION
+		//Logique
+		
+		sf::Time elapsedTime = clock.restart();
+		if (firstFrame) {
+			world = GenerateLevel();
+			CreateEnnemies(world);
+			firstFrame = false;
+		}
+
+		UpdateEnnemies(world, elapsedTime.asSeconds());
+		MovePlayer(player, elapsedTime.asSeconds(), velocity,camera,world);
+
+
+		//Rendu
 		window.clear();
-		window.draw(ground);
-		window.draw(player.body);
+		
+		RefreshWorld(world,window);
+		RefreshEnnemies(world,window);
 
+		Zoom(camera, window);
+		window.setView(camera);
+
+		window.draw(player.body);
 		window.display();
 	}
 }
