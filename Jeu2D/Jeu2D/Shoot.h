@@ -12,4 +12,4 @@ struct Bullet
 	sf::CircleShape body;
 };
 
-void Shoot(sf::Vector2f, sf::Vector2f, std::list<Bullet>&);
+void Shoot(sf::Vector2f, sf::Vector2f, std::list<Bullet>&, float&);

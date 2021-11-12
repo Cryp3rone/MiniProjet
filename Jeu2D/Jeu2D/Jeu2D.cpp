@@ -17,6 +17,7 @@ int main() {
 	window.setVerticalSyncEnabled(true); // Cap les fps au fps du pc
 
 	sf::Clock clock;
+
 	sf::View camera(sf::Vector2f(window.getSize().x / 2, window.getSize().y / 2), sf::Vector2f(window.getSize().x,window.getSize().y));
 	
 	World* world = nullptr;
@@ -32,32 +33,31 @@ int main() {
 	// Inputs
 	while (window.isOpen()) {
 		sf::Event event;
+		sf::Time elapsedTime = clock.restart();
+		float dt = elapsedTime.asSeconds();
 		while (window.pollEvent(event)) {
 			switch (event.type) {
 				case sf::Event::Closed:
 
 					window.close();
 					break;
-				
+				case sf::Event::MouseButtonPressed:
+					Shoot(player.body.getPosition(), (sf::Vector2f)sf::Mouse::getPosition(window), bullets, dt);
 			}
 		}
 		//Logique	
-		sf::Time elapsedTime = clock.restart();
+
 		if (firstFrame) {
 			world = GenerateLevel();
 			CreateEnnemies(world);
 			firstFrame = false;
 		}
 
-		UpdateEnnemies(world, elapsedTime.asSeconds());
-		MovePlayer(player, elapsedTime.asSeconds(), velocity,camera,world);
+		UpdateEnnemies(world, dt);
+		MovePlayer(player, dt, velocity,camera,world);
 
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-		{
-			Shoot(player.body.getPosition(), (sf::Vector2f)sf::Mouse::getPosition(window), bullets);
-		}
 
-		for (Bullet bullet : bullets)
+		for (Bullet& bullet : bullets)
 		{
 			bullet.body.move(bullet.currVelocity);
 		}
@@ -72,7 +72,7 @@ int main() {
 		window.setView(camera);
 
 		window.draw(player.body);
-		for (Bullet bullet: bullets)
+		for (Bullet& bullet: bullets)
 		{
 			window.draw(bullet.body);
 		}
