@@ -1,6 +1,10 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
+enum _EnnemyBehaviour {
+	HORIZONTAL,
+	VERTICAL
+};
 
 struct Ennemy {
 	sf::CircleShape* circle;
@@ -11,5 +15,5 @@ struct Ennemy {
 	sf::Vector2f max;
 	sf::Vector2f min;
 	bool returnBack;
-	sf::FloatRect collision;
+	_EnnemyBehaviour behaviour;
 };

@@ -16,6 +16,9 @@
     <ClCompile Include="LevelGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="EnnemyBehaviour.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Collision.h">
@@ -37,6 +40,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CollisionStr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EnnemyBehaviour.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
