@@ -6,8 +6,6 @@
 
 void Shoot(sf::Vector2f playerPos, sf::Vector2f mousePos, std::list<Bullet>& bullets, float& dt)
 {
-	mousePos.x += playerPos.x;
-
 	sf::Vector2f dir = mousePos - playerPos;
 	sf::Vector2f dirNorm = dir / (float)sqrt(pow(dir.x, 2) + pow(dir.y, 2));
 
@@ -17,4 +15,23 @@ void Shoot(sf::Vector2f playerPos, sf::Vector2f mousePos, std::list<Bullet>& bul
 	bullet.body.setPosition(playerPos);
 	bullet.currVelocity = dirNorm * bulletSpeed*dt;
 	bullets.push_back(bullet);	
+}
+
+void updateBullet(std::list<Bullet>& bullets, sf::View& camera)
+{
+	auto it = bullets.begin();
+	while (it != bullets.end())
+	{
+		if ((*it).body.getPosition().x < camera.getCenter().x - camera.getSize().x ||
+			(*it).body.getPosition().x > camera.getCenter().x + camera.getSize().x ||
+			(*it).body.getPosition().y < camera.getCenter().y - camera.getSize().y ||
+			(*it).body.getPosition().y > camera.getCenter().y + camera.getSize().y )
+		{
+			it = bullets.erase(it);
+		}
+		else
+		{
+			it++;
+		}
+	}
 }

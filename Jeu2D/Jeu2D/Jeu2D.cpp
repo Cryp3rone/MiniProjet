@@ -42,7 +42,8 @@ int main() {
 					window.close();
 					break;
 				case sf::Event::MouseButtonPressed:
-					Shoot(player.body.getPosition(), (sf::Vector2f)sf::Mouse::getPosition(window), bullets, dt);
+					sf::Vector2i pos = sf::Mouse::getPosition(window);
+					Shoot(player.body.getPosition(), window.mapPixelToCoords(pos), bullets, dt);
 			}
 		}
 		//Logique	
@@ -55,12 +56,13 @@ int main() {
 
 		UpdateEnnemies(world, dt);
 		MovePlayer(player, dt, velocity,camera,world);
-
-
+		
 		for (Bullet& bullet : bullets)
 		{
 			bullet.body.move(bullet.currVelocity);
 		}
+		updateBullet(bullets, camera);
+		std::cout << bullets.size() << std::endl;
 
 		//Rendu
 		window.clear();
