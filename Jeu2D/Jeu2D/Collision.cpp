@@ -9,20 +9,14 @@ void OnCollisionEnter(Player& player,Collision& collision, bool isEnnemy,bool is
 		player.collision.isOnCollision = true;
 
 		if (player.isJumping) {
-			if (collision.circleCol != nullptr) {
-				player.mooveX = true;
-				world->groundY = collision.circleCol->getPosition().y - 5;
+			float checkY = collision.circleCol ? collision.circleCol->getPosition().y : collision.rectangleCol->getPosition().y;
+			if (player.body.getPosition().y <= checkY) {
+				world->groundY = checkY - 5;
 				if (world->groundY <= 0)
 					world->groundY = originalGroundY;
-			}
-			else {
-				player.mooveX = true;
-				world->groundY = collision.rectangleCol->getPosition().y - 5;
-				if (world->groundY <= 0)
-					world->groundY = originalGroundY;
-			}
 
-			//player.mooveX = true;
+				player.mooveX = true;
+			}
 		}
 		else 
 			player.mooveX = false;	
@@ -30,17 +24,8 @@ void OnCollisionEnter(Player& player,Collision& collision, bool isEnnemy,bool is
 	else
 		player.health = 0;
 
-	if (isBullet) {
-		if (collision.circleCol != nullptr) {
-			Ennemy& targetEnnemy = GetEnnemyWithShape(collision.circleCol,world);
-			world->eraseEnnemies.push_back(&targetEnnemy);
-		}
-		else {
-			Ennemy& targetEnnemy = GetEnnemyWithShape(collision.rectangleCol,world);
-			world->eraseEnnemies.push_back(&targetEnnemy);
-		}
-
-	}
+	if (isBullet) 
+		world->eraseEnnemies.push_back(collision.circleCol ? &GetEnnemyWithShape(collision.circleCol, world) : &GetEnnemyWithShape(collision.rectangleCol, world));
 
 	if (player.isJumping) 
 		player.isJumping = false;
@@ -48,18 +33,18 @@ void OnCollisionEnter(Player& player,Collision& collision, bool isEnnemy,bool is
 }
 
 void OnCollisionStay(Player& player, Collision& collision, bool isEnnemy, bool isBullet, World* world) {
-	if (collision.circleCol != nullptr) {
-		if (player.body.getGlobalBounds().top <= collision.rectangleCol->getGlobalBounds().top) { // On check si le joueur est au dessus de la collision
-			if (!player.mooveX)
-				player.mooveX = true;
-		}
+	float checkY = collision.circleCol ? collision.circleCol->getPosition().y : collision.rectangleCol->getPosition().y;
+	sf::FloatRect checkRect = collision.circleCol ? collision.circleCol->getGlobalBounds() : collision.rectangleCol->getGlobalBounds();
+
+	if (player.body.getGlobalBounds().top <= checkRect.top) { // On check si le joueur est au dessus de la collision
+		if (!player.mooveX)
+			player.mooveX = true;
 	}
 	else {
-		if (player.body.getGlobalBounds().top <= collision.rectangleCol->getGlobalBounds().top) { // On check si le joueur est au dessus de la collision
-			if (!player.mooveX)
-				player.mooveX = true;
-		}
+		if (world->groundY != checkRect.top && (int)player.body.getPosition().y != (int)checkY)
+			player.mooveX = false;
 	}
+
 }
 
 

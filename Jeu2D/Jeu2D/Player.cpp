@@ -68,7 +68,6 @@ void MovePlayer(Player& player, float dt, sf::Vector2f& velocity, sf::View& view
 			velocity.y = jumpForce;
 			player.body.move(velocity);
 			player.isJumping = true;
-			//player.mooveX = true;
 		}
 
 	}
@@ -89,13 +88,9 @@ void MovePlayer(Player& player, float dt, sf::Vector2f& velocity, sf::View& view
 
 
 	// COLLISION
-	if ( world->endFlag.getGlobalBounds().intersects(player.body.getGlobalBounds())) {
-		//	if (!player.collision.isOnCollision) {
+	if ( world->endFlag.getGlobalBounds().intersects(player.body.getGlobalBounds())) 
 		state = WIN;
-		//	}
-	}
 	
-
 	for (sf::RectangleShape& rectangle : world->rectangles) {
 		if (rectangle.getOutlineColor() != sf::Color::Blue) { // On skip la collision du bas
 			if (rectangle.getGlobalBounds().intersects(player.body.getGlobalBounds())) {
@@ -114,48 +109,34 @@ void MovePlayer(Player& player, float dt, sf::Vector2f& velocity, sf::View& view
 
 	for (Ennemy& ennemy : world->ennemies) {
 		for (Bullet& bullet : bullets) {
-			if (ennemy.circle != nullptr) {
-				if (bullet.body.getGlobalBounds().intersects(ennemy.circle->getGlobalBounds())) {
-					if (!player.collision.isOnCollision) {
-						CreateCollision(player, nullptr, ennemy.circle);
-						OnCollisionEnter(player, player.collision, false, true, world);
-					}
-					OnCollisionStay(player, player.collision, false, true, world);
+			sf::FloatRect checkRect = ennemy.circle ? ennemy.circle->getGlobalBounds() : ennemy.rectangle->getGlobalBounds();
+			if (bullet.body.getGlobalBounds().intersects(checkRect)) {
+				if (!player.collision.isOnCollision) {
+					CreateCollision(player, ennemy.circle ? nullptr : ennemy.rectangle, ennemy.circle ? ennemy.circle : nullptr); // Modifier 
+					OnCollisionEnter(player, player.collision, false, true, world);
 				}
-				else {
-					if (player.collision.isOnCollision && player.collision.circleCol != nullptr && player.collision.circleCol == &bullet.body)
+				OnCollisionStay(player, player.collision, false, true, world);
+			}
+			else {
+				if (player.collision.isOnCollision) {
+					if((player.collision.circleCol != nullptr && player.collision.circleCol == &bullet.body))
 						OnCollisionLeave(player, player.collision, world);
 				}
 			}
 		}
 
-
-		if (ennemy.circle != nullptr) {
-			if (ennemy.circle->getGlobalBounds().intersects(player.body.getGlobalBounds())) {
-				if (!player.collision.isOnCollision) {
-					CreateCollision(player, nullptr, ennemy.circle);
-					OnCollisionEnter(player, player.collision, true, false, world);
-				}
-				OnCollisionStay(player, player.collision, true, false, world);
+		sf::FloatRect checkRect = ennemy.circle ? ennemy.circle->getGlobalBounds() : ennemy.rectangle->getGlobalBounds();
+		if (checkRect.intersects(player.body.getGlobalBounds())) {
+			if (!player.collision.isOnCollision) {
+				CreateCollision(player, ennemy.circle ? nullptr : ennemy.rectangle, ennemy.circle ? ennemy.circle : nullptr); // Modifier 
+				OnCollisionEnter(player, player.collision, true, false, world);
 			}
-			else {
-				if (player.collision.isOnCollision && player.collision.circleCol != nullptr && player.collision.circleCol == ennemy.circle)
-					OnCollisionLeave(player, player.collision, world);
-			}
-
-
+			OnCollisionStay(player, player.collision, true, false, world);
 		}
 		else {
-			if (ennemy.rectangle->getGlobalBounds().intersects(player.body.getGlobalBounds())) {
-				if (!player.collision.isOnCollision) {
-					CreateCollision(player, ennemy.rectangle, nullptr);
-					OnCollisionEnter(player, player.collision, true, false, world);
-				}
-				OnCollisionStay(player, player.collision, true, false, world);
-			}
-			else {
-				if (player.collision.isOnCollision && player.collision.rectangleCol != nullptr && player.collision.rectangleCol == ennemy.rectangle)
-					OnCollisionLeave(player, player.collision, world);
+			if (player.collision.isOnCollision) {
+				if ((player.collision.circleCol && player.collision.circleCol == ennemy.circle) || (player.collision.rectangleCol && player.collision.rectangleCol == ennemy.rectangle)) 
+					OnCollisionLeave(player, player.collision, world);	
 			}
 		}
 	}
