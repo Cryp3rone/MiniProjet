@@ -177,6 +177,7 @@
     <ClInclude Include="GameState.h" />
     <ClInclude Include="LevelGenerator.h" />
     <ClInclude Include="Plateform.h" />
+    <ClInclude Include="PlateformStr.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerStr.h" />
     <ClInclude Include="Shoot.h" />

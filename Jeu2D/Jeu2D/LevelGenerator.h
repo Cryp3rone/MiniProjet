@@ -3,7 +3,7 @@
 #include <list>
 #include <SFML/Graphics.hpp>
 #include "EnnemyStr.h"
-#include "Plateform.h"
+#include "PlateformStr.h"
 
 struct World {
 	std::vector<Plateform*> plateforms;

@@ -2,17 +2,17 @@
 #include "Player.h"
 #include "LevelGenerator.h"
 #include "Ennemy.h"
-#include "Collision.h";
+#include "PlateformStr.h"
+#include "Collision.h"
 
-bool GetPlateformByShape(sf::RectangleShape compare,Plateform& newPlateform,World* world) {
-	for (Plateform& plateform : world->plateforms) {
-		if (plateform.rectangle.getPosition().x == compare.getPosition().x && plateform.rectangle.getPosition().y == compare.getPosition().y) {
-			newPlateform = plateform;
-			return true;
-		}
+Plateform* GetPlateformByShape(sf::RectangleShape compare,World* world) {
+	for (Plateform* plateformPtr : world->plateforms) {
+		if (plateformPtr->rectangle.getPosition().x == compare.getPosition().x && plateformPtr->rectangle.getPosition().y == compare.getPosition().y) 
+			return plateformPtr;
+		
 	}
 
-	return false;
+	return nullptr;
 }
 
 void CreateCollision(Player& player, sf::RectangleShape* rectangleCol, sf::CircleShape* circleCol,World* world) {
@@ -23,9 +23,8 @@ void CreateCollision(Player& player, sf::RectangleShape* rectangleCol, sf::Circl
 	coll.plateform = nullptr;
 
 	if (coll.rectangleCol != nullptr) {
-		Plateform plateform;
-		if (GetPlateformByShape(*coll.rectangleCol, plateform, world)) 
-			coll.plateform = &plateform;	
+		if (GetPlateformByShape(*coll.rectangleCol, world)) 
+			coll.plateform = GetPlateformByShape(*coll.rectangleCol, world);	
 	}
 
 	player.collision = coll;
@@ -35,8 +34,8 @@ void OnCollisionDetection(Player& player, World* world, std::list<Bullet>& bulle
 	if (world->endFlag.getGlobalBounds().intersects(player.body.getGlobalBounds()))
 		state = WIN;
 
-	for (Plateform& plateform : world->plateforms) {
-		sf::RectangleShape& rectangle = plateform.rectangle;
+	for (Plateform* plateform : world->plateforms) {
+		sf::RectangleShape& rectangle = plateform->rectangle;
 		if (rectangle.getOutlineColor() != sf::Color::Blue) { // On skip la collision du bas
 			if (rectangle.getGlobalBounds().intersects(player.body.getGlobalBounds())) {
 				if (!player.collision.isOnCollision) {

@@ -58,7 +58,7 @@ int main() {
 		float dt = elapsedTime.asSeconds();
 
 		if (CanWallJump(player)) {
-			std::cout << std::boolalpha;
+			std::cout << "walljump" << std::endl;
 			Plateform& collisionPlateform = *(player.collision.plateform);
 			velocity.x = jumpForce * collisionPlateform.jumpDirection;
 			velocity.y = jumpForce;
@@ -75,8 +75,11 @@ int main() {
 					Shoot(player.body.getPosition(), window.mapPixelToCoords(sf::Mouse::getPosition(window)), bullets, dt);
 					break;
 				case sf::Event::KeyPressed:
-					if (event.key.code == sf::Keyboard::Space && CanStopJump(player)) 
-						player.canJump = false;		
+					if (event.key.code == sf::Keyboard::Space && CanStopJump(player)) {
+
+						std::cout << "stopJump" << std::endl;
+						player.canJump = false;
+					}
 					break;
 			}
 		}

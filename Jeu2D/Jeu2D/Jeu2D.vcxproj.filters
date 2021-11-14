@@ -60,6 +60,9 @@
     <ClInclude Include="Plateform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PlateformStr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">

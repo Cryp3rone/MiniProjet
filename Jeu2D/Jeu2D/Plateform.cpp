@@ -1,11 +1,15 @@
 #pragma once
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include "Plateform.h"
+#include "PlateformStr.h"
 #include "LevelGenerator.h"
 
 void CreatePlateform(sf::RectangleShape form,int jumpDirection, PlateformType type,World* world) {
-	Plateform plateform {form,jumpDirection,type};
+	Plateform* plateform = new Plateform;
 
-	world->plateforms.push_back(&plateform);
+	plateform->rectangle = form;
+	plateform->jumpDirection = jumpDirection;
+	plateform->type = type;
+
+	world->plateforms.push_back(plateform);
 }
