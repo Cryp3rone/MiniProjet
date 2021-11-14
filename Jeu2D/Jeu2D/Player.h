@@ -8,12 +8,17 @@
 
 const float originalGroundY = 475.f;
 const float speed = 400.f;
-const float jumpForce = -8.f;
+const float jumpForce = -4.f;
 const sf::Vector2f gravity(0.f, 9.8f);
 
 Player newPlayer();
 
-void MovePlayer(Player&, float, sf::Vector2f&,sf::View& view,World* world, std::list<Bullet> bullets, GameState& state);
+void UpdatePlayer(Player&, float, sf::Vector2f&,sf::View& view,World*, std::list<Bullet>, GameState&);
+void MovePlayer(Player&, float, sf::View& view);
+void JumpPlayer(Player&,float,sf::Vector2f&,World*);
 
 bool isGrounded(Player&,World*);
 bool isOnFloor(Player&);
+
+bool CanStopJump(Player&);
+bool CanWallJump(Player&);

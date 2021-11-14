@@ -2,7 +2,90 @@
 #include "Player.h"
 #include "LevelGenerator.h"
 #include "Ennemy.h"
+#include "Collision.h";
 
+bool GetPlateformByShape(sf::RectangleShape compare,Plateform& newPlateform,World* world) {
+	for (Plateform& plateform : world->plateforms) {
+		if (plateform.rectangle.getPosition().x == compare.getPosition().x && plateform.rectangle.getPosition().y == compare.getPosition().y) {
+			newPlateform = plateform;
+			return true;
+		}
+	}
+
+	return false;
+}
+
+void CreateCollision(Player& player, sf::RectangleShape* rectangleCol, sf::CircleShape* circleCol,World* world) {
+	Collision coll;
+	coll.rectangleCol = rectangleCol;
+	coll.circleCol = circleCol;
+	coll.isOnCollision = true;
+	coll.plateform = nullptr;
+
+	if (coll.rectangleCol != nullptr) {
+		Plateform plateform;
+		if (GetPlateformByShape(*coll.rectangleCol, plateform, world)) 
+			coll.plateform = &plateform;	
+	}
+
+	player.collision = coll;
+}
+
+void OnCollisionDetection(Player& player, World* world, std::list<Bullet>& bullets, GameState& state) {
+	if (world->endFlag.getGlobalBounds().intersects(player.body.getGlobalBounds()))
+		state = WIN;
+
+	for (Plateform& plateform : world->plateforms) {
+		sf::RectangleShape& rectangle = plateform.rectangle;
+		if (rectangle.getOutlineColor() != sf::Color::Blue) { // On skip la collision du bas
+			if (rectangle.getGlobalBounds().intersects(player.body.getGlobalBounds())) {
+				if (!player.collision.isOnCollision) {
+					CreateCollision(player, &rectangle, nullptr,world);
+					OnCollisionEnter(player, player.collision, false, false, world);
+				}
+				OnCollisionStay(player, player.collision, false, false, world);
+			}
+			else {
+				if (player.collision.isOnCollision && player.collision.rectangleCol != nullptr && player.collision.rectangleCol == &rectangle)
+					OnCollisionLeave(player, player.collision, world);
+			}
+		}
+	}
+
+	for (Ennemy& ennemy : world->ennemies) {
+		for (Bullet& bullet : bullets) {
+			sf::FloatRect checkRect = ennemy.circle ? ennemy.circle->getGlobalBounds() : ennemy.rectangle->getGlobalBounds();
+			if (bullet.body.getGlobalBounds().intersects(checkRect)) {
+				if (!player.collision.isOnCollision) {
+					CreateCollision(player, ennemy.circle ? nullptr : ennemy.rectangle, ennemy.circle ? ennemy.circle : nullptr,world); // Modifier 
+					OnCollisionEnter(player, player.collision, false, true, world);
+				}
+				OnCollisionStay(player, player.collision, false, true, world);
+			}
+			else {
+				if (player.collision.isOnCollision) {
+					if ((player.collision.circleCol != nullptr && player.collision.circleCol == &bullet.body))
+						OnCollisionLeave(player, player.collision, world);
+				}
+			}
+		}
+
+		sf::FloatRect checkRect = ennemy.circle ? ennemy.circle->getGlobalBounds() : ennemy.rectangle->getGlobalBounds();
+		if (checkRect.intersects(player.body.getGlobalBounds())) {
+			if (!player.collision.isOnCollision) {
+				CreateCollision(player, ennemy.circle ? nullptr : ennemy.rectangle, ennemy.circle ? ennemy.circle : nullptr,world); // Modifier 
+				OnCollisionEnter(player, player.collision, true, false, world);
+			}
+			OnCollisionStay(player, player.collision, true, false, world);
+		}
+		else {
+			if (player.collision.isOnCollision) {
+				if ((player.collision.circleCol && player.collision.circleCol == ennemy.circle) || (player.collision.rectangleCol && player.collision.rectangleCol == ennemy.rectangle))
+					OnCollisionLeave(player, player.collision, world);
+			}
+		}
+	}
+}
 
 void OnCollisionEnter(Player& player,Collision& collision, bool isEnnemy,bool isBullet,World* world) {
 	if (!isEnnemy) {
@@ -52,6 +135,8 @@ void OnCollisionLeave(Player& player, Collision& collision, World* world) {
 	player.collision.isOnCollision = false;
 	player.collision.circleCol = nullptr;
 	player.collision.rectangleCol = nullptr;
+
+	std::cout << "leave" << std::endl;
 
 	world->groundY = originalGroundY;
 }

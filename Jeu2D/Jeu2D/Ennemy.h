@@ -1,7 +1,6 @@
 #pragma once
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include "LevelGenerator.h"
 #include "EnnemyStr.h"
 
 void CreateEnnemies(World* world);

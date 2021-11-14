@@ -11,6 +11,7 @@ struct Player
 	bool mooveX;
 	sf::Vector2f direction;
 	sf::Vector2f lastDirection;
+	bool canJump;
 	bool isJumping;
 	Collision collision;
 };
