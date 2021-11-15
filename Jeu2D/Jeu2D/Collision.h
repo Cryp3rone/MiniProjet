@@ -1,4 +1,15 @@
 #pragma once
-#include "Player.h"
+#include <iostream>
+#include <SFML/Graphics.hpp>
+#include "LevelGenerator.h"
+#include "Ennemy.h"
+#include "PlayerStr.h"
+#include "CollisionStr.h"
 
-void OnCollision(Player& player,sf::Shape& shape, bool isEnnemy);
+void OnCollisionDetection(Player&, World*,std::list<Bullet>&, GameState&);
+void OnCollisionEnter(Player&, Collision&, bool, bool,World*);
+void OnCollisionStay(Player&, Collision&, bool, bool, World*);
+void OnCollisionLeave(Player&,Collision&,World* );
+void CreateCollision(Player&,sf::RectangleShape*,sf::CircleShape*,World*);
+
+Plateform* GetPlateformByShape(sf::RectangleShape, World*);

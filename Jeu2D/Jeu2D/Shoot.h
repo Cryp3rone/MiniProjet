@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include <List>
+#include <list>
 #include "Player.h"
 
 const float bulletSpeed = 400.f;
