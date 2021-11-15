@@ -108,9 +108,15 @@ void OnCollisionEnter(Player& player,Collision& collision, bool isEnnemy,bool is
 	if (isBullet) 
 		world->eraseEnnemies.push_back(collision.circleCol ? &GetEnnemyWithShape(collision.circleCol, world) : &GetEnnemyWithShape(collision.rectangleCol, world));
 
-	if (player.isJumping) 
-		player.isJumping = false;
-	
+	if (player.isJumping) {
+		if (player.collision.rectangleCol) {
+			Plateform* plateform = GetPlateformByShape(*player.collision.rectangleCol,world);
+			if(plateform->type != WALL_JUMP) // Permet de faire le resaut lors d'un walljump
+				player.isJumping = false;
+		}
+		else
+			player.isJumping = false;
+	}
 }
 
 void OnCollisionStay(Player& player, Collision& collision, bool isEnnemy, bool isBullet, World* world) {
