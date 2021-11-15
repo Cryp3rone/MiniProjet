@@ -100,7 +100,7 @@ void OnCollisionEnter(Player& player,Collision& collision, bool isEnnemy,bool is
 			}
 		}
 		else 
-			player.mooveX = false;	
+			player.mooveX = false;
 	}
 	else
 		player.health = 0;
@@ -128,7 +128,7 @@ void OnCollisionStay(Player& player, Collision& collision, bool isEnnemy, bool i
 			player.mooveX = true;
 	}
 	else {
-		if (world->groundY != checkRect.top && (int)player.body.getPosition().y != (int)checkY)
+		if (world->groundY != checkRect.top && (int)player.body.getPosition().y != (int)checkY) 
 			player.mooveX = false;
 	}
 

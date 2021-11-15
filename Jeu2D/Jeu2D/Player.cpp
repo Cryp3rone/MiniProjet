@@ -29,9 +29,6 @@ Player newPlayer()
 void UpdatePlayer(Player& player, float dt, sf::Vector2f& velocity, sf::View& view,World* world, std::list<Bullet> bullets,GameState& state) {
 	player.velocity = velocity;
 
-	std::cout << std::boolalpha;
-	std::cout << "isJumping " << player.isJumping << " canJump " << player.canJump << " isOnCollision " << player.collision.isOnCollision << std::endl;
-
 	MovePlayer(player, dt, view);
 	JumpPlayer(player,dt,velocity,world);
 	OnCollisionDetection(player, world,bullets,state);
@@ -59,6 +56,9 @@ void MovePlayer(Player& player, float dt, sf::View& view) {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
 		player.direction = sf::Vector2f(1.f, 0.f);
 
+		std::cout << std::boolalpha;
+		//std::cout << "directionX: " << player.direction.x << " lastDirX: " << player.lastDirection.x << " mooveX " << player.mooveX << std::endl;
+
 		if (player.direction.x != player.lastDirection.x || (player.direction.x == player.lastDirection.x && player.mooveX)) { // On regarde si le joueur change de direction ou si il est dans la m�me direction et qu'il peut se d�placer
 			player.body.move(sf::Vector2f(speed * dt, 0.f));
 			if ((-speed * dt) + player.body.getPosition().x >= 600.f)
@@ -81,7 +81,6 @@ void JumpPlayer(Player& player,float dt, sf::Vector2f& velocity,World* world) {
 
 				switch (player.lastJumpDirection != 0 && plateform->jumpDirection != player.lastJumpDirection) {
 					case true:
-						std::cout << "true condition " << std::endl;
 						if (player.velocity.x < 0 && plateform->jumpDirection == -1) 
 							velocity.x = 0;
 						else if (player.velocity.x > 0 && plateform->jumpDirection == 1) 

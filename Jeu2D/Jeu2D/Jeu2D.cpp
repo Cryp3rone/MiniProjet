@@ -59,6 +59,7 @@ int main() {
 			Plateform& collisionPlateform = *(player.collision.plateform);
 			velocity.x = jumpForce * collisionPlateform.jumpDirection;
 			velocity.y = jumpForce;
+			player.lastDirection.x = collisionPlateform.jumpDirection * -1;
 			player.canJump = true;
 			JumpPlayer(player,dt,velocity,world);
 		}
