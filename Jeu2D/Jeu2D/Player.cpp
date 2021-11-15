@@ -33,7 +33,7 @@ void UpdatePlayer(Player& player, float dt, sf::Vector2f& velocity, sf::View& vi
 }
 
 void MovePlayer(Player& player, float dt, sf::View& view) {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
 		player.direction = sf::Vector2f(-1.f, 0.f);
 
 		if (player.direction.x != player.lastDirection.x || (player.direction.x == player.lastDirection.x && player.mooveX)) { // On regarde si le joueur change de direction ou si il est dans la m�me direction et qu'il peut se d�placer
@@ -50,7 +50,7 @@ void MovePlayer(Player& player, float dt, sf::View& view) {
 		}
 	}
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
 		player.direction = sf::Vector2f(1.f, 0.f);
 
 		if (player.direction.x != player.lastDirection.x || (player.direction.x == player.lastDirection.x && player.mooveX)) { // On regarde si le joueur change de direction ou si il est dans la m�me direction et qu'il peut se d�placer
