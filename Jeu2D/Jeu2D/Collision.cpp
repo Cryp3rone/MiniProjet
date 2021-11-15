@@ -49,7 +49,7 @@ void OnCollisionEnter(Player& player,Collision& collision, bool isEnnemy,bool is
 
 void OnCollisionStay(Player& player, Collision& collision, bool isEnnemy, bool isBullet, World* world) {
 	if (collision.circleCol != nullptr) {
-		if (player.body.getGlobalBounds().top <= collision.rectangleCol->getGlobalBounds().top) { // On check si le joueur est au dessus de la collision
+		if (player.body.getGlobalBounds().top <= collision.circleCol->getGlobalBounds().top) { // On check si le joueur est au dessus de la collision
 			if (!player.mooveX)
 				player.mooveX = true;
 		}
