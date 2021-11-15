@@ -9,19 +9,26 @@
 Player newPlayer()
 {
 	Player p;
+
 	p.body = sf::CircleShape(20.f);
 	p.body.setPosition(600.f, originalGroundY - 20);
 	p.body.setFillColor(sf::Color::Black);
 	p.body.setOrigin(p.body.getRadius(), p.body.getRadius());
 	p.body.setOutlineThickness(3.f);
 	p.body.setOutlineColor(sf::Color::Red);
+
 	p.health = 100.f;
+
 	Collision coll;
 	coll.isOnCollision = false;
 	coll.rectangleCol = nullptr;
 	coll.circleCol = nullptr;
 	p.collision = coll;
 	p.isJumping = false;
+
+	p.maxAmmo = 3;
+	p.ammo = p.maxAmmo;
+
 	return p;
 }
 

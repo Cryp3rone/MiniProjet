@@ -14,4 +14,6 @@ struct Player
 	bool canJump;
 	bool isJumping;
 	Collision collision;
+	int ammo;
+	int maxAmmo;
 };
