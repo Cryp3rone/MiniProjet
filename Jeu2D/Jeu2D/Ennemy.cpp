@@ -7,11 +7,36 @@
 
 void CreateEnnemies(World* world) {
 	// Création des ennemis ici
-	CreateCEnnemy(world, CreateCircleShape(new sf::CircleShape(15, 3), sf::Color::Black, sf::Vector2f(1500, 450), 3, sf::Color::Color(255,204,0), world),
-		50, sf::Vector2f(1500, 450),true,sf::Vector2f(1500,450),sf::Vector2f(1700,450),HORIZONTAL);
 
-	CreateCEnnemy(world, CreateCircleShape(new sf::CircleShape(15, 3), sf::Color::Black, sf::Vector2f(650, 300), 3, sf::Color::Color(255, 204, 0), world),
-		150, sf::Vector2f(650, 300), true, sf::Vector2f(650, 300), sf::Vector2f(650, 450), VERTICAL);
+	int ennemyTyp=0;
+	int posX=300;
+	int offset = 0;
+
+	for (size_t i = 0; i < 40; i++)
+	{
+		ennemyTyp = rand() % 2;
+		offset = rand() % 600 + 300;
+		switch(ennemyTyp)
+		{
+		case(0):
+
+			CreateCEnnemy(world, CreateCircleShape(new sf::CircleShape(15, 3), sf::Color::Black, sf::Vector2f(posX, 450), 3, sf::Color::Color::Red, world),
+				50, sf::Vector2f(1500, 450), true, sf::Vector2f(1500, 450), sf::Vector2f(1700, 450), HORIZONTAL);
+			posX += offset;
+			break;
+		case(1):
+			CreateCEnnemy(world, CreateCircleShape(new sf::CircleShape(15, 3), sf::Color::Black, sf::Vector2f(posX, 300), 3, sf::Color::Color::Red, world),
+				150, sf::Vector2f(650, 300), true, sf::Vector2f(650, 300), sf::Vector2f(650, 450), VERTICAL);
+			posX += offset;
+			break;
+		default:
+			break;
+		}
+	}
+
+	
+
+	
 }
 
 void CreateCEnnemy(World* world, sf::CircleShape* circle, float speed, sf::Vector2f position, bool canMoove, sf::Vector2f min, sf::Vector2f max, _EnnemyBehaviour behaviour) {
