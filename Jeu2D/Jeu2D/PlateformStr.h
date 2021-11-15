@@ -12,4 +12,5 @@ struct Plateform {
 	sf::RectangleShape rectangle;
 	int jumpDirection;
 	PlateformType type;
+	sf::FloatRect collision;
 };

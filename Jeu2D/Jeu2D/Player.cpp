@@ -56,9 +56,6 @@ void MovePlayer(Player& player, float dt, sf::View& view) {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
 		player.direction = sf::Vector2f(1.f, 0.f);
 
-		std::cout << std::boolalpha;
-		//std::cout << "directionX: " << player.direction.x << " lastDirX: " << player.lastDirection.x << " mooveX " << player.mooveX << std::endl;
-
 		if (player.direction.x != player.lastDirection.x || (player.direction.x == player.lastDirection.x && player.mooveX)) { // On regarde si le joueur change de direction ou si il est dans la m�me direction et qu'il peut se d�placer
 			player.body.move(sf::Vector2f(speed * dt, 0.f));
 			if ((-speed * dt) + player.body.getPosition().x >= 600.f)
@@ -127,9 +124,9 @@ bool isOnFloor(Player& p) {
 }
 
 bool CanStopJump(Player& player) {
-	return player.isJumping && player.collision.isOnCollision && player.collision.plateform && player.collision.plateform->type == WALL_JUMP;
+	return player.isJumping && player.collision.isOnCollision && player.collision.plateform && player.collision.plateform->type == WALL_JUMP /*&& player.collision.plateform->collision.intersects(player.body.getGlobalBounds())*/;
 }
 
 bool CanWallJump(Player& player) {
-	return !player.canJump && player.isJumping && player.collision.isOnCollision && player.collision.plateform && player.collision.plateform->type == WALL_JUMP;
+	return !player.canJump && player.isJumping && player.collision.isOnCollision && player.collision.plateform && player.collision.plateform->type == WALL_JUMP /*&& player.collision.plateform->collision.intersects(player.body.getGlobalBounds())*/;
 }

@@ -109,10 +109,7 @@ int main() {
 			window.draw(player.body);
 
 			for (Bullet& bullet: bullets)
-			{
 				window.draw(bullet.body);
-			}
-
 		}
 		else if(game == LOOSE)
 			window.draw(text);	
