@@ -22,10 +22,16 @@ Player newPlayer()
 	coll.circleCol = nullptr;
 	p.collision = coll;
 	p.isJumping = false;
+	p.lastJumpDirection = 0;
 	return p;
 }
 
 void UpdatePlayer(Player& player, float dt, sf::Vector2f& velocity, sf::View& view,World* world, std::list<Bullet> bullets,GameState& state) {
+	player.velocity = velocity;
+
+	std::cout << std::boolalpha;
+	std::cout << "isJumping " << player.isJumping << " canJump " << player.canJump << " isOnCollision " << player.collision.isOnCollision << std::endl;
+
 	MovePlayer(player, dt, view);
 	JumpPlayer(player,dt,velocity,world);
 	OnCollisionDetection(player, world,bullets,state);
@@ -68,6 +74,26 @@ void MovePlayer(Player& player, float dt, sf::View& view) {
 
 void JumpPlayer(Player& player,float dt, sf::Vector2f& velocity,World* world) {
 	if (player.canJump) {
+
+		if (player.collision.isOnCollision && player.velocity.x != 0) {
+			if (player.collision.rectangleCol) {
+				Plateform* plateform = GetPlateformByShape(*player.collision.rectangleCol,world);
+
+				switch (player.lastJumpDirection != 0 && plateform->jumpDirection != player.lastJumpDirection) {
+					case true:
+						std::cout << "true condition " << std::endl;
+						if (player.velocity.x < 0 && plateform->jumpDirection == -1) 
+							velocity.x = 0;
+						else if (player.velocity.x > 0 && plateform->jumpDirection == 1) 
+							velocity.x = 0;
+
+						break;
+				}
+
+				player.lastJumpDirection = plateform->jumpDirection;
+			}
+		}
+
 		if (isGrounded(player, world)) {
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
 				if (velocity.x != 0)
@@ -77,8 +103,6 @@ void JumpPlayer(Player& player,float dt, sf::Vector2f& velocity,World* world) {
 				player.body.move(velocity);
 				player.isJumping = true;
 			}
-
-
 		}
 		else {
 			player.body.move(velocity);

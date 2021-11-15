@@ -12,4 +12,6 @@ void CreatePlateform(sf::RectangleShape form,int jumpDirection, PlateformType ty
 	plateform->type = type;
 
 	world->plateforms.push_back(plateform);
+
+	// NE PAS OUBLIER A delete
 }

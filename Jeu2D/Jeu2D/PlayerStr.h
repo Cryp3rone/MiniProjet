@@ -14,4 +14,6 @@ struct Player
 	bool canJump;
 	bool isJumping;
 	Collision collision;
+	sf::Vector2f velocity;
+	int lastJumpDirection;
 };
