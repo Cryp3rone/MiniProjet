@@ -8,8 +8,7 @@
 Plateform* GetPlateformByShape(sf::RectangleShape compare,World* world) {
 	for (Plateform* plateformPtr : world->plateforms) {
 		if (plateformPtr->rectangle.getPosition().x == compare.getPosition().x && plateformPtr->rectangle.getPosition().y == compare.getPosition().y) 
-			return plateformPtr;
-		
+			return plateformPtr;	
 	}
 
 	return nullptr;
@@ -134,8 +133,6 @@ void OnCollisionLeave(Player& player, Collision& collision, World* world) {
 	player.collision.isOnCollision = false;
 	player.collision.circleCol = nullptr;
 	player.collision.rectangleCol = nullptr;
-
-	std::cout << "leave" << std::endl;
 
 	world->groundY = originalGroundY;
 }
