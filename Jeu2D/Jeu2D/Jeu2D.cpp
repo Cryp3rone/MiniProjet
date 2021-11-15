@@ -56,14 +56,30 @@ int main() {
 		sf::Event event;
 		sf::Time elapsedTime = clock.restart();
 		float dt = elapsedTime.asSeconds();
+
+		if (CanWallJump(player)) {
+			std::cout << "walljump" << std::endl;
+			Plateform& collisionPlateform = *(player.collision.plateform);
+			velocity.x = jumpForce * collisionPlateform.jumpDirection;
+			velocity.y = jumpForce;
+			player.canJump = true;
+			JumpPlayer(player,dt,velocity,world);
+		}
+
 		while (window.pollEvent(event)) {
 			switch (event.type) {
 				case sf::Event::Closed:
 					window.close();
 					break;
 				case sf::Event::MouseButtonPressed:
-					sf::Vector2i pos = sf::Mouse::getPosition(window);
-					Shoot(player.body.getPosition(), window.mapPixelToCoords(pos), bullets, dt);
+					Shoot(player.body.getPosition(), window.mapPixelToCoords(sf::Mouse::getPosition(window)), bullets, dt);
+					break;
+				case sf::Event::KeyPressed:
+					if (event.key.code == sf::Keyboard::Space && CanStopJump(player)) {
+
+						std::cout << "stopJump" << std::endl;
+						player.canJump = false;
+					}
 					break;
 			}
 		}
@@ -77,13 +93,11 @@ int main() {
 
 		if (game == PLAY) {
 			UpdateEnnemies(world, elapsedTime.asSeconds());
-			MovePlayer(player, elapsedTime.asSeconds(), velocity, camera, world,bullets,game);
+			UpdatePlayer(player, elapsedTime.asSeconds(), velocity, camera, world,bullets,game);
 
 			for (Bullet& bullet : bullets)
-			{
 				bullet.body.move(bullet.currVelocity);
-			}
-
+			
 			if (player.health == 0)
 				game = LOOSE;
 		}

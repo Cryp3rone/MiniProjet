@@ -1,10 +1,14 @@
 #pragma once
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include "LevelGenerator.h"
 #include "Ennemy.h"
+#include "Player.h"
+
+
 World* GenerateLevel() {
 	World* level = new World;
+
+	// ATTENTION FAIRE SPAWN QUE DES sf::RectangleShape pour les plateformes
 
 	int pFType;// si PF Volante ou non
 	int pos = 100; //position par default
@@ -27,43 +31,48 @@ World* GenerateLevel() {
 		{
 		case(0):
 
-			CreateRectangleShape(sf::RectangleShape(sf::Vector2f(sizeL, 1000)), sf::Color::Black, sf::Vector2f(pos, H), 3, sf::Color::Yellow, level);
+			//CreateRectangleShape(sf::RectangleShape(sf::Vector2f(sizeL, 1000)), sf::Color::Black, sf::Vector2f(pos, H), 3, sf::Color::Yellow, level);
 			preceH = H;
 			break;
 		case(1):
-			CreateRectangleShape(sf::RectangleShape(sf::Vector2f(sizeL, 30)), sf::Color::Black, sf::Vector2f(pos, H), 3, sf::Color::Yellow, level);
+			//CreateRectangleShape(sf::RectangleShape(sf::Vector2f(sizeL, 30)), sf::Color::Black, sf::Vector2f(pos, H), 3, sf::Color::Yellow, level);
 			break;
 		default:
 			break;
 		}
 		pos += sizeL + offset;
-		CreateRectangleShape(sf::RectangleShape(sf::Vector2f(100000000, 125)), sf::Color::Black, sf::Vector2f(0, 475), 3, sf::Color::Blue, level);
+		CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(100000000, 125)), sf::Color::Black, sf::Vector2f(0, 475), 3, sf::Color::Blue, false, level),0,NORMAL,level);
 	}
 
-	CreateRectangleShape(sf::RectangleShape(sf::Vector2f(40, 20)), sf::Color::Black, sf::Vector2f(pos + 35, 200), 3, sf::Color::Green, level);
-	level->endFlag = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(10, 300)), sf::Color::Black, sf::Vector2f(pos + 35, 200), 3, sf::Color::Green, level);
-	CreateRectangleShape(sf::RectangleShape(sf::Vector2f(50, 30)), sf::Color::Black, sf::Vector2f(pos+15, 450), 3, sf::Color::Green, level);
-	CreateRectangleShape(sf::RectangleShape(sf::Vector2f(80, 30)), sf::Color::Black, sf::Vector2f(pos, 475), 3, sf::Color::Green, level);
 	
+	CreateRectangleShape(sf::RectangleShape(sf::Vector2f(40, 20)), sf::Color::Black, sf::Vector2f(pos + 35, 200), 3, sf::Color::Green, false, level);
+	level->endFlag = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(10, 300)), sf::Color::Black, sf::Vector2f(pos + 35, 200), 3, sf::Color::Green, false, level);
+	CreateRectangleShape(sf::RectangleShape(sf::Vector2f(50, 30)), sf::Color::Black, sf::Vector2f(pos+15, 450), 3, sf::Color::Green, false, level);
+	CreateRectangleShape(sf::RectangleShape(sf::Vector2f(80, 30)), sf::Color::Black, sf::Vector2f(pos, 475), 3, sf::Color::Green, false, level);
+	
+	// WALL JUMP
+	CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(50, 300)), sf::Color::Black, sf::Vector2f(400, 170), 3, sf::Color::Yellow, true, level),-1, WALL_JUMP,level);
+	CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(50, 300)), sf::Color::Black, sf::Vector2f(650,170), 3, sf::Color::Yellow, true, level),1,WALL_JUMP,level);
 
-	level->groundY = 471.5f;
+
+	level->groundY = originalGroundY;
 	//affiche le sol après comme ça il passe devant les autres platformes
 
 	return level;
 }
 
 void RefreshWorld(World* level, sf::RenderWindow& window) {
-	for (sf::RectangleShape rectangle : (*level).rectangles)
-		window.draw(rectangle);
+	for (Plateform* plateform : level->plateforms) {
+		window.draw(plateform->rectangle);
+	}
 }
 
 
-sf::RectangleShape CreateRectangleShape(sf::RectangleShape shape, sf::Color color, sf::Vector2f position, float thickness, sf::Color thicknessColor, World* level) {
+sf::RectangleShape CreateRectangleShape(sf::RectangleShape shape, sf::Color color, sf::Vector2f position, float thickness, sf::Color thicknessColor,bool createPlateform, World* level) {
 	shape.setPosition(position);
 	shape.setFillColor(color);
 	shape.setOutlineThickness(thickness);
 	shape.setOutlineColor(thicknessColor);
-	level->rectangles.push_back(shape);
 
 	//window.draw(shape);
 

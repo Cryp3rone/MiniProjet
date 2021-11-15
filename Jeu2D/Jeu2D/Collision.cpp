@@ -2,27 +2,103 @@
 #include "Player.h"
 #include "LevelGenerator.h"
 #include "Ennemy.h"
+#include "PlateformStr.h"
+#include "Collision.h"
 
+Plateform* GetPlateformByShape(sf::RectangleShape compare,World* world) {
+	for (Plateform* plateformPtr : world->plateforms) {
+		if (plateformPtr->rectangle.getPosition().x == compare.getPosition().x && plateformPtr->rectangle.getPosition().y == compare.getPosition().y) 
+			return plateformPtr;
+		
+	}
+
+	return nullptr;
+}
+
+void CreateCollision(Player& player, sf::RectangleShape* rectangleCol, sf::CircleShape* circleCol,World* world) {
+	Collision coll;
+	coll.rectangleCol = rectangleCol;
+	coll.circleCol = circleCol;
+	coll.isOnCollision = true;
+	coll.plateform = nullptr;
+
+	if (coll.rectangleCol != nullptr) {
+		if (GetPlateformByShape(*coll.rectangleCol, world)) 
+			coll.plateform = GetPlateformByShape(*coll.rectangleCol, world);	
+	}
+
+	player.collision = coll;
+}
+
+void OnCollisionDetection(Player& player, World* world, std::list<Bullet>& bullets, GameState& state) {
+	if (world->endFlag.getGlobalBounds().intersects(player.body.getGlobalBounds()))
+		state = WIN;
+
+	for (Plateform* plateform : world->plateforms) {
+		sf::RectangleShape& rectangle = plateform->rectangle;
+		if (rectangle.getOutlineColor() != sf::Color::Blue) { // On skip la collision du bas
+			if (rectangle.getGlobalBounds().intersects(player.body.getGlobalBounds())) {
+				if (!player.collision.isOnCollision) {
+					CreateCollision(player, &rectangle, nullptr,world);
+					OnCollisionEnter(player, player.collision, false, false, world);
+				}
+				OnCollisionStay(player, player.collision, false, false, world);
+			}
+			else {
+				if (player.collision.isOnCollision && player.collision.rectangleCol != nullptr && player.collision.rectangleCol == &rectangle)
+					OnCollisionLeave(player, player.collision, world);
+			}
+		}
+	}
+
+	for (Ennemy& ennemy : world->ennemies) {
+		for (Bullet& bullet : bullets) {
+			sf::FloatRect checkRect = ennemy.circle ? ennemy.circle->getGlobalBounds() : ennemy.rectangle->getGlobalBounds();
+			if (bullet.body.getGlobalBounds().intersects(checkRect)) {
+				if (!player.collision.isOnCollision) {
+					CreateCollision(player, ennemy.circle ? nullptr : ennemy.rectangle, ennemy.circle ? ennemy.circle : nullptr,world); // Modifier 
+					OnCollisionEnter(player, player.collision, false, true, world);
+				}
+				OnCollisionStay(player, player.collision, false, true, world);
+			}
+			else {
+				if (player.collision.isOnCollision) {
+					if ((player.collision.circleCol != nullptr && player.collision.circleCol == &bullet.body))
+						OnCollisionLeave(player, player.collision, world);
+				}
+			}
+		}
+
+		sf::FloatRect checkRect = ennemy.circle ? ennemy.circle->getGlobalBounds() : ennemy.rectangle->getGlobalBounds();
+		if (checkRect.intersects(player.body.getGlobalBounds())) {
+			if (!player.collision.isOnCollision) {
+				CreateCollision(player, ennemy.circle ? nullptr : ennemy.rectangle, ennemy.circle ? ennemy.circle : nullptr,world); // Modifier 
+				OnCollisionEnter(player, player.collision, true, false, world);
+			}
+			OnCollisionStay(player, player.collision, true, false, world);
+		}
+		else {
+			if (player.collision.isOnCollision) {
+				if ((player.collision.circleCol && player.collision.circleCol == ennemy.circle) || (player.collision.rectangleCol && player.collision.rectangleCol == ennemy.rectangle))
+					OnCollisionLeave(player, player.collision, world);
+			}
+		}
+	}
+}
 
 void OnCollisionEnter(Player& player,Collision& collision, bool isEnnemy,bool isBullet,World* world) {
 	if (!isEnnemy) {
 		player.collision.isOnCollision = true;
 
 		if (player.isJumping) {
-			if (collision.circleCol != nullptr) {
-				player.mooveX = true;
-				world->groundY = collision.circleCol->getPosition().y - 5;
+			float checkY = collision.circleCol ? collision.circleCol->getPosition().y : collision.rectangleCol->getPosition().y;
+			if (player.body.getPosition().y <= checkY) {
+				world->groundY = checkY - 5;
 				if (world->groundY <= 0)
 					world->groundY = originalGroundY;
-			}
-			else {
-				player.mooveX = true;
-				world->groundY = collision.rectangleCol->getPosition().y - 5;
-				if (world->groundY <= 0)
-					world->groundY = originalGroundY;
-			}
 
-			//player.mooveX = true;
+				player.mooveX = true;
+			}
 		}
 		else 
 			player.mooveX = false;	
@@ -30,17 +106,8 @@ void OnCollisionEnter(Player& player,Collision& collision, bool isEnnemy,bool is
 	else
 		player.health = 0;
 
-	if (isBullet) {
-		if (collision.circleCol != nullptr) {
-			Ennemy& targetEnnemy = GetEnnemyWithShape(collision.circleCol,world);
-			world->eraseEnnemies.push_back(&targetEnnemy);
-		}
-		else {
-			Ennemy& targetEnnemy = GetEnnemyWithShape(collision.rectangleCol,world);
-			world->eraseEnnemies.push_back(&targetEnnemy);
-		}
-
-	}
+	if (isBullet) 
+		world->eraseEnnemies.push_back(collision.circleCol ? &GetEnnemyWithShape(collision.circleCol, world) : &GetEnnemyWithShape(collision.rectangleCol, world));
 
 	if (player.isJumping) 
 		player.isJumping = false;
@@ -48,18 +115,18 @@ void OnCollisionEnter(Player& player,Collision& collision, bool isEnnemy,bool is
 }
 
 void OnCollisionStay(Player& player, Collision& collision, bool isEnnemy, bool isBullet, World* world) {
-	if (collision.circleCol != nullptr) {
-		if (player.body.getGlobalBounds().top <= collision.circleCol->getGlobalBounds().top) { // On check si le joueur est au dessus de la collision
-			if (!player.mooveX)
-				player.mooveX = true;
-		}
+	float checkY = collision.circleCol ? collision.circleCol->getPosition().y : collision.rectangleCol->getPosition().y;
+	sf::FloatRect checkRect = collision.circleCol ? collision.circleCol->getGlobalBounds() : collision.rectangleCol->getGlobalBounds();
+
+	if (player.body.getGlobalBounds().top <= checkRect.top) { // On check si le joueur est au dessus de la collision
+		if (!player.mooveX)
+			player.mooveX = true;
 	}
 	else {
-		if (player.body.getGlobalBounds().top <= collision.rectangleCol->getGlobalBounds().top) { // On check si le joueur est au dessus de la collision
-			if (!player.mooveX)
-				player.mooveX = true;
-		}
+		if (world->groundY != checkRect.top && (int)player.body.getPosition().y != (int)checkY)
+			player.mooveX = false;
 	}
+
 }
 
 
@@ -67,6 +134,8 @@ void OnCollisionLeave(Player& player, Collision& collision, World* world) {
 	player.collision.isOnCollision = false;
 	player.collision.circleCol = nullptr;
 	player.collision.rectangleCol = nullptr;
+
+	std::cout << "leave" << std::endl;
 
 	world->groundY = originalGroundY;
 }
