@@ -23,20 +23,25 @@ World* GenerateLevel() {
 	for (size_t i = 0; i < 20; i++) //entre le nombre de PF que tu veux faire spawn
 	{
 		
-		pFType = rand() % 2;
+		pFType = rand() % 3;
 		sizeL = rand() % 210 + 50;
 		offset = rand() % 150 + 100;
-		H = rand() % 330 + 200;
+		H = rand() % 330 + 250;
 		switch (pFType)
 		{
 		case(0):
-
+			CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(sizeL, 1000)), sf::Color::Black, sf::Vector2f(pos, H), 3, sf::Color::Yellow, true, level), 0, NORMAL, level);
 			//CreateRectangleShape(sf::RectangleShape(sf::Vector2f(sizeL, 1000)), sf::Color::Black, sf::Vector2f(pos, H), 3, sf::Color::Yellow, level);
 			preceH = H;
 			break;
 		case(1):
+			CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(sizeL, 30)), sf::Color::Black, sf::Vector2f(pos, H), 3, sf::Color::Yellow, true, level), 0, NORMAL, level);
 			//CreateRectangleShape(sf::RectangleShape(sf::Vector2f(sizeL, 30)), sf::Color::Black, sf::Vector2f(pos, H), 3, sf::Color::Yellow, level);
 			break;
+		case(2):
+			CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(30, 200)), sf::Color::Black, sf::Vector2f(pos, 170), 3, sf::Color::Yellow, true, level),-1, WALL_JUMP,level);
+			CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(30, rand() % 300 + 200)), sf::Color::Black, sf::Vector2f(pos+150,170), 3, sf::Color::Yellow, true, level),1,WALL_JUMP,level);
+				break;
 		default:
 			break;
 		}
@@ -51,8 +56,7 @@ World* GenerateLevel() {
 	CreateRectangleShape(sf::RectangleShape(sf::Vector2f(80, 30)), sf::Color::Black, sf::Vector2f(pos, 475), 3, sf::Color::Green, false, level);
 	
 	// WALL JUMP
-	CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(50, 300)), sf::Color::Black, sf::Vector2f(400, 170), 3, sf::Color::Yellow, true, level),-1, WALL_JUMP,level);
-	CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(50, 300)), sf::Color::Black, sf::Vector2f(650,170), 3, sf::Color::Yellow, true, level),1,WALL_JUMP,level);
+	
 
 
 	level->groundY = originalGroundY;
