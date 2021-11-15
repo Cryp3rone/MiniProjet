@@ -128,9 +128,9 @@ bool isOnFloor(Player& p) {
 }
 
 bool CanStopJump(Player& player) {
-	return player.isJumping && player.collision.isOnCollision/* && player.collision.plateform && player.collision.plateform->type == WALL_JUMP*/;
+	return player.isJumping && player.collision.isOnCollision && player.collision.plateform && player.collision.plateform->type == WALL_JUMP;
 }
 
 bool CanWallJump(Player& player) {
-	return !player.canJump && player.isJumping && player.collision.isOnCollision /*&& player.collision.plateform && player.collision.plateform->type == WALL_JUMP*/;
+	return !player.canJump && player.isJumping && player.collision.isOnCollision && player.collision.plateform && player.collision.plateform->type == WALL_JUMP;
 }
