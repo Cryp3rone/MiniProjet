@@ -69,12 +69,12 @@ sf::RectangleShape CreateRectangleShape(sf::RectangleShape shape, sf::Color colo
 	return shape;
 }
 
-sf::CircleShape CreateCircleShape(sf::CircleShape shape, sf::Color color, sf::Vector2f position, float thickness, sf::Color thicknessColor, World* level) {
+sf::CircleShape* CreateCircleShape(sf::CircleShape shape, sf::Color color, sf::Vector2f position, float thickness, sf::Color thicknessColor, World* level) {
 	shape.setPosition(position);
 	shape.setFillColor(color);
 	shape.setOutlineThickness(thickness);
 	shape.setOutlineColor(thicknessColor);
 
-	return shape;
+	return &shape;
 }
 
