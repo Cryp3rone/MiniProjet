@@ -12,7 +12,7 @@ Boss* CreateBoss(World* world) {
 	sf::RectangleShape rightarm_01 = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(120, 20)), sf::Color::Black, sf::Vector2f(1060.f, 315.f), 3, sf::Color::Magenta, false, world);
 	sf::RectangleShape rightarm_02 = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(120, 15)), sf::Color::Black, sf::Vector2f(1150.f, 410.f), 3, sf::Color::Magenta, false, world);
 
-	// begin 225° = 3,92 to 315° = 5,5
+	// begin 225ï¿½ = 3,92 to 315ï¿½ = 5,5
 	
 	for (float i = 3.92;i < 5.5;i+=0.1f) {
 		float angle = 3.14159265358979323846f * 2 * i / 360;
@@ -32,15 +32,19 @@ Boss* CreateBoss(World* world) {
 	
 	boss->head = *head;	
 	boss->leftArm.push_back(leftarm_01);
-	boss->leftArm.push_back(leftarm_02);
-	boss->rightArm.push_back(rightarm_01);
-	boss->rightArm.push_back(rightarm_02);
+	//boss->leftArm.push_back(leftarm_02);
+	//boss->rightArm.push_back(rightarm_01);
+	//boss->rightArm.push_back(rightarm_02);
 	
 	return boss;
 }
 
 void UpdateBoss(Boss* boss) {
-	
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::T))
+		boss->leftArm[0].rotate(boss->leftArm[0].getRotation() + 5.f);
+		
+	//std::cout << "size: " << boss->leftArm[0].getPosition().x  << " rotate: " << boss->leftArm[0].getRotation() << std::endl;
+
 
 }
 
