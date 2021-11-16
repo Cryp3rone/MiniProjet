@@ -16,53 +16,60 @@ World* GenerateLevel() {
 	int sizeL = 40;// taill par default d'une PF
 	int jumpH = 50;// taill temporaire du saut du joueur
 	//int randH;//futur var pour gestion du c
-	int H;//taill final de la PF après gestion de la hauteur de saut de joueur (In proges)
+	int H = 400;//taill final de la PF après gestion de la hauteur de saut de joueur (In proges)
 	int preceH = 0;//contien la hauteur de la PF avant celle qui spawn
 	int growsize = 0;
 
 	int floorSize = 0;
-	int floorPos = 0;
+	int floorPos = 500;
 	int holeSize = 0;
 	int holePos = 0;
 	int holeOfset = 20;
-
+	bool mustChange = false;
+	//H si la taill de la plateform avant est a hauteur de saut alors ont peut sauter plus haut 
+	//et si la tail de la plateform d'avant est supérieur a la hauteur de saut alors la plateform seras plus bas et a hauter de saut
+	
 	srand(time(NULL));
 	
-	for (size_t i = 0; i < 20; i++) //entre le nombre de PF que tu veux faire spawn
+	for (size_t i = 0; i < 30; i++) //entre le nombre de PF que tu veux faire spawn
 	{
 		
 		pFType = rand() % 5;
 		sizeL = rand() % 210 + 50;
 		offset = rand() % 150 + 100;
-		//min + (std::rand() % (max - min + 1))
-		H = 300 + (rand() % (460-300+1));
+		
 		int wallJumpOffSett = rand() % 180 + 120;
+
+		if ((pos+jumpH) >=H)
+		{
+			std::cout << "__________________tkt mec" << i << " "<< abs(H - preceH) << std::endl;
+			H += jumpH;
+		}
 		switch (pFType)
 		{
 		case(0):
-			CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(sizeL, 1000)), sf::Color::Black, sf::Vector2f(pos, H), 3, sf::Color::Yellow, true, level), 0, NORMAL, level);
-			//CreateRectangleShape(sf::RectangleShape(sf::Vector2f(sizeL, 1000)), sf::Color::Black, sf::Vector2f(pos, H), 3, sf::Color::Yellow, level);
-			//preceH = H;
+			CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(sizeL, 200)), sf::Color::Black, sf::Vector2f(pos, H), 3, sf::Color::Yellow, true, level), 0, NORMAL, level);
+			H = 300 + (rand() % (350 - 300 + 1));
 			pos += sizeL + offset;
 			break;
 		case(1):
 			CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(sizeL, 30)), sf::Color::Black, sf::Vector2f(pos, H), 3, sf::Color::Yellow, true, level), 0, NORMAL, level);
 			pos += sizeL + offset;
-			//CreateRectangleShape(sf::RectangleShape(sf::Vector2f(sizeL, 30)), sf::Color::Black, sf::Vector2f(pos, H), 3, sf::Color::Yellow, level);
+			H = 300 + (rand() % (350 - 300 + 1));
 			break;
 		case(2):
 			CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(sizeL, 1000)), sf::Color::Black, sf::Vector2f(pos, H), 3, sf::Color::Yellow, true, level), 0, NORMAL, level);
-			//CreateRectangleShape(sf::RectangleShape(sf::Vector2f(sizeL, 1000)), sf::Color::Black, sf::Vector2f(pos, H), 3, sf::Color::Yellow, level);
+			H = 300 + (rand() % (350 - 300 + 1));
 			preceH = H;
 			pos += sizeL + offset;
 			break;
 		case(3):
 			CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(sizeL, 30)), sf::Color::Black, sf::Vector2f(pos, H), 3, sf::Color::Yellow, true, level), 0, NORMAL, level);
 			pos += sizeL + offset;
-			//CreateRectangleShape(sf::RectangleShape(sf::Vector2f(sizeL, 30)), sf::Color::Black, sf::Vector2f(pos, H), 3, sf::Color::Yellow, level);
+			H = 300 + (rand() % (350 - 300 + 1));
 			break;
 		case(4):
-			
+			H = 300 + (rand() % (350 - 300 + 1));
 			CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(30, 200)), sf::Color::Black, sf::Vector2f(pos, 170), 3, sf::Color::Yellow, true, level),-1, WALL_JUMP,level);
 			CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(30, rand() % 300 + 200)), sf::Color::Black, sf::Vector2f(pos+ wallJumpOffSett,170), 3, sf::Color::Yellow, true, level),1,WALL_JUMP,level);
 			pos += sizeL + offset+ wallJumpOffSett;
@@ -70,7 +77,7 @@ World* GenerateLevel() {
 		default:
 			break;
 		}
-
+		
 		//CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(100000000, 125)), sf::Color::Black, sf::Vector2f(0, 475), 3, sf::Color::Blue, false, level),0,NORMAL,level);
 	}
 
