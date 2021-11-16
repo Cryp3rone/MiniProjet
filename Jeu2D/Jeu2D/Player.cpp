@@ -23,6 +23,7 @@ Player newPlayer()
 	p.collision = coll;
 	p.isJumping = false;
 	p.lastJumpDirection = 0;
+	p.lastPosition = sf::Vector2f(0.f, 0.f);
 	return p;
 }
 
@@ -33,6 +34,12 @@ void UpdatePlayer(Player& player, float dt, sf::Vector2f& velocity, sf::View& vi
 	JumpPlayer(player,dt,velocity,world);
 	OnCollisionDetection(player, world,bullets,state);
 	DestroyEnnemies(world);
+
+//	if (player.body.getPosition().x != player.lastPosition.x || player.body.getPosition().y != player.lastPosition.y) {
+		//view.move(player.lastPosition.x, 300);
+//	}
+
+	player.lastPosition = player.body.getPosition();
 }
 
 void MovePlayer(Player& player, float dt, sf::View& view) {
@@ -43,9 +50,9 @@ void MovePlayer(Player& player, float dt, sf::View& view) {
 			if (-speed * dt + player.body.getPosition().x >= 5.f) // On place une bordure a 5 pour empecher le joueur d'aller au dela du niveau
 				player.body.move(sf::Vector2f(-speed * dt, 0.f));
 			
-			if ((-speed * dt) + view.getCenter().x >= 600.f)
+		/*	if ((-speed * dt) + view.getCenter().x >= 600.f)
 				view.move(sf::Vector2f(-speed * dt, 0.f));
-
+				*/
 			if (player.direction.x != player.lastDirection.x) {
 				player.mooveX = true;
 				player.lastDirection = player.direction;
@@ -58,8 +65,10 @@ void MovePlayer(Player& player, float dt, sf::View& view) {
 
 		if (player.direction.x != player.lastDirection.x || (player.direction.x == player.lastDirection.x && player.mooveX)) { // On regarde si le joueur change de direction ou si il est dans la m�me direction et qu'il peut se d�placer
 			player.body.move(sf::Vector2f(speed * dt, 0.f));
-			if ((-speed * dt) + player.body.getPosition().x >= 600.f)
+
+		/*if ((-speed * dt) + player.body.getPosition().x >= 600.f)
 				view.move(sf::Vector2f(speed * dt, 0.f));
+				*/
 
 			if (player.direction.x != player.lastDirection.x) {
 				player.mooveX = true;

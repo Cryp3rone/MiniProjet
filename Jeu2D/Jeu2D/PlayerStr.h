@@ -16,4 +16,5 @@ struct Player
 	Collision collision;
 	sf::Vector2f velocity;
 	int lastJumpDirection;
+	sf::Vector2f lastPosition;
 };
