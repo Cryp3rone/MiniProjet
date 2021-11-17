@@ -4,4 +4,4 @@
 #include "LevelGenerator.h"
 #include "PlateformStr.h"
 
-void CreatePlateform(sf::RectangleShape,int, PlateformType,World*);
+void CreatePlateform(sf::RectangleShape,int, PlateformType,int,int,World*);

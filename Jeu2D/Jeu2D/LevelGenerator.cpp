@@ -41,30 +41,22 @@ World* GenerateLevel() {
 			break;
 		}
 		pos += sizeL + offset;
-		CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(100000000, 125)), sf::Color::Black, sf::Vector2f(0, 475), 3, sf::Color::Blue, false, level),0,NORMAL,level);
+		CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(100000000, 125)), sf::Color::Black, sf::Vector2f(0, 475), 3, sf::Color::Blue, false, level), 0, NORMAL, 100000000, 125,level);
 	}
 
-	
 	CreateRectangleShape(sf::RectangleShape(sf::Vector2f(40, 20)), sf::Color::Black, sf::Vector2f(pos + 35, 200), 3, sf::Color::Green, false, level);
 	level->endFlag = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(10, 300)), sf::Color::Black, sf::Vector2f(pos + 35, 200), 3, sf::Color::Green, false, level);
 	CreateRectangleShape(sf::RectangleShape(sf::Vector2f(50, 30)), sf::Color::Black, sf::Vector2f(pos+15, 450), 3, sf::Color::Green, false, level);
 	CreateRectangleShape(sf::RectangleShape(sf::Vector2f(80, 30)), sf::Color::Black, sf::Vector2f(pos, 475), 3, sf::Color::Green, false, level);
 	
-	// WALL JUMP
-	CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(50, 300)), sf::Color::Black, sf::Vector2f(400, 170), 3, sf::Color::Yellow, true, level),-1, WALL_JUMP,level);
-	CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(50, 300)), sf::Color::Black, sf::Vector2f(650,170), 3, sf::Color::Yellow, true, level),1,WALL_JUMP,level);
-
-
 	level->groundY = originalGroundY;
-	//affiche le sol après comme ça il passe devant les autres platformes
 
 	return level;
 }
 
 void RefreshWorld(World* level, sf::RenderWindow& window) {
-	for (Plateform* plateform : level->plateforms) {
+	for (Plateform* plateform : level->plateforms) 
 		window.draw(plateform->rectangle);
-	}
 }
 
 
@@ -74,17 +66,15 @@ sf::RectangleShape CreateRectangleShape(sf::RectangleShape shape, sf::Color colo
 	shape.setOutlineThickness(thickness);
 	shape.setOutlineColor(thicknessColor);
 
-	//window.draw(shape);
-
 	return shape;
 }
 
-sf::CircleShape* CreateCircleShape(sf::CircleShape* shape, sf::Color color, sf::Vector2f position, float thickness, sf::Color thicknessColor, World* level) {
-	shape->setPosition(position);
-	shape->setFillColor(color);
-	shape->setOutlineThickness(thickness);
-	shape->setOutlineColor(thicknessColor);
+sf::CircleShape CreateCircleShape(sf::CircleShape shape, sf::Color color, sf::Vector2f position, float thickness, sf::Color thicknessColor, World* level) {
+	shape.setPosition(position);
+	shape.setFillColor(color);
+	shape.setOutlineThickness(thickness);
+	shape.setOutlineColor(thicknessColor);
+
 	return shape;
-	//window.draw(shape);
 }
 

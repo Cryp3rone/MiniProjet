@@ -8,8 +8,7 @@
 Plateform* GetPlateformByShape(sf::RectangleShape compare,World* world) {
 	for (Plateform* plateformPtr : world->plateforms) {
 		if (plateformPtr->rectangle.getPosition().x == compare.getPosition().x && plateformPtr->rectangle.getPosition().y == compare.getPosition().y) 
-			return plateformPtr;
-		
+			return plateformPtr;	
 	}
 
 	return nullptr;
@@ -84,6 +83,13 @@ void OnCollisionDetection(Player& player, World* world, std::list<Bullet>& bulle
 			}
 		}
 	}
+
+	for (sf::RectangleShape rectangle : world->boss.leftArm) {
+		if (rectangle.getGlobalBounds().intersects(player.body.getGlobalBounds())) {
+			std::cout << " enter boss collision " << std::endl;
+		}
+	}
+
 }
 
 void OnCollisionEnter(Player& player,Collision& collision, bool isEnnemy,bool isBullet,World* world) {
@@ -101,7 +107,7 @@ void OnCollisionEnter(Player& player,Collision& collision, bool isEnnemy,bool is
 			}
 		}
 		else 
-			player.mooveX = false;	
+			player.mooveX = false;
 	}
 	else
 		player.health = 0;
@@ -109,9 +115,15 @@ void OnCollisionEnter(Player& player,Collision& collision, bool isEnnemy,bool is
 	if (isBullet) 
 		world->eraseEnnemies.push_back(collision.circleCol ? &GetEnnemyWithShape(collision.circleCol, world) : &GetEnnemyWithShape(collision.rectangleCol, world));
 
-	if (player.isJumping) 
-		player.isJumping = false;
-	
+	if (player.isJumping) {
+		if (player.collision.rectangleCol) {
+			Plateform* plateform = GetPlateformByShape(*player.collision.rectangleCol,world);
+			if(plateform->type != WALL_JUMP) // Permet de faire le resaut lors d'un walljump
+				player.isJumping = false;
+		}
+		else
+			player.isJumping = false;
+	}
 }
 
 void OnCollisionStay(Player& player, Collision& collision, bool isEnnemy, bool isBullet, World* world) {
@@ -123,7 +135,7 @@ void OnCollisionStay(Player& player, Collision& collision, bool isEnnemy, bool i
 			player.mooveX = true;
 	}
 	else {
-		if (world->groundY != checkRect.top && (int)player.body.getPosition().y != (int)checkY)
+		if (world->groundY != checkRect.top && (int)player.body.getPosition().y != (int)checkY) 
 			player.mooveX = false;
 	}
 
@@ -134,8 +146,6 @@ void OnCollisionLeave(Player& player, Collision& collision, World* world) {
 	player.collision.isOnCollision = false;
 	player.collision.circleCol = nullptr;
 	player.collision.rectangleCol = nullptr;
-
-	std::cout << "leave" << std::endl;
 
 	world->groundY = originalGroundY;
 }

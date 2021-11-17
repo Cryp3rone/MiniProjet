@@ -25,7 +25,7 @@
     <ClCompile Include="Plateform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Bonus.cpp">
+    <ClCompile Include="Boss.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -66,10 +66,10 @@
     <ClInclude Include="PlateformStr.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BonusStr.h">
+    <ClInclude Include="Boss.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Bonus.h">
+    <ClInclude Include="BossStr.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
