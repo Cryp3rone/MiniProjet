@@ -11,8 +11,20 @@ void CreateEnnemies(World* world) {
 	int ennemyTyp=0;
 	int posX=300;
 	int offset = 0;
+	int pos;
+	for (Plateform* platform:world->plateforms)
+	{
+		for (size_t i = 0; i < 40; i++) {
+			if (platform->type == ENNEMI) {
 
-	for (size_t i = 0; i < 40; i++)
+				CreateCEnnemy(world, CreateCircleShape(new sf::CircleShape(15, 3), sf::Color::Black, sf::Vector2f(platform->rectangle.getPosition().x, 450), 3, sf::Color::Color::Red, world),
+					50, sf::Vector2f(1500, 450), true, sf::Vector2f(1500, 450), sf::Vector2f(1700, 450), HORIZONTAL);
+				posX += offset;
+
+			}
+		}
+	}
+	/*for (size_t i = 0; i < 40; i++)
 	{
 		ennemyTyp = rand() % 2;
 		offset = rand() % 600 + 300;
@@ -20,9 +32,7 @@ void CreateEnnemies(World* world) {
 		{
 		case(0):
 
-			CreateCEnnemy(world, CreateCircleShape(new sf::CircleShape(15, 3), sf::Color::Black, sf::Vector2f(posX, 450), 3, sf::Color::Color::Red, world),
-				50, sf::Vector2f(1500, 450), true, sf::Vector2f(1500, 450), sf::Vector2f(1700, 450), HORIZONTAL);
-			posX += offset;
+			
 			break;
 		case(1):
 			CreateCEnnemy(world, CreateCircleShape(new sf::CircleShape(15, 3), sf::Color::Black, sf::Vector2f(posX, 300), 3, sf::Color::Color::Red, world),
@@ -32,7 +42,7 @@ void CreateEnnemies(World* world) {
 		default:
 			break;
 		}
-	}
+	}*/
 
 	
 
