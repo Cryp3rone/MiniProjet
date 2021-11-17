@@ -7,9 +7,14 @@
 #include "CollisionStr.h"
 
 void OnCollisionDetection(Player&, World*,std::list<Bullet>&, GameState&);
+
 void OnCollisionEnter(Player&, Collision&, bool, bool,World*);
+
 void OnCollisionStay(Player&, Collision&, bool, bool, World*);
+
 void OnCollisionLeave(Player&,Collision&,World* );
+
 void CreateCollision(Player&,sf::RectangleShape*,sf::CircleShape*,World*);
+
 
 Plateform* GetPlateformByShape(sf::RectangleShape, World*);

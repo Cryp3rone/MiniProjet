@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "CollisionStr.h"
+#include "bonus.h"
 
 
 struct Player
@@ -16,4 +17,5 @@ struct Player
 	Collision collision;
 	int ammo;
 	int maxAmmo;
+	std::list<Bonus> listBonus;
 };

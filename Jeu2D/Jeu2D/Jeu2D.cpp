@@ -7,6 +7,7 @@
 #include "Player.h"
 #include "Shoot.h"
 #include "GameState.h"
+#include "Bonus.h"
 
 
 
@@ -49,7 +50,11 @@ int main() {
 	Player player = newPlayer();
 
 	std::list<Bullet> bullets;
+	std::list<Bonus> listBonus;
 	GameState game = PLAY;
+
+	//TEST BONUS
+	listBonus.push_back(CreateBonus(enumBonus::AMMO, 3.f));
 
 	// Inputs
 	while (window.isOpen()) {
@@ -112,10 +117,22 @@ int main() {
 
 			window.setView(camera);
 			window.draw(player.body);
+			for (int i = 1; i <= player.ammo; i++)
+			{
+				sf::CircleShape ammo = sf::CircleShape(12.f);
+				ammo.setFillColor(sf::Color::Green);
+				ammo.setPosition(sf::Vector2f(30.f * i, 20.f));
+				window.draw(ammo);
+			}
 
 			for (Bullet& bullet: bullets)
 			{
 				window.draw(bullet.body);
+			}
+
+			for (Bonus& bonus : listBonus)
+			{
+				window.draw(bonus.body);
 			}
 
 		}
