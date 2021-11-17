@@ -31,10 +31,10 @@ World* GenerateLevel() {
 	
 	srand(time(NULL));
 	
-	for (size_t i = 0; i < 30; i++) //entre le nombre de PF que tu veux faire spawn
+	for (size_t i = 0; i < 10; i++) //entre le nombre de PF que tu veux faire spawn
 	{
 		
-		pFType = rand() % 5;
+		pFType = rand() % 9;
 		sizeL = rand() % 210 + 50;
 		offset = rand() % 150 + 100;
 		
@@ -69,6 +69,27 @@ World* GenerateLevel() {
 			H = 300 + (rand() % (350 - 300 + 1));
 			break;
 		case(4):
+			CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(sizeL, 200)), sf::Color::Black, sf::Vector2f(pos, H), 3, sf::Color::Yellow, true, level), 0, NORMAL, level);
+			H = 300 + (rand() % (350 - 300 + 1));
+			pos += sizeL + offset;
+			break;
+		case(5):
+			CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(sizeL, 30)), sf::Color::Black, sf::Vector2f(pos, H), 3, sf::Color::Yellow, true, level), 0, NORMAL, level);
+			pos += sizeL + offset;
+			H = 300 + (rand() % (350 - 300 + 1));
+			break;
+		case(6):
+			CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(sizeL, 1000)), sf::Color::Black, sf::Vector2f(pos, H), 3, sf::Color::Yellow, true, level), 0, NORMAL, level);
+			H = 300 + (rand() % (350 - 300 + 1));
+			preceH = H;
+			pos += sizeL + offset;
+			break;
+		case(7):
+			CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(sizeL, 30)), sf::Color::Black, sf::Vector2f(pos, H), 3, sf::Color::Yellow, true, level), 0, NORMAL, level);
+			pos += sizeL + offset;
+			H = 300 + (rand() % (350 - 300 + 1));
+			break;
+		case(8):
 			H = 300 + (rand() % (350 - 300 + 1));
 			CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(30, 200)), sf::Color::Black, sf::Vector2f(pos, 170), 3, sf::Color::Yellow, true, level),-1, WALL_JUMP,level);
 			CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(30, rand() % 300 + 200)), sf::Color::Black, sf::Vector2f(pos+ wallJumpOffSett,170), 3, sf::Color::Yellow, true, level),1,WALL_JUMP,level);
