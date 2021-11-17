@@ -5,7 +5,7 @@
 enum enumBonus {
 	AMMO,
 	SPEED,
-	JUMP 
+	JUMP
 };
 
 struct Bonus

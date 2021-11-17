@@ -9,7 +9,7 @@ Bonus CreateBonus(enumBonus type, float effect)
 
 	bonus.type = type;
 	bonus.effect = effect;
-	 
+
 	return bonus;
 }
 

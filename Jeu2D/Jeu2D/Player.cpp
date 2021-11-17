@@ -34,6 +34,11 @@ void UpdatePlayer(Player& player, float dt, sf::Vector2f& velocity, sf::View& vi
 	JumpPlayer(player,dt,velocity,world);
 	OnCollisionDetection(player, world,bullets,state);
 	DestroyEnnemies(world);
+<<<<<<< HEAD
+=======
+	view.setCenter(sf::Vector2f(player.body.getPosition().x, 300.f));
+}
+>>>>>>> parent of e074474 (tentative merge amaury)
 
 //	if (player.body.getPosition().x != player.lastPosition.x || player.body.getPosition().y != player.lastPosition.y) {
 		//view.move(player.lastPosition.x, 300);
