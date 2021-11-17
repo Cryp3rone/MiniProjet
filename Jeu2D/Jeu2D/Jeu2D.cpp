@@ -69,7 +69,7 @@ int main() {
 					window.close();
 					break;
 				case sf::Event::MouseButtonPressed:
-					Shoot(player.body.getPosition(), window.mapPixelToCoords(sf::Mouse::getPosition(window)), bullets, dt);
+					//Shoot(player.body.getPosition(), window.mapPixelToCoords(sf::Mouse::getPosition(window)), bullets, dt);
 					break;
 				case sf::Event::KeyPressed:
 					if (event.key.code == sf::Keyboard::Space && CanStopJump(player)) 
