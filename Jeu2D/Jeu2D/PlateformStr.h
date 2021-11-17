@@ -4,6 +4,7 @@
 
 enum PlateformType {
 	NORMAL,
+	FLOOR,
 	ENNEMI,
 	WALL_JUMP
 };

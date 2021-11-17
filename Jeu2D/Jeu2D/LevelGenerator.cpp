@@ -1,7 +1,6 @@
 #pragma once
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include "Ennemy.h"
 #include "Player.h"
 
 
@@ -102,28 +101,28 @@ World* GenerateLevel() {
 		//CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(100000000, 125)), sf::Color::Black, sf::Vector2f(0, 475), 3, sf::Color::Blue, false, level),0,NORMAL,level);
 	*/}
 
-	for (size_t i = 0; i < 10; i++)
-	{
+	for (size_t i = 0; i < 10; i++) {
 		pFType = rand() % 5;
 		floorSize = rand() % 600 + 400;
 
 		holeSize = rand() % 100 + 50;
 		offset = rand() % 200 + 100;
-		CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(floorSize, 125)), sf::Color::Black, sf::Vector2f(floorPos, 475), 3, sf::Color::Blue, false, level), 0, NORMAL,floorSize,125, level);
+		CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(floorSize, 125)), sf::Color::Black, sf::Vector2f(floorPos, 475), 3, sf::Color::Blue, false, level), 0, FLOOR,floorSize,125, level);
 		floorPos += holeSize + offset + floorSize;
-
 	}
+
+
 //	CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(40, 20)), sf::Color::Black, sf::Vector2f(pos + 35, 200), 3, sf::Color::Green, false, level), 0, NORMAL,40,20, level);
 	
 	
-	level->endFlag = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(10, 300)), sf::Color::Black, sf::Vector2f(pos + 35, 200), 3, sf::Color::Green, false, level);
-	CreatePlateform(level->endFlag, 0, NORMAL,15,300, level);
+//	level->endFlag = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(10, 300)), sf::Color::Black, sf::Vector2f(pos + 35, 200), 3, sf::Color::Green, false, level);
+//	CreatePlateform(level->endFlag, 0, NORMAL,15,300, level);
 	
 	
 	
 //	CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(10, 300)), sf::Color::Black, sf::Vector2f(pos + 35, 200), 3, sf::Color::Green, false, level), 0, NORMAL,10,300, level);
-	CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(50, 30)), sf::Color::Black, sf::Vector2f(pos + 15, 450), 3, sf::Color::Green, false, level), 0, NORMAL,50,30,level);
-	CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(80, 30)), sf::Color::Black, sf::Vector2f(pos, 475), 3, sf::Color::Green, false, level), 0, NORMAL,80,30, level);
+//	CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(50, 30)), sf::Color::Black, sf::Vector2f(pos + 15, 450), 3, sf::Color::Green, false, level), 0, NORMAL,50,30,level);
+//	CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(80, 30)), sf::Color::Black, sf::Vector2f(pos, 475), 3, sf::Color::Green, false, level), 0, NORMAL,80,30, level);
 
 
 	level->groundY = originalGroundY;
@@ -136,6 +135,21 @@ void RefreshWorld(World* level, sf::RenderWindow& window) {
 		window.draw(plateform->rectangle);
 }
 
+void ActualizeGroundY(Player& player, World* world) {
+	bool isOnFloor = true;
+
+	for (Plateform* plateform : world->plateforms) {
+		if (plateform->type == FLOOR) {
+			isOnFloor = player.body.getPosition().x >= plateform->rectangle.getPosition().x && player.body.getPosition().x <= plateform->rectangle.getPosition().x + plateform->rectangle.getSize().x /*&& world->groundY == originalGroundY*/;
+			
+			if (isOnFloor)
+				break;
+		}
+	}
+
+	if (!isOnFloor) 
+		world->groundY = 1000.f;
+}
 
 sf::RectangleShape CreateRectangleShape(sf::RectangleShape shape, sf::Color color, sf::Vector2f position, float thickness, sf::Color thicknessColor,bool createPlateform, World* level) {
 	shape.setPosition(position);

@@ -97,6 +97,7 @@ int main() {
 		}
 
 		if (game == PLAY) {
+			ActualizeGroundY(player,world);
 			UpdateEnnemies(world, elapsedTime.asSeconds());
 			UpdatePlayer(player, elapsedTime.asSeconds(), velocity, camera, world,bullets,game);
 			UpdateBoss(&world->boss);

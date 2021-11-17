@@ -48,6 +48,10 @@ void UpdatePlayer(Player& player, float dt, sf::Vector2f& velocity, sf::View& vi
 	JumpPlayer(player,dt,velocity,world);
 	OnCollisionDetection(player, world,bullets,state);
 	DestroyEnnemies(world);
+
+	if (player.body.getPosition().y >= 600) // Le joueur a dépassé la caméra
+		state = LOOSE;
+
 	view.setCenter(sf::Vector2f(player.body.getPosition().x, 300.f));
 	player.lastPosition = player.body.getPosition();
 }
