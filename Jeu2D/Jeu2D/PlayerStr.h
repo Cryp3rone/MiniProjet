@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "CollisionStr.h"
+#include "bonus.h"
 
 
 struct Player
@@ -14,6 +15,7 @@ struct Player
 	bool canJump;
 	bool isJumping;
 	Collision collision;
-	sf::Vector2f velocity;
-	int lastJumpDirection;
+	int ammo;
+	int maxAmmo;
+	std::list<Bonus> listBonus;
 };

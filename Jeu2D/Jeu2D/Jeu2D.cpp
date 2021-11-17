@@ -7,6 +7,9 @@
 #include "Player.h"
 #include "Shoot.h"
 #include "GameState.h"
+#include "Bonus.h"
+
+
 
 std::string getAppPath() {
 	char cExeFilePath[256];
@@ -47,7 +50,11 @@ int main() {
 	Player player = newPlayer();
 
 	std::list<Bullet> bullets;
+	std::list<Bonus> listBonus;
 	GameState game = PLAY;
+
+	//TEST BONUS
+	listBonus.push_back(CreateBonus(enumBonus::AMMO, 3.f));
 
 	// Inputs
 	while (window.isOpen()) {
@@ -56,6 +63,7 @@ int main() {
 		float dt = elapsedTime.asSeconds();
 
 		if (CanWallJump(player)) {
+			std::cout << "walljump" << std::endl;
 			Plateform& collisionPlateform = *(player.collision.plateform);
 			velocity.x = jumpForce * collisionPlateform.jumpDirection;
 			velocity.y = jumpForce;
@@ -69,11 +77,14 @@ int main() {
 					window.close();
 					break;
 				case sf::Event::MouseButtonPressed:
-					Shoot(player.body.getPosition(), window.mapPixelToCoords(sf::Mouse::getPosition(window)), bullets, dt);
+					Shoot(player, window.mapPixelToCoords(sf::Mouse::getPosition(window)), bullets, dt);
 					break;
 				case sf::Event::KeyPressed:
-					if (event.key.code == sf::Keyboard::Space && CanStopJump(player)) 
+					if (event.key.code == sf::Keyboard::Space && CanStopJump(player)) {
+
+						std::cout << "stopJump" << std::endl;
 						player.canJump = false;
+					}
 					break;
 			}
 		}
@@ -106,10 +117,22 @@ int main() {
 
 			window.setView(camera);
 			window.draw(player.body);
+			for (int i = 1; i <= player.ammo; i++)
+			{
+				sf::CircleShape ammo = sf::CircleShape(12.f);
+				ammo.setFillColor(sf::Color::Green);
+				ammo.setPosition(sf::Vector2f(30.f * i, 20.f));
+				window.draw(ammo);
+			}
 
 			for (Bullet& bullet: bullets)
 			{
 				window.draw(bullet.body);
+			}
+
+			for (Bonus& bonus : listBonus)
+			{
+				window.draw(bonus.body);
 			}
 
 		}
