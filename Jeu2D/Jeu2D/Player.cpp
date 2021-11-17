@@ -38,7 +38,7 @@ void UpdatePlayer(Player& player, float dt, sf::Vector2f& velocity, sf::View& vi
 	OnCollisionDetection(player, world,bullets,state);
 	DestroyEnnemies(world);
 	view.setCenter(sf::Vector2f(player.body.getPosition().x, 300.f));
-}
+} 
 
 void MovePlayer(Player& player, float dt) {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
