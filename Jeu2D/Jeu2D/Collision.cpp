@@ -83,6 +83,13 @@ void OnCollisionDetection(Player& player, World* world, std::list<Bullet>& bulle
 			}
 		}
 	}
+
+	for (sf::RectangleShape rectangle : world->boss.leftArm) {
+		if (rectangle.getGlobalBounds().intersects(player.body.getGlobalBounds())) {
+			std::cout << " enter boss collision " << std::endl;
+		}
+	}
+
 }
 
 void OnCollisionEnter(Player& player,Collision& collision, bool isEnnemy,bool isBullet,World* world) {

@@ -46,7 +46,6 @@ int main() {
 	sf::Vector2f velocity(0.f,  5.f);
 	float speed = 100.f;
 	Player player = newPlayer();
-	Boss* boss = nullptr;
 	std::list<Bullet> bullets;
 	GameState game = PLAY;
 
@@ -83,7 +82,7 @@ int main() {
 
 		if (firstFrame) {
 			world = GenerateLevel();
-			boss = CreateBoss(world);
+			CreateBoss(world);
 			CreateEnnemies(world);
 			firstFrame = false;
 		}
@@ -91,7 +90,7 @@ int main() {
 		if (game == PLAY) {
 			UpdateEnnemies(world, elapsedTime.asSeconds());
 			UpdatePlayer(player, elapsedTime.asSeconds(), velocity, camera, world,bullets,game);
-			UpdateBoss(boss);
+			UpdateBoss(&world->boss);
 
 			for (Bullet& bullet : bullets)
 				bullet.body.move(bullet.currVelocity);
@@ -107,7 +106,7 @@ int main() {
 		if (game == PLAY) {
 			RefreshWorld(world, window);
 			RefreshEnnemies(world, window);
-			RefreshBoss(boss,window);
+			RefreshBoss(&world->boss,window);
 
 			window.setView(camera);
 			window.draw(player.body);

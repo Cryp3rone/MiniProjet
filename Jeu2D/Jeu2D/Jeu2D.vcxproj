@@ -171,6 +171,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Boss.h" />
+    <ClInclude Include="BossStr.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="CollisionStr.h" />
     <ClInclude Include="Ennemy.h" />

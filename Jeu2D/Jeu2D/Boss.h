@@ -3,15 +3,6 @@
 #include <vector>
 #include "LevelGenerator.h"
 
-struct Boss {
-	sf::CircleShape head;
-	std::vector<sf::RectangleShape> rightArm;
-	std::vector<sf::RectangleShape> leftArm;
-	std::vector<sf::RectangleShape> weaknessArea;
-	int health;
-	int damage; 
-};
-
-Boss* CreateBoss(World*);
+void CreateBoss(World*);
 void UpdateBoss(Boss*);
 void RefreshBoss(Boss*,sf::RenderWindow&);
