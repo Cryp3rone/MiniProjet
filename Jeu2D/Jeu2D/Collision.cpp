@@ -55,7 +55,7 @@ void OnCollisionDetection(Player& player, World* world, std::list<Bullet>& bulle
 			sf::FloatRect checkRect = ennemy.circle ? ennemy.circle->getGlobalBounds() : ennemy.rectangle->getGlobalBounds();
 			if (bullet.body.getGlobalBounds().intersects(checkRect)) {
 				if (!player.collision.isOnCollision) {
-					CreateCollision(player, ennemy.circle ? nullptr : ennemy.rectangle, ennemy.circle ? ennemy.circle : nullptr,world); // Modifier 
+					CreateCollision(player, !ennemy.circle ? nullptr : ennemy.rectangle, ennemy.circle ? ennemy.circle : nullptr,world); // Modifier 
 					OnCollisionEnter(player, player.collision, false, true, world);
 				}
 				OnCollisionStay(player, player.collision, false, true, world);
