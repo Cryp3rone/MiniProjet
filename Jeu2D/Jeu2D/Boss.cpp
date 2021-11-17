@@ -5,7 +5,7 @@
 void CreateBoss(World* world) {
 	Boss* boss = new Boss;
 
-	sf::CircleShape head = CreateCircleShape(sf::CircleShape(80), sf::Color::Black, sf::Vector2f(900, 200),3,sf::Color::Magenta,world);
+/*	sf::CircleShape head = CreateCircleShape(sf::CircleShape(80), sf::Color::Black, sf::Vector2f(900, 200),3,sf::Color::Magenta,world);
 	sf::RectangleShape leftarm_01 = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(120, 20)), sf::Color::Black, sf::Vector2f(900.f,200.f), 3, sf::Color::Magenta, false, world);
 	
 	sf::RectangleShape leftarm_02 = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(120, 15)), sf::Color::Black, sf::Vector2f(830.f, 410.f), 3, sf::Color::Magenta, false, world); //leftarm_01.setOrigin(sf::Vector2f(head.getPosition().x + head.getRadius(),head.getPosition().y + head.getRadius()));
@@ -52,9 +52,9 @@ void CreateBoss(World* world) {
 	boss->leftArm.push_back(leftarm_02);
 	boss->rightArm.push_back(rightarm_01);
 	boss->rightArm.push_back(rightarm_02);
-	
-	
+	*/
 	world->boss = *boss;
+	
 }
 
 void UpdateBoss(Boss* boss) {
@@ -66,7 +66,7 @@ void UpdateBoss(Boss* boss) {
 }
 
 void RefreshBoss(Boss* boss,sf::RenderWindow& window) {
-	window.draw(boss->head);
+	/*window.draw(boss->head);
 	
 	for (sf::RectangleShape rectangle : boss->rightArm) 
 		window.draw(rectangle);
@@ -76,4 +76,5 @@ void RefreshBoss(Boss* boss,sf::RenderWindow& window) {
 	sf::Vertex lines[16];
 	std::copy(boss->weaknessArea.begin(), boss->weaknessArea.end(), lines);
 	window.draw(lines, boss->weaknessArea.size(), sf::Lines);
+	*/
 }

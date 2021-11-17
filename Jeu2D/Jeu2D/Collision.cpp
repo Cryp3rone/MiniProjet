@@ -30,8 +30,8 @@ void CreateCollision(Player& player, sf::RectangleShape* rectangleCol, sf::Circl
 }
 
 void OnCollisionDetection(Player& player, World* world, std::list<Bullet>& bullets, GameState& state) {
-	if (world->endFlag.getGlobalBounds().intersects(player.body.getGlobalBounds()))
-		state = WIN;
+	//if (world->endFlag.getGlobalBounds().intersects(player.body.getGlobalBounds()))
+		//state = WIN;
 
 	for (Plateform* plateform : world->plateforms) {
 		sf::RectangleShape& rectangle = plateform->rectangle;

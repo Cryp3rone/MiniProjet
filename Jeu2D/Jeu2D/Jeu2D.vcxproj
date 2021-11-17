@@ -159,6 +159,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Bonus.cpp" />
     <ClCompile Include="Boss.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="Ennemy.cpp" />
@@ -170,6 +171,8 @@
     <ClCompile Include="Shoot.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Bonus.h" />
+    <ClInclude Include="BonusStr.h" />
     <ClInclude Include="Boss.h" />
     <ClInclude Include="BossStr.h" />
     <ClInclude Include="Collision.h" />

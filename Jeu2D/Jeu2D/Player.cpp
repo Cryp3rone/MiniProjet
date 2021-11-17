@@ -35,7 +35,16 @@ Player newPlayer()
 void UpdatePlayer(Player& player, float dt, sf::Vector2f& velocity, sf::View& view,World* world, std::list<Bullet> bullets,GameState& state) {
 	player.velocity = velocity;
 
-	MovePlayer(player, dt, view);
+	Plateform* plate = GetPlateformByShape(world->endFlag,world);
+
+	if (plate) {
+		sf::FloatRect playerCollision = player.body.getGlobalBounds();
+		if (plate->collision.intersects(playerCollision)) {
+			std::cout << "entered " << std::endl;
+		}
+	}
+
+	MovePlayer(player, dt);
 	JumpPlayer(player,dt,velocity,world);
 	OnCollisionDetection(player, world,bullets,state);
 	DestroyEnnemies(world);

@@ -17,7 +17,7 @@ void CreateEnnemies(World* world) {
 		for (size_t i = 0; i < 40; i++) {
 			if (platform->type == ENNEMI) {
 
-				CreateCEnnemy(world, CreateCircleShape(new sf::CircleShape(15, 3), sf::Color::Black, sf::Vector2f(platform->rectangle.getPosition().x, 450), 3, sf::Color::Color::Red, world),
+				CreateCEnnemy(world,&CreateCircleShape(sf::CircleShape(15, 3), sf::Color::Black, sf::Vector2f(platform->rectangle.getPosition().x, 450), 3, sf::Color::Color::Red, world),
 					50, sf::Vector2f(1500, 450), true, sf::Vector2f(1500, 450), sf::Vector2f(1700, 450), HORIZONTAL);
 				posX += offset;
 
