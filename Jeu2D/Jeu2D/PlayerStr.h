@@ -4,7 +4,6 @@
 #include "CollisionStr.h"
 #include "bonus.h"
 
-
 struct Player
 {
 	sf::CircleShape body;

@@ -32,7 +32,7 @@ Player newPlayer()
 	return p;
 }
 
-void UpdatePlayer(Player& player, float dt, sf::Vector2f& velocity, sf::View& view,World* world, std::list<Bullet> bullets,GameState& state) {
+void UpdatePlayer(Player& player, float dt, sf::Vector2f& velocity, sf::View& view,World* world, std::list<Bullet>& bullets,GameState& state) {
 	player.velocity = velocity;
 
 	MovePlayer(player, dt);

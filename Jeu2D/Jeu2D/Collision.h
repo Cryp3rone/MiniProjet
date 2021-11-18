@@ -12,4 +12,6 @@ void OnCollisionStay(Player&, Collision&, bool, bool, World*);
 void OnCollisionLeave(Player&,Collision&,World* );
 void CreateCollision(Player&,sf::RectangleShape*,sf::CircleShape*,World*);
 
+void DestroyBullets(std::vector<Bullet*>&,std::list<Bullet>&);
+
 Plateform* GetPlateformByShape(sf::RectangleShape, World*);

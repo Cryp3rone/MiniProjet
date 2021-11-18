@@ -1,5 +1,6 @@
 #pragma once
 #include "Boss.h"
+#include "Timer.h"
 #include <cmath>
 
 void CreateBoss(World* world) {
@@ -53,10 +54,11 @@ void CreateBoss(World* world) {
 	boss->originalLeftAngle = leftarm_01.getRotation();
 	boss->originalRightAngle = rightarm_01.getRotation();
 	boss->waitTimer = 0;
-	boss->wait = false;
-	boss->rotateLeftArm = true; // 1 = LeftArm ; 2 = RightArm
+	boss->wait = true;
+	boss->rotateLeftArm = true; // true = LeftArm ; false = RightArm
 	boss->health = 6;
 	boss->maxHealth = 6;
+	boss->weaknessCollision = CreateCircleShape(sf::CircleShape(65), sf::Color::Black, sf::Vector2f(875, 195), 3, sf::Color::Blue, world);
 
 	sf::RectangleShape background = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(300, 25)), sf::Color::Black, sf::Vector2f(830.f, 410.f), 3, sf::Color::Red, false, world);
 	sf::RectangleShape health = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(80, 25)), sf::Color::Red, sf::Vector2f(830.f, 410.f), 0, sf::Color::Magenta, false, world);
@@ -68,20 +70,18 @@ void CreateBoss(World* world) {
 void UpdateBoss(Boss* boss,Player& player,float dt) {
 	if (boss->canMoove) {
 		float angle = dt * 3.141592f * 2.f * boss->speed;
-
 		switch (boss->rotateLeftArm) {
 			case true:
-				RotateArms(boss, angle, 163.f, boss->originalLeftAngle,true,boss->leftArm);
+				RotateArms(boss, angle, 163.f, boss->originalLeftAngle, true,boss->leftArm);
 				break;
 
 			case false:
-				RotateArms(boss, angle,20.f,boss->originalRightAngle,false,boss->rightArm);
+				RotateArms(boss, angle,20.f,boss->originalRightAngle,false, boss->rightArm);
 				break;
 		}
 
 		if (boss->wait) {
-			boss->waitTimer += dt;
-			if (boss->waitTimer >= 3.f) {
+			if (Wait(boss->waitTimer,3,dt)) {
 				boss->wait = false;
 				boss->waitTimer = 0;
 				boss->speed = 10;
@@ -102,6 +102,7 @@ void RotateArms(Boss* boss,float angle,float beginAngle,float endAngle,bool posi
 			if (positive ? arm.getRotation() >= endAngle : arm.getRotation() <= endAngle)
 				arm.rotate(positive ? -angle : angle);
 			else {
+			//	if (Wait(boss->waitTimer, 3, dt)) {}
 				boss->rotateLeftArm = !boss->rotateLeftArm;
 				boss->speed = 3;
 			}

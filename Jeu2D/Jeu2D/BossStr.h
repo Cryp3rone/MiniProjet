@@ -8,6 +8,7 @@ struct Boss {
 	std::vector<sf::RectangleShape> rightArm;
 	std::vector<sf::RectangleShape> leftArm;
 	std::vector<sf::Vertex> weaknessArea;
+	sf::CircleShape weaknessCollision;
 	HealthBar bar;
 	int health;
 	int maxHealth;

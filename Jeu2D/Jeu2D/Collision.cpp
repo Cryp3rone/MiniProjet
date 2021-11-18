@@ -32,6 +32,7 @@ void CreateCollision(Player& player, sf::RectangleShape* rectangleCol, sf::Circl
 void OnCollisionDetection(Player& player, World* world, std::list<Bullet>& bullets, GameState& state) {
 	//if (world->endFlag.getGlobalBounds().intersects(player.body.getGlobalBounds()))
 		//state = WIN;
+	std::vector<Bullet*> eraseBullets;
 
 	for (Plateform* plateform : world->plateforms) {
 		sf::RectangleShape& rectangle = plateform->rectangle;
@@ -48,6 +49,11 @@ void OnCollisionDetection(Player& player, World* world, std::list<Bullet>& bulle
 					OnCollisionLeave(player, player.collision, world);
 			}
 		}
+
+		for (Bullet& bullet : bullets) {
+			if (bullet.body.getGlobalBounds().intersects(plateform->rectangle.getGlobalBounds())) 
+				eraseBullets.push_back(&bullet);
+		}
 	}
 
 	for (Ennemy& ennemy : world->ennemies) {
@@ -55,6 +61,7 @@ void OnCollisionDetection(Player& player, World* world, std::list<Bullet>& bulle
 			sf::FloatRect checkRect = ennemy.circle ? ennemy.circle->getGlobalBounds() : ennemy.rectangle->getGlobalBounds();
 			if (bullet.body.getGlobalBounds().intersects(checkRect)) {
 				if (!player.collision.isOnCollision) {
+					eraseBullets.push_back(&bullet);
 					CreateCollision(player, !ennemy.circle ? nullptr : ennemy.rectangle, ennemy.circle ? ennemy.circle : nullptr,world); // Modifier 
 					OnCollisionEnter(player, player.collision, false, true, world);
 				}
@@ -88,6 +95,33 @@ void OnCollisionDetection(Player& player, World* world, std::list<Bullet>& bulle
 		if (voidCollision.intersects(player.body.getGlobalBounds())) 
 			world->groundY = 1000;
 	}
+
+	for (Bullet& bullet : bullets) {
+		if (bullet.body.getGlobalBounds().intersects(world->boss.weaknessCollision.getGlobalBounds())) {
+			if (world->boss.health > 0) {
+				world->boss.health -= 1;
+				break;
+				// tuer si plus de boss 
+			}
+
+			eraseBullets.push_back(&bullet);
+		}
+		
+		if (bullet.body.getGlobalBounds().intersects(world->boss.head.getGlobalBounds()))
+			eraseBullets.push_back(&bullet);
+
+		for (sf::RectangleShape& rectangle : world->boss.leftArm) {
+			if (bullet.body.getGlobalBounds().intersects(rectangle.getGlobalBounds()))
+				eraseBullets.push_back(&bullet);
+		}
+		for (sf::RectangleShape& rectangle : world->boss.rightArm) {
+			if (bullet.body.getGlobalBounds().intersects(rectangle.getGlobalBounds()))
+				eraseBullets.push_back(&bullet);
+		}
+
+	}
+
+	DestroyBullets(eraseBullets,bullets);
 }
 
 void OnCollisionEnter(Player& player,Collision& collision, bool isEnnemy,bool isBullet,World* world) {
@@ -146,4 +180,21 @@ void OnCollisionLeave(Player& player, Collision& collision, World* world) {
 	player.collision.rectangleCol = nullptr;
 
 	world->groundY = originalGroundY;
+}
+
+void DestroyBullets(std::vector<Bullet*>& eraseBullets, std::list<Bullet>& bullets) {
+	std::cout << "erase " << eraseBullets.size() << std::endl;
+
+	for (Bullet* bullet : eraseBullets) {
+		auto it = bullets.begin();
+
+		while (it != bullets.end()) {
+			if (&(*it) == bullet)
+				it = bullets.erase(it);
+			else
+				it++;
+		}
+	}
+
+	eraseBullets.clear();
 }

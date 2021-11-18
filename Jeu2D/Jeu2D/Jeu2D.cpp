@@ -1,5 +1,6 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <list>
 #include <windows.h>
 #include "LevelGenerator.h"
@@ -53,6 +54,15 @@ int main() {
 
 	//TEST BONUS
 	listBonus.push_back(CreateBonus(enumBonus::AMMO, 3.f));
+
+	sf::SoundBuffer buffer;
+	buffer.loadFromFile(getAssetsPath() + "\\music.ogg");
+
+	sf::Sound sound;
+	sound.setBuffer(buffer);
+	sound.setLoop(true);
+	sound.setVolume(20.f);
+	sound.play();
 
 	// Inputs
 	while (window.isOpen()) {
@@ -117,14 +127,15 @@ int main() {
 		}
 
 		if (game == PLAY) {
+			for (Bullet& bullet : bullets)
+				bullet.body.move(bullet.currVelocity);
+
 			ActualizeGroundY(player,world);
 			UpdateEnnemies(world, elapsedTime.asSeconds());
 			UpdatePlayer(player, elapsedTime.asSeconds(), velocity, camera, world,bullets,game);
 			UpdateBoss(&world->boss,player,dt);
 
-			for (Bullet& bullet : bullets)
-				bullet.body.move(bullet.currVelocity);
-
+			
 			if (player.health == 0)
 				game = LOOSE;
 		}
