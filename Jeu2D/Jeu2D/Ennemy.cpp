@@ -81,12 +81,13 @@ Ennemy CreateEnnemy(World* world, float speed, sf::Vector2f position, bool canMo
 }
 
 void RefreshEnnemies(World* world, sf::RenderWindow& window) {
-	for (Ennemy& ennemy : (*world).ennemies) {
-		if (ennemy.circle != nullptr)
+/*	for (Ennemy& ennemy : (*world).ennemies) {
+		if (ennemy.circle)
 			window.draw(*(ennemy).circle);
 		else
 			window.draw(*(ennemy).rectangle);
 	}
+	*/
 }
 
 void UpdateEnnemies(World* world, float deltaTime) {

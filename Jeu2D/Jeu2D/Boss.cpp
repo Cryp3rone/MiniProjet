@@ -66,7 +66,7 @@ void UpdateBoss(Boss* boss) {
 }
 
 void RefreshBoss(Boss* boss,sf::RenderWindow& window) {
-	window.draw(boss->head);
+/*	window.draw(boss->head);
 	
 	for (sf::RectangleShape rectangle : boss->rightArm) 
 		window.draw(rectangle);
@@ -76,5 +76,5 @@ void RefreshBoss(Boss* boss,sf::RenderWindow& window) {
 	sf::Vertex lines[16];
 	std::copy(boss->weaknessArea.begin(), boss->weaknessArea.end(), lines);
 	window.draw(lines, boss->weaknessArea.size(), sf::Lines);
-	
+*/	
 }

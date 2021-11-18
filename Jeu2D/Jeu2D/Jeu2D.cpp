@@ -61,13 +61,35 @@ int main() {
 		float dt = elapsedTime.asSeconds();
 
 		if (CanWallJump(player)) {
-			std::cout << "walljump" << std::endl;
 			Plateform& collisionPlateform = *(player.collision.plateform);
-			velocity.x = jumpForce * collisionPlateform.jumpDirection;
-			velocity.y = jumpForce;
-			player.lastDirection.x = collisionPlateform.jumpDirection * -1;
-			player.canJump = true;
-			JumpPlayer(player,dt,velocity,world);
+			sf::RectangleShape& shape = player.collision.plateform->rectangle;
+			sf::FloatRect playerCollision = player.body.getGlobalBounds();
+
+			float left, top, width, height;
+			if (collisionPlateform.jumpDirection == 1) { // Partie droite
+				left = shape.getPosition().x - 5;
+				top = shape.getPosition().y;
+				width = 15;
+				height = shape.getSize().y;
+			}
+			else {
+				left = shape.getPosition().x + shape.getSize().x - 10;
+				top = shape.getPosition().y;
+				width = 25;
+				height = shape.getSize().y;
+			}
+
+			sf::FloatRect check = sf::FloatRect(left, top, width, height);
+
+			if (check.intersects(playerCollision)) {
+				velocity.x = jumpForce * collisionPlateform.jumpDirection;
+				velocity.y = jumpForce;
+				player.lastDirection.x = collisionPlateform.jumpDirection * -1;
+				player.canJump = true;
+				JumpPlayer(player, dt, velocity, world);
+			}
+			else
+				player.canJump = true;
 		}
 
 		while (window.pollEvent(event)) {
@@ -79,11 +101,9 @@ int main() {
 					Shoot(player, window.mapPixelToCoords(sf::Mouse::getPosition(window)), bullets, dt);
 					break;
 				case sf::Event::KeyPressed:
-					if (event.key.code == sf::Keyboard::Space && CanStopJump(player)) {
-
-						std::cout << "stopJump" << std::endl;
+					if (event.key.code == sf::Keyboard::Space && CanStopJump(player)) 
 						player.canJump = false;
-					}
+					
 					break;
 			}
 		}
