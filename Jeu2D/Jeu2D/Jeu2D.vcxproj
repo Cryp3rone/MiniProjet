@@ -181,6 +181,7 @@
     <ClInclude Include="EnnemyBehaviour.h" />
     <ClInclude Include="EnnemyStr.h" />
     <ClInclude Include="GameState.h" />
+    <ClInclude Include="HealthBar.h" />
     <ClInclude Include="LevelGenerator.h" />
     <ClInclude Include="Plateform.h" />
     <ClInclude Include="PlateformStr.h" />

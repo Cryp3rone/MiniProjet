@@ -55,7 +55,13 @@ void CreateBoss(World* world) {
 	boss->waitTimer = 0;
 	boss->wait = false;
 	boss->rotateLeftArm = true; // 1 = LeftArm ; 2 = RightArm
+	boss->health = 6;
+	boss->maxHealth = 6;
 
+	sf::RectangleShape background = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(300, 25)), sf::Color::Black, sf::Vector2f(830.f, 410.f), 3, sf::Color::Red, false, world);
+	sf::RectangleShape health = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(80, 25)), sf::Color::Red, sf::Vector2f(830.f, 410.f), 0, sf::Color::Magenta, false, world);
+	boss->bar = {background,health};
+	
 	world->boss = *boss;
 }
 
@@ -104,9 +110,8 @@ void RotateArms(Boss* boss,float angle,float beginAngle,float endAngle,bool posi
 	}
 }
 
-void RefreshBoss(Boss* boss,sf::RenderWindow& window) {
+void RefreshBoss(Boss* boss,sf::RenderWindow& window,sf::View& view) {
 	window.draw(boss->head);
-	
 	for (sf::RectangleShape rectangle : boss->rightArm) 
 		window.draw(rectangle);
 	for (sf::RectangleShape rectangle : boss->leftArm) 
@@ -116,4 +121,10 @@ void RefreshBoss(Boss* boss,sf::RenderWindow& window) {
 	std::copy(boss->weaknessArea.begin(), boss->weaknessArea.end(), lines);
 	window.draw(lines, boss->weaknessArea.size(), sf::Lines);
 
+	boss->bar.background.setPosition(sf::Vector2f(view.getCenter().x - boss->bar.background.getSize().x / 2.f, 50.f));
+	boss->bar.health.setSize(sf::Vector2f((boss->bar.background.getSize().x / boss->maxHealth) * boss->health,boss->bar.health.getSize().y));
+	boss->bar.health.setPosition(sf::Vector2f(view.getCenter().x - boss->bar.background.getSize().x / 2.f, 50.f));
+
+	window.draw(boss->bar.background);
+	window.draw(boss->bar.health);
 }

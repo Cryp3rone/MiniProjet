@@ -30,9 +30,9 @@ World* GenerateLevel() {
 
 	srand(time(NULL));
 
-	for (size_t i = 0; i < 1; i++) { //entre le nombre de PF que tu veux faire spawn
+	/*for (size_t i = 0; i < 20; i++) { //entre le nombre de PF que tu veux faire spawn
 
-		pFType = /*rand() % 9*/8;
+		pFType = rand() % 9;
 		sizeL = rand() % 210 + 50;
 		offset = rand() % 150 + 100;
 		bool spawn = false;
@@ -88,9 +88,9 @@ World* GenerateLevel() {
 			case(8):
 				if (!spawn) {
 					H = 300 + (rand() % (350 - 300 + 1));
-					//CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(30, 200)), sf::Color::Black, sf::Vector2f(pos, 170), 3, sf::Color::Yellow, true, level), -1, WALL_JUMP,level); // Partie Gauche
+					CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(30, 200)), sf::Color::Black, sf::Vector2f(pos, 170), 3, sf::Color::Yellow, true, level), -1, WALL_JUMP,level); // Partie Gauche
 					int randomY = rand() % 300 + 200;
-					//CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(30, randomY)), sf::Color::Black, sf::Vector2f(pos + wallJumpOffSett, 170), 3, sf::Color::Magenta, true, level), 1, WALL_JUMP,level); // Partie Droite
+					CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(30, randomY)), sf::Color::Black, sf::Vector2f(pos + wallJumpOffSett, 170), 3, sf::Color::Magenta, true, level), 1, WALL_JUMP,level); // Partie Droite
 					pos += sizeL + offset + wallJumpOffSett;
 					spawn = true;
 				}
@@ -99,7 +99,7 @@ World* GenerateLevel() {
 
 		//CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(100000000, 125)), sf::Color::Black, sf::Vector2f(0, 475), 3, sf::Color::Blue, false, level),0,NORMAL,level);
 	}
-
+	*/
 	for (size_t i = 0; i < 10; i++) {
 		pFType = rand() % 5;
 		floorSize = rand() % 600 + 400;
@@ -129,8 +129,8 @@ World* GenerateLevel() {
 	for (Plateform* plateform : level->plateforms) {
 		if (plateform->type == FLOOR) {
 
-			if (lastShape) {
-				sf::FloatRect collision = sf::FloatRect(lastShape->getPosition().x + lastShape->getSize().x,lastShape->getPosition().y,plateform->rectangle.getPosition().x - (lastShape->getPosition().x + lastShape->getSize().x),1000);
+			if (lastShape) { // 40 représente dans le calcul le rayon du joueur
+				sf::FloatRect collision = sf::FloatRect(lastShape->getPosition().x + lastShape->getSize().x + 40,lastShape->getPosition().y,plateform->rectangle.getPosition().x - (lastShape->getPosition().x + lastShape->getSize().x) - 40,1000);
 				level->voidArea.push_back(collision);
 			}
 

@@ -136,7 +136,7 @@ int main() {
 		if (game == PLAY) {
 			RefreshWorld(world, window);
 			RefreshEnnemies(world, window);
-			RefreshBoss(&world->boss,window);
+			RefreshBoss(&world->boss,window,camera);
 
 			window.setView(camera);
 			window.draw(player.body);
