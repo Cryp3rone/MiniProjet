@@ -83,6 +83,11 @@ void OnCollisionDetection(Player& player, World* world, std::list<Bullet>& bulle
 			}
 		}
 	}
+
+	for (sf::FloatRect& voidCollision : world->voidArea) {
+		if (voidCollision.intersects(player.body.getGlobalBounds())) 
+			world->groundY = 1000;
+	}
 }
 
 void OnCollisionEnter(Player& player,Collision& collision, bool isEnnemy,bool isBullet,World* world) {
