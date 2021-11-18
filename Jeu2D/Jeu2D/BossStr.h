@@ -9,4 +9,11 @@ struct Boss {
 	std::vector<sf::Vertex> weaknessArea;
 	int health;
 	int damage;
+	bool canMoove;
+	float speed;
+	bool wait;
+	float waitTimer;
+	float originalLeftAngle;
+	float originalRightAngle;
+	bool rotateLeftArm;
 };

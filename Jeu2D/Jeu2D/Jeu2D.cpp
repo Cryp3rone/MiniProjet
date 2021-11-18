@@ -120,7 +120,7 @@ int main() {
 			ActualizeGroundY(player,world);
 			UpdateEnnemies(world, elapsedTime.asSeconds());
 			UpdatePlayer(player, elapsedTime.asSeconds(), velocity, camera, world,bullets,game);
-			UpdateBoss(&world->boss);
+			UpdateBoss(&world->boss,player,dt);
 
 			for (Bullet& bullet : bullets)
 				bullet.body.move(bullet.currVelocity);
