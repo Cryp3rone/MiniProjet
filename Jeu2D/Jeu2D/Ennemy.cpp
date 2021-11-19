@@ -14,21 +14,24 @@ void CreateEnnemies(World* world) {
 	int pos;
 	for (Plateform* platform : world->plateforms)
 	{
-		for (size_t i = 0; i < 40; i++) {
-			ennemyTyp = rand() % 2;
-			offset = rand() % 600 + 300;
+		for (size_t i = 0; i < 15; i++) {
+
 			if (platform->type == ENNEMI) {
+				ennemyTyp = rand() % 2;
+				offset = rand() % 600 + 300;
 				switch (ennemyTyp)
 				{
 				case(0):
-					CreateCEnnemy(world, CreateCircleShape(new sf::CircleShape(15, 3), sf::Color::Black, sf::Vector2f(platform->rectangle.getPosition().x, 450), 3, sf::Color::Color::Red, world),
-						50, sf::Vector2f(1500, 450), true, sf::Vector2f(1500, 450), sf::Vector2f(1700, 450), HORIZONTAL);
-					posX += offset;
-				break;
+					CreateCEnnemy(world, CreateCircleShape(new sf::CircleShape(15, 3), sf::Color::Black, sf::Vector2f(platform->rectangle.getPosition().x+10, platform->rectangle.getPosition().y), 3, sf::Color::Color::Red, world),
+						50, sf::Vector2f(1500, 400), true, sf::Vector2f(1500, 480), sf::Vector2f(1700, 480), HORIZONTAL);
+					std::cout << "ennemy 1" << std::endl;
+					//posX += offset;
+					break;
 				case(1):
-					CreateCEnnemy(world, CreateCircleShape(new sf::CircleShape(15, 3), sf::Color::Black, sf::Vector2f(posX, 300), 3, sf::Color::Color::Red, world),
-						150, sf::Vector2f(650, 300), true, sf::Vector2f(650, 300), sf::Vector2f(650, 450), VERTICAL);
-					posX += offset;
+					CreateCEnnemy(world, CreateCircleShape(new sf::CircleShape(15, 3), sf::Color::Black, sf::Vector2f(platform->rectangle.getPosition().x+10, platform->rectangle.getPosition().y), 3, sf::Color::Color::Red, world),
+						150, sf::Vector2f(650, 300), true, sf::Vector2f(650, 200), sf::Vector2f(650, 475), VERTICAL);
+					std::cout << "pos"<< platform->rectangle.getPosition().y << std::endl;
+					//posX += offset;
 					break;
 				default:
 					break;
@@ -36,29 +39,6 @@ void CreateEnnemies(World* world) {
 			}
 		}
 	}
-	/*for (size_t i = 0; i < 40; i++)
-	{
-		ennemyTyp = rand() % 2;
-		offset = rand() % 600 + 300;
-		switch(ennemyTyp)
-		{
-		case(0):
-
-			
-			break;
-		case(1):
-			CreateCEnnemy(world, CreateCircleShape(new sf::CircleShape(15, 3), sf::Color::Black, sf::Vector2f(posX, 300), 3, sf::Color::Color::Red, world),
-				150, sf::Vector2f(650, 300), true, sf::Vector2f(650, 300), sf::Vector2f(650, 450), VERTICAL);
-			posX += offset;
-			break;
-		default:
-			break;
-		}
-	}*/
-
-	
-
-	
 }
 
 void CreateCEnnemy(World* world, sf::CircleShape* circle, float speed, sf::Vector2f position, bool canMoove, sf::Vector2f min, sf::Vector2f max, _EnnemyBehaviour behaviour) {
@@ -71,23 +51,23 @@ void CreateCEnnemy(World* world, sf::CircleShape* circle, float speed, sf::Vecto
 
 void CreateREnnemy(World* world, sf::RectangleShape rectangle, float speed, sf::Vector2f position, bool canMoove, sf::Vector2f min, sf::Vector2f max, _EnnemyBehaviour behaviour) {
 
-	Ennemy ennemy = CreateEnnemy(world, speed, position, canMoove,min,max,behaviour);
-	ennemy.rectangle = &rectangle;
+	Ennemy ennemy		= CreateEnnemy(world, speed, position, canMoove,min,max,behaviour);
+	ennemy.rectangle	= &rectangle;
 	world->ennemies.push_back(ennemy);
 
 }
 
 Ennemy CreateEnnemy(World* world, float speed, sf::Vector2f position, bool canMoove,sf::Vector2f min,sf::Vector2f max, _EnnemyBehaviour behaviour) {
 	Ennemy ennemy;
-	ennemy.circle = nullptr;
-	ennemy.rectangle = nullptr;
-	ennemy.speed = speed;
-	ennemy.position = position;
-	ennemy.canMoove = canMoove;
-	ennemy.min = min;
-	ennemy.max = max;
-	ennemy.returnBack = false;
-	ennemy.behaviour = behaviour;
+	ennemy.circle		= nullptr;
+	ennemy.rectangle	= nullptr;
+	ennemy.speed		= speed;
+	ennemy.position		= position;
+	ennemy.canMoove		= canMoove;
+	ennemy.min			= min;
+	ennemy.max			= max;
+	ennemy.returnBack	= false;
+	ennemy.behaviour	= behaviour;
 	return ennemy;
 }
 

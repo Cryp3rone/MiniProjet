@@ -102,17 +102,16 @@ World* GenerateLevel() {
 		//CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(100000000, 125)), sf::Color::Black, sf::Vector2f(0, 475), 3, sf::Color::Blue, false, level),0,NORMAL,level);
 	}
 
-	for (size_t i = 0; i < 10; i++)
+	for (size_t i = 0; i < 10; i++)// génération des trous 
 	{
-		pFType = rand() % 5;
-		floorSize = rand() % 600 + 400;
-
-		holeSize = rand() % 100 + 50;
-		offset = rand() % 200 + 100;
+		floorSize	= rand() % 600 + 400;
+		holeSize	= rand() % 100 + 50;
+		offset		= rand() % 200 + 100;
 		CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(floorSize, 125)), sf::Color::Black, sf::Vector2f(floorPos, 475), 3, sf::Color::Blue, false, level), 0, NORMAL, level);
 		floorPos += holeSize + offset + floorSize;
 
 	}
+	//draepau de fin 
 	CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(40, 20)), sf::Color::Black, sf::Vector2f(pos + 35, 200), 3, sf::Color::Green, false, level), 0, NORMAL, level);
 	level->endFlag = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(10, 300)), sf::Color::Black, sf::Vector2f(pos + 35, 200), 3, sf::Color::Green, false, level);
 	CreatePlateform(level->endFlag, 0, NORMAL, level);
