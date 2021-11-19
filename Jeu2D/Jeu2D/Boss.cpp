@@ -9,7 +9,7 @@ void CreateBoss(World* world) {
 
 	sf::CircleShape head = CreateCircleShape(sf::CircleShape(80), sf::Color::Black, sf::Vector2f(900, 200),3,sf::Color::Magenta,world);
 	sf::RectangleShape leftarm_01 = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(120, 20)), sf::Color::Black, sf::Vector2f(900.f,200.f), 3, sf::Color::Magenta, false, world);
-	sf::RectangleShape leftarm_02 = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(120, 15)), sf::Color::Black, sf::Vector2f(830.f, 410.f), 3, sf::Color::Magenta, false, world); //leftarm_01.setOrigin(sf::Vector2f(head.getPosition().x + head.getRadius(),head.getPosition().y + head.getRadius()));
+	sf::RectangleShape leftarm_02 = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(120, 15)), sf::Color::Black, sf::Vector2f(1000.f, 410.f), 3, sf::Color::Magenta, false, world); //leftarm_01.setOrigin(sf::Vector2f(head.getPosition().x + head.getRadius(),head.getPosition().y + head.getRadius()));
 
 	sf::RectangleShape rightarm_01 = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(120, 20)), sf::Color::Black, sf::Vector2f(1060.f, 315.f), 3, sf::Color::Magenta, false, world);
 	sf::RectangleShape rightarm_02 = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(120, 15)), sf::Color::Black, sf::Vector2f(1150.f, 410.f), 3, sf::Color::Magenta, false, world);
@@ -20,17 +20,15 @@ void CreateBoss(World* world) {
 	leftarm_01.rotate(130);
 	leftarm_01.setPosition(head.getPosition().x + head.getOrigin().x, head.getPosition().y + head.getOrigin().y);
 
-	leftarm_02.setOrigin(leftarm_02.getSize().x + leftarm_01.getSize().x / 2.f ,leftarm_02.getSize().x + leftarm_01.getSize().y / 2.f); // Je centre son origine au centre du rectangle
 	leftarm_02.rotate(90);
-	leftarm_02.setPosition(leftarm_01.getPosition().x - 253,leftarm_01.getPosition().y + 340);
+	leftarm_02.setPosition(leftarm_01.getSize().x,0);
 
 	rightarm_01.setOrigin(-head.getRadius(), rightarm_01.getSize().y / 2.f); // Je centre son origine au centre du rectangle
 	rightarm_01.rotate(45);
 	rightarm_01.setPosition(head.getPosition().x + head.getOrigin().x, head.getPosition().y + head.getOrigin().y);
 
-	rightarm_02.setOrigin(-head.getRadius(), rightarm_02.getSize().y / 2.f); // Je centre son origine au centre du rectangle
-	rightarm_02.rotate(90);
-	rightarm_02.setPosition(head.getPosition().x + head.getOrigin().x + 140, head.getPosition().y + head.getOrigin().y + 70);
+	rightarm_02.rotate(45);
+	rightarm_02.setPosition(rightarm_01.getSize().x,0);
 	
 	bool back = true;
 	for (int i = 11;i < 20;i++) {
@@ -46,10 +44,14 @@ void CreateBoss(World* world) {
 	}
 
 	boss->head = head;	
+	
+
 	boss->leftArm.push_back(leftarm_01);
-	//boss->leftArm.push_back(leftarm_02);
+	boss->leftArm.push_back(leftarm_02);
 	boss->rightArm.push_back(rightarm_01);
-	//boss->rightArm.push_back(rightarm_02);
+	boss->rightArm.push_back(rightarm_02);
+
+
 	boss->canMoove = true;
 	boss->speed = 3;
 	boss->originalLeftAngle = leftarm_01.getRotation();
@@ -151,10 +153,15 @@ void RotateArms(Boss* boss,float angle,float beginAngle,float endAngle,bool posi
 
 void RefreshBoss(Boss* boss,sf::RenderWindow& window,sf::View& view) {
 	if (boss) {
-		for (sf::RectangleShape rectangle : boss->rightArm)
-			window.draw(rectangle);
-		for (sf::RectangleShape rectangle : boss->leftArm)
-			window.draw(rectangle);
+		window.draw(boss->rightArm[0]);
+		sf::RenderStates rightState;
+		rightState.transform = boss->rightArm[0].getTransform();
+		window.draw(boss->rightArm[1],rightState);
+
+		window.draw(boss->leftArm[0]);
+		sf::RenderStates leftState;
+		rightState.transform = boss->leftArm[0].getTransform();
+		window.draw(boss->leftArm[1], leftState);
 
 		boss->bar.background.setPosition(sf::Vector2f(view.getCenter().x - boss->bar.background.getSize().x / 2.f, 50.f));
 		boss->bar.health.setSize(sf::Vector2f((boss->bar.background.getSize().x / boss->maxHealth) * boss->health, boss->bar.health.getSize().y));

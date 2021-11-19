@@ -43,7 +43,7 @@ World* GenerateLevel() {
 			std::cout << "__________________tkt mec" << i << " "<< abs(H - preceH) << std::endl;
 			H += jumpH;
 		}
-		switch (pFType) {
+		/*switch (pFType) {
 			case(0):
 				CreatePlateform(CreateRectangleShape(new sf::RectangleShape(sf::Vector2f(sizeL, 500)), sf::Color::Black, sf::Vector2f(pos, H), 3, sf::Color::Yellow, true, level), 0, NORMAL, level);
 				H = 300 + (rand() % (350 - 300 + 1));
@@ -97,7 +97,7 @@ World* GenerateLevel() {
 				}
 				break;
 		}
-
+		*/
 	//	CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(100000000, 125)), sf::Color::Black, sf::Vector2f(0, 475), 3, sf::Color::Blue, false, level),0,NORMAL,level);
 	}
 	
@@ -132,7 +132,11 @@ World* GenerateLevel() {
 		if (plateform->type == FLOOR) {
 
 			if (lastShape) { // 40 représente dans le calcul le rayon du joueur
-				sf::FloatRect collision = sf::FloatRect(lastShape->getPosition().x + lastShape->getSize().x + 40,lastShape->getPosition().y,plateform->rectangle->getPosition().x - (lastShape->getPosition().x + lastShape->getSize().x) - 40,1000);
+				float distanceX = plateform->rectangle->getPosition().x - (lastShape->getPosition().x + lastShape->getSize().x) - 40;
+				if (distanceX < 0) 
+					distanceX *= -1;
+
+				sf::FloatRect collision = sf::FloatRect(lastShape->getPosition().x + lastShape->getSize().x + 40,lastShape->getPosition().y,distanceX,1000);
 				level->voidArea.push_back(collision);
 			}
 
@@ -143,13 +147,15 @@ World* GenerateLevel() {
 
 
 	level->groundY = originalGroundY;
-	std::cout << "groundY" << level->groundY << std::endl;
 	return level;
 }
 
 void RefreshWorld(World* level, sf::RenderWindow& window) {
 	for (std::pair<sf::RectangleShape*, Plateform*> pair : level->plateforms) 
 		window.draw(*pair.second->rectangle);	
+
+
+	//std::cout << "groundY" << level->groundY << std::endl;
 }
 
 void ActualizeGroundY(Player& player, World* world) {
