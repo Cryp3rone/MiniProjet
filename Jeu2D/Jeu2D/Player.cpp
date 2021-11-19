@@ -19,26 +19,29 @@ Player newPlayer()
 
 	p.health = 100.f;
 
-	Collision coll;
-	coll.isOnCollision = false;
-	coll.rectangleCol = nullptr;
-	coll.circleCol = nullptr;
-	p.collision = coll;
 	p.isJumping = false;
-
-	p.maxAmmo = 3;
+	p.lastJumpDirection = 0;
+	p.lastPosition = sf::Vector2f(0.f, 0.f);
+	p.maxAmmo = 10;
 	p.ammo = p.maxAmmo;
-
+	p.canJump = true;
 	return p;
 }
 
-void UpdatePlayer(Player& player, float dt, sf::Vector2f& velocity, sf::View& view,World* world, std::list<Bullet> bullets,GameState& state) {
+void UpdatePlayer(Player& player, float dt, sf::Vector2f& velocity, sf::View& view,World* world, std::list<Bullet>& bullets,GameState& state) {
+	player.velocity = velocity;
+
 	MovePlayer(player, dt);
 	JumpPlayer(player,dt,velocity,world);
 	OnCollisionDetection(player, world,bullets,state);
 	DestroyEnnemies(world);
+
+	if (player.body.getPosition().y >= 600) // Le joueur a dépassé la caméra
+		state = LOOSE;
+
 	view.setCenter(sf::Vector2f(player.body.getPosition().x, 300.f));
-} 
+	player.lastPosition = player.body.getPosition();
+}
 
 void MovePlayer(Player& player, float dt) {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
@@ -71,6 +74,28 @@ void MovePlayer(Player& player, float dt) {
 
 void JumpPlayer(Player& player,float dt, sf::Vector2f& velocity,World* world) {
 	if (player.canJump) {
+		for (std::pair<sf::Shape*,Collision*> pair : player.collisions) {
+			if (pair.second->isOnCollision && player.velocity.x != 0) {
+				if (pair.second->rectangleCol) {
+					Plateform* plateform = GetPlateformByShape(*pair.second->rectangleCol, world);
+
+					if (plateform) {
+						switch (player.lastJumpDirection != 0 && plateform->jumpDirection != player.lastJumpDirection) {
+						case true:
+							if (player.velocity.x < 0 && plateform->jumpDirection == -1)
+								velocity.x = 0;
+							else if (player.velocity.x > 0 && plateform->jumpDirection == 1)
+								velocity.x = 0;
+
+							break;
+						}
+
+						player.lastJumpDirection = plateform->jumpDirection;
+					}
+				}
+			}
+		}
+
 		if (isGrounded(player, world)) {
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
 				if (velocity.x != 0)
@@ -107,9 +132,20 @@ bool isOnFloor(Player& p) {
 }
 
 bool CanStopJump(Player& player) {
-	return player.isJumping && player.collision.isOnCollision/* && player.collision.plateform && player.collision.plateform->type == WALL_JUMP*/;
+
+	for (std::pair<sf::Shape*, Collision*> pair : player.collisions) {
+		if (player.isJumping && pair.second->isOnCollision && pair.second->plateform && pair.second->plateform->type == WALL_JUMP)
+			return true;
+	}
+
+	return false;
 }
 
 bool CanWallJump(Player& player) {
-	return !player.canJump && player.isJumping && player.collision.isOnCollision /*&& player.collision.plateform && player.collision.plateform->type == WALL_JUMP*/;
+	for (std::pair<sf::Shape*, Collision*> pair : player.collisions) {
+		if (!player.canJump && !player.isJumping && pair.second->isOnCollision && pair.second->plateform && pair.second->plateform->type == WALL_JUMP)
+			return true;
+	}
+
+	return false;
 }

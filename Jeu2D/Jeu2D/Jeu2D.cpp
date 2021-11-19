@@ -1,5 +1,6 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <list>
 #include <windows.h>
 #include "LevelGenerator.h"
@@ -7,9 +8,8 @@
 #include "Player.h"
 #include "Shoot.h"
 #include "GameState.h"
+#include "Boss.h"
 #include "Bonus.h"
-
-
 
 std::string getAppPath() {
 	char cExeFilePath[256];
@@ -48,13 +48,20 @@ int main() {
 	sf::Vector2f velocity(0.f,  5.f);
 	float speed = 100.f;
 	Player player = newPlayer();
-
 	std::list<Bullet> bullets;
 	std::list<Bonus> listBonus;
 	GameState game = PLAY;
-
 	//TEST BONUS
 	listBonus.push_back(CreateBonus(enumBonus::AMMO, 3.f));
+
+	sf::SoundBuffer buffer;
+	buffer.loadFromFile(getAssetsPath() + "\\music.ogg");
+
+	sf::Sound sound;
+	sound.setBuffer(buffer);
+	sound.setLoop(true);
+	sound.setVolume(20.f);
+	sound.play();
 
 	// Inputs
 	while (window.isOpen()) {
@@ -63,28 +70,62 @@ int main() {
 		float dt = elapsedTime.asSeconds();
 
 		if (CanWallJump(player)) {
-			std::cout << "walljump" << std::endl;
-			Plateform& collisionPlateform = *(player.collision.plateform);
-			velocity.x = jumpForce * collisionPlateform.jumpDirection;
-			velocity.y = jumpForce;
-			player.canJump = true;
-			JumpPlayer(player,dt,velocity,world);
+			Plateform* plateform = nullptr;
+
+			for (std::pair<sf::Shape*,Collision*> collisionPair : player.collisions) {
+				for (std::pair<sf::RectangleShape*, Plateform*> plateformPair : world->plateforms) {
+					if (collisionPair.first == plateformPair.second->rectangle) {
+						plateformPair.second;
+					}
+				}
+			}
+
+			if (plateform) {
+				sf::RectangleShape* shape = plateform->rectangle;
+				sf::FloatRect playerCollision = player.body.getGlobalBounds();
+
+				float left, top, width, height;
+				if (plateform->jumpDirection == 1) { // Partie droite
+					left = shape->getPosition().x - 5;
+					top = shape->getPosition().y;
+					width = 15;
+					height = shape->getSize().y;
+				}
+				else {
+					left = shape->getPosition().x + shape->getSize().x - 10;
+					top = shape->getPosition().y;
+					width = 25;
+					height = shape->getSize().y;
+				}
+
+				sf::FloatRect check = sf::FloatRect(left, top, width, height);
+
+				if (check.intersects(playerCollision)) {
+					velocity.x = jumpForce * plateform->jumpDirection;
+					velocity.y = jumpForce;
+					player.lastDirection.x = plateform->jumpDirection * -1;
+					player.canJump = true;
+					JumpPlayer(player, dt, velocity, world);
+				}
+				else
+					player.canJump = true;
+			}
 		}
 
 		while (window.pollEvent(event)) {
 			switch (event.type) {
 				case sf::Event::Closed:
+				//	UnloadLevel(world,player);
 					window.close();
+					return 0;
 					break;
 				case sf::Event::MouseButtonPressed:
-					Shoot(player, window.mapPixelToCoords(sf::Mouse::getPosition(window)), bullets, dt);
+					Shoot(player, window.mapPixelToCoords(sf::Mouse::getPosition(window)), bullets,PLAYER, dt);
 					break;
 				case sf::Event::KeyPressed:
-					if (event.key.code == sf::Keyboard::Space && CanStopJump(player)) {
-
-						std::cout << "stopJump" << std::endl;
-						player.canJump = false;
-					}
+					if (event.key.code == sf::Keyboard::Space && CanStopJump(player)) 
+						player.canJump = false;					
+					
 					break;
 			}
 		}
@@ -92,16 +133,21 @@ int main() {
 
 		if (firstFrame) {
 			world = GenerateLevel();
+			CreateBoss(world);
 			CreateEnnemies(world);
 			firstFrame = false;
 		}
 
 		if (game == PLAY) {
-			UpdateEnnemies(world, elapsedTime.asSeconds());
-			UpdatePlayer(player, elapsedTime.asSeconds(), velocity, camera, world,bullets,game);
-
 			for (Bullet& bullet : bullets)
 				bullet.body.move(bullet.currVelocity);
+
+			ActualizeGroundY(player,world);
+			UpdateEnnemies(world, elapsedTime.asSeconds());
+			UpdatePlayer(player, elapsedTime.asSeconds(), velocity, camera, world,bullets,game);
+			if(world->boss)
+				UpdateBoss(world,world->boss,player,bullets,dt);
+
 			
 			if (player.health == 0)
 				game = LOOSE;
@@ -114,11 +160,13 @@ int main() {
 		if (game == PLAY) {
 			RefreshWorld(world, window);
 			RefreshEnnemies(world, window);
+			if(world->boss)
+				RefreshBoss(world->boss,window,camera);
 
 			window.setView(camera);
 			window.draw(player.body);
-			for (int i = 1; i <= player.ammo; i++)
-			{
+
+			for (int i = 1; i <= player.ammo; i++) {
 				sf::CircleShape ammo = sf::CircleShape(12.f);
 				ammo.setFillColor(sf::Color::Green);
 				ammo.setPosition(sf::Vector2f(30.f * i, 20.f));
@@ -126,18 +174,15 @@ int main() {
 			}
 
 			for (Bullet& bullet: bullets)
-			{
 				window.draw(bullet.body);
-			}
 
 			for (Bonus& bonus : listBonus)
-			{
 				window.draw(bonus.body);
-			}
+			
 
 		}
 		else if(game == LOOSE)
-			window.draw(text);	
+			window.draw(text);
 		else {
 			text.setString("VICTOIRE");
 			text.setFillColor(sf::Color::Green);

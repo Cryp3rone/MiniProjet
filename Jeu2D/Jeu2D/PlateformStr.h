@@ -4,12 +4,13 @@
 
 enum PlateformType {
 	NORMAL,
+	FLOOR,
 	ENNEMI,
 	WALL_JUMP
 };
 
 struct Plateform {
-	sf::RectangleShape rectangle;
+	sf::RectangleShape* rectangle;
 	int jumpDirection;
 	PlateformType type;
 };
