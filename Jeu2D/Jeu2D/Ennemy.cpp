@@ -40,10 +40,10 @@ void CreateEnnemies(World* world) {
 	
 }
 
-void CreateCEnnemy(World* world, sf::CircleShape* circle, float speed, sf::Vector2f position, bool canMoove, sf::Vector2f min, sf::Vector2f max, _EnnemyBehaviour behaviour) {
+void CreateCEnnemy(World* world, sf::CircleShape circle, float speed, sf::Vector2f position, bool canMoove, sf::Vector2f min, sf::Vector2f max, _EnnemyBehaviour behaviour) {
 
 	Ennemy ennemy = CreateEnnemy(world,speed,position,canMoove,min,max,behaviour);
-	ennemy.circle = circle;
+	ennemy.circle = &circle;
 	world->ennemies.push_back(ennemy);
 
 }

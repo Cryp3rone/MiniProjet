@@ -5,7 +5,7 @@
 #include "LevelGenerator.h"
 
 void CreateEnnemies(World* world);
-void CreateCEnnemy(World* world,sf::CircleShape* shape, float speed,sf::Vector2f position,bool canMoove, sf::Vector2f min, sf::Vector2f max,_EnnemyBehaviour);
+void CreateCEnnemy(World* world,sf::CircleShape shape, float speed,sf::Vector2f position,bool canMoove, sf::Vector2f min, sf::Vector2f max,_EnnemyBehaviour);
 void CreateREnnemy(World* world, sf::RectangleShape shape, float speed, sf::Vector2f position, bool canMoove, sf::Vector2f min, sf::Vector2f max,_EnnemyBehaviour);
 Ennemy CreateEnnemy(World* world, float speed, sf::Vector2f position, bool canMoove, sf::Vector2f min, sf::Vector2f max, _EnnemyBehaviour);
 
