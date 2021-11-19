@@ -134,16 +134,16 @@ void OnCollisionDetection(Player& player, World* world, std::list<Bullet>& bulle
 			}
 		}
 		
-		if (bullet.body.getGlobalBounds().intersects(world->boss->head.getGlobalBounds()))
+		if (bullet.type == PLAYER &&  bullet.body.getGlobalBounds().intersects(world->boss->head.getGlobalBounds()))
 			eraseBullets.push_back(&bullet);
 
 		for (sf::RectangleShape& rectangle : world->boss->leftArm) {
-			if (bullet.body.getGlobalBounds().intersects(rectangle.getGlobalBounds()))
+			if (bullet.type == PLAYER &&  bullet.body.getGlobalBounds().intersects(rectangle.getGlobalBounds()))
 				eraseBullets.push_back(&bullet);
 		}
 		
 		for (sf::RectangleShape& rectangle : world->boss->rightArm) {
-			if (bullet.body.getGlobalBounds().intersects(rectangle.getGlobalBounds()))
+			if (bullet.type == PLAYER && bullet.body.getGlobalBounds().intersects(rectangle.getGlobalBounds()))
 				eraseBullets.push_back(&bullet);
 		}
 		

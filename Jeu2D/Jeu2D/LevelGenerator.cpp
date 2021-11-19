@@ -116,7 +116,6 @@ World* GenerateLevel() {
 
 	CreatePlateform(CreateRectangleShape(new sf::RectangleShape(sf::Vector2f(40, 20)), sf::Color::Black, sf::Vector2f(pos + 35, 200), 3, sf::Color::Green, false, level), 0, NORMAL, level);
 	
-	
 	level->endFlag = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(10, 300)), sf::Color::Black, sf::Vector2f(pos + 35, 200), 3, sf::Color::Green, false, level);
 	CreatePlateform(&level->endFlag, 0, NORMAL, level);
 	
