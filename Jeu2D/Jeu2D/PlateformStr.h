@@ -10,7 +10,7 @@ enum PlateformType {
 };
 
 struct Plateform {
-	sf::RectangleShape rectangle;
+	sf::RectangleShape* rectangle;
 	int jumpDirection;
 	PlateformType type;
 };

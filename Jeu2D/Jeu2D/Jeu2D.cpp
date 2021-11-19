@@ -70,42 +70,54 @@ int main() {
 		float dt = elapsedTime.asSeconds();
 
 		if (CanWallJump(player)) {
-			Plateform& collisionPlateform = *(player.collision.plateform);
-			sf::RectangleShape& shape = player.collision.plateform->rectangle;
-			sf::FloatRect playerCollision = player.body.getGlobalBounds();
+			Plateform* plateform = nullptr;
 
-			float left, top, width, height;
-			if (collisionPlateform.jumpDirection == 1) { // Partie droite
-				left = shape.getPosition().x - 5;
-				top = shape.getPosition().y;
-				width = 15;
-				height = shape.getSize().y;
-			}
-			else {
-				left = shape.getPosition().x + shape.getSize().x - 10;
-				top = shape.getPosition().y;
-				width = 25;
-				height = shape.getSize().y;
+			for (std::pair<sf::Shape*,Collision*> collisionPair : player.collisions) {
+				for (std::pair<sf::RectangleShape*, Plateform*> plateformPair : world->plateforms) {
+					if (collisionPair.first == plateformPair.second->rectangle) {
+						plateformPair.second;
+					}
+				}
 			}
 
-			sf::FloatRect check = sf::FloatRect(left, top, width, height);
+			if (plateform) {
+				sf::RectangleShape* shape = plateform->rectangle;
+				sf::FloatRect playerCollision = player.body.getGlobalBounds();
 
-			if (check.intersects(playerCollision)) {
-				velocity.x = jumpForce * collisionPlateform.jumpDirection;
-				velocity.y = jumpForce;
-				player.lastDirection.x = collisionPlateform.jumpDirection * -1;
-				player.canJump = true;
-				JumpPlayer(player, dt, velocity, world);
+				float left, top, width, height;
+				if (plateform->jumpDirection == 1) { // Partie droite
+					left = shape->getPosition().x - 5;
+					top = shape->getPosition().y;
+					width = 15;
+					height = shape->getSize().y;
+				}
+				else {
+					left = shape->getPosition().x + shape->getSize().x - 10;
+					top = shape->getPosition().y;
+					width = 25;
+					height = shape->getSize().y;
+				}
+
+				sf::FloatRect check = sf::FloatRect(left, top, width, height);
+
+				if (check.intersects(playerCollision)) {
+					velocity.x = jumpForce * plateform->jumpDirection;
+					velocity.y = jumpForce;
+					player.lastDirection.x = plateform->jumpDirection * -1;
+					player.canJump = true;
+					JumpPlayer(player, dt, velocity, world);
+				}
+				else
+					player.canJump = true;
 			}
-			else
-				player.canJump = true;
 		}
 
 		while (window.pollEvent(event)) {
 			switch (event.type) {
 				case sf::Event::Closed:
-					//UnloadLevel(world,player);
+				//	UnloadLevel(world,player);
 					window.close();
+					return 0;
 					break;
 				case sf::Event::MouseButtonPressed:
 					Shoot(player, window.mapPixelToCoords(sf::Mouse::getPosition(window)), bullets,PLAYER, dt);

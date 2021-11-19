@@ -5,14 +5,13 @@
 #include "LevelGenerator.h"
 // Faire une map
 
-void CreatePlateform(sf::RectangleShape form,int jumpDirection, PlateformType type,World* world) {
+void CreatePlateform(sf::RectangleShape* form,int jumpDirection, PlateformType type,World* world) {
 	Plateform* plateform = new Plateform;
 
 	plateform->rectangle = form;
 	plateform->jumpDirection = jumpDirection;
 	plateform->type = type;
-	world->plateforms.push_back(plateform);
-
+	world->plateforms[form] = plateform;
 	
-	// NE PAS OUBLIER A delete
+
 }

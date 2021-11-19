@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 
 struct World {
-	std::vector<Plateform*> plateforms;
+	std::map<sf::RectangleShape*,Plateform*> plateforms;
 	std::list<Ennemy> ennemies;
 	std::vector<Ennemy*> eraseEnnemies;
 	std::vector<sf::FloatRect> voidArea;
