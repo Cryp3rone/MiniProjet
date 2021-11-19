@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "Player.h"
 #include "LevelGenerator.h"
+#include "Boss.h"
 
 
 World* GenerateLevel() {
@@ -31,7 +32,7 @@ World* GenerateLevel() {
 
 	srand(time(NULL));
 
-	for (size_t i = 0; i < 20; i++) { //entre le nombre de PF que tu veux faire spawn
+	for (size_t i = 0; i < /*20*/ 1; i++) { //entre le nombre de PF que tu veux faire spawn
 
 		pFType = rand() % 9;
 		sizeL = rand() % 210 + 50;
@@ -43,7 +44,7 @@ World* GenerateLevel() {
 			std::cout << "__________________tkt mec" << i << " "<< abs(H - preceH) << std::endl;
 			H += jumpH;
 		}
-		/*switch (pFType) {
+		switch (pFType) {
 			case(0):
 				CreatePlateform(CreateRectangleShape(new sf::RectangleShape(sf::Vector2f(sizeL, 500)), sf::Color::Black, sf::Vector2f(pos, H), 3, sf::Color::Yellow, true, level), 0, NORMAL, level);
 				H = 300 + (rand() % (350 - 300 + 1));
@@ -97,7 +98,7 @@ World* GenerateLevel() {
 				}
 				break;
 		}
-		*/
+		
 	//	CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(100000000, 125)), sf::Color::Black, sf::Vector2f(0, 475), 3, sf::Color::Blue, false, level),0,NORMAL,level);
 	}
 	
@@ -113,17 +114,19 @@ World* GenerateLevel() {
 		floorPos += holeSize + offset + floorSize;
 	}
 
+	// 35
+	CreateBoss(level,pos);
 
-	CreatePlateform(CreateRectangleShape(new sf::RectangleShape(sf::Vector2f(40, 20)), sf::Color::Black, sf::Vector2f(pos + 35, 200), 3, sf::Color::Green, false, level), 0, NORMAL, level);
+	CreatePlateform(CreateRectangleShape(new sf::RectangleShape(sf::Vector2f(40, 20)), sf::Color::Black, sf::Vector2f(pos + 450, 200), 3, sf::Color::Green, false, level), 0, NORMAL, level);
 	
-	level->endFlag = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(10, 300)), sf::Color::Black, sf::Vector2f(pos + 35, 200), 3, sf::Color::Green, false, level);
+	level->endFlag = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(10, 280)), sf::Color::Black, sf::Vector2f(pos + 450, 200), 3, sf::Color::Green, false, level);
 	CreatePlateform(&level->endFlag, 0, NORMAL, level);
 	
 	
 	
-	CreatePlateform(CreateRectangleShape(new sf::RectangleShape(sf::Vector2f(10, 300)), sf::Color::Black, sf::Vector2f(pos + 35, 200), 3, sf::Color::Green, false, level), 0, NORMAL, level);
-	CreatePlateform(CreateRectangleShape(new sf::RectangleShape(sf::Vector2f(50, 30)), sf::Color::Black, sf::Vector2f(pos + 15, 450), 3, sf::Color::Green, false, level), 0, NORMAL,level);
-	CreatePlateform(CreateRectangleShape(new sf::RectangleShape(sf::Vector2f(80, 30)), sf::Color::Black, sf::Vector2f(pos, 475), 3, sf::Color::Green, false, level), 0, NORMAL, level);
+	CreatePlateform(CreateRectangleShape(new sf::RectangleShape(sf::Vector2f(10, 280)), sf::Color::Black, sf::Vector2f(pos + 450, 200), 3, sf::Color::Green, false, level), 0, NORMAL, level);
+	CreatePlateform(CreateRectangleShape(new sf::RectangleShape(sf::Vector2f(50, 30)), sf::Color::Black, sf::Vector2f(pos + 435, 450), 3, sf::Color::Green, false, level), 0, NORMAL,level);
+	CreatePlateform(CreateRectangleShape(new sf::RectangleShape(sf::Vector2f(80, 30)), sf::Color::Black, sf::Vector2f(pos + 420, 475), 3, sf::Color::Green, false, level), 0, NORMAL, level);
 
 	sf::RectangleShape* lastShape = nullptr;
 	for (std::pair<sf::RectangleShape*, Plateform*> pair : level->plateforms) {
@@ -131,7 +134,7 @@ World* GenerateLevel() {
 		if (plateform->type == FLOOR) {
 
 			if (lastShape) { // 40 représente dans le calcul le rayon du joueur
-				float distanceX = plateform->rectangle->getPosition().x - (lastShape->getPosition().x + lastShape->getSize().x) - 40;
+				float distanceX = plateform->rectangle.getPosition().x - (lastShape->getPosition().x + lastShape->getSize().x) - 40;
 				if (distanceX < 0) 
 					distanceX *= -1;
 
@@ -139,11 +142,9 @@ World* GenerateLevel() {
 				level->voidArea.push_back(collision);
 			}
 
-			lastShape = plateform->rectangle;
+			lastShape = &plateform->rectangle;
 		}
 	}
-
-
 
 	level->groundY = originalGroundY;
 	return level;
@@ -151,10 +152,7 @@ World* GenerateLevel() {
 
 void RefreshWorld(World* level, sf::RenderWindow& window) {
 	for (std::pair<sf::RectangleShape*, Plateform*> pair : level->plateforms) 
-		window.draw(*pair.second->rectangle);	
-
-
-	//std::cout << "groundY" << level->groundY << std::endl;
+		window.draw(*pair.first);
 }
 
 void ActualizeGroundY(Player& player, World* world) {
@@ -163,7 +161,7 @@ void ActualizeGroundY(Player& player, World* world) {
 	for (std::pair<sf::RectangleShape*, Plateform*> pair : world->plateforms) {
 		Plateform* plateform = pair.second;
 		if (plateform->type == FLOOR) {
-			isOnFloor = player.body.getPosition().x >= plateform->rectangle->getPosition().x && player.body.getPosition().x <= plateform->rectangle->getPosition().x + plateform->rectangle->getSize().x /*&& world->groundY == originalGroundY*/;
+			isOnFloor = player.body.getPosition().x >= plateform->rectangle.getPosition().x && player.body.getPosition().x <= plateform->rectangle.getPosition().x + plateform->rectangle.getSize().x /*&& world->groundY == originalGroundY*/;
 			
 			if (isOnFloor)
 				break;
@@ -203,7 +201,7 @@ sf::CircleShape CreateCircleShape(sf::CircleShape shape, sf::Color color, sf::Ve
 void UnloadLevel(World* world, Player& player) {
 	for (std::pair<sf::RectangleShape*, Plateform*> pair : world->plateforms) {
 		delete pair.first;
-		delete pair.second->rectangle;
+		delete &pair.second->rectangle;
 		delete pair.second;
 	}
 

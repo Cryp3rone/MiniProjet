@@ -5,7 +5,7 @@
 #include "ShootStr.h"
 #include <list>
 
-void CreateBoss(World*);
+void CreateBoss(World*,int);
 void UpdateBoss(World*,Boss*,Player&, std::list<Bullet>&, float);
 void RefreshBoss(Boss*,sf::RenderWindow&,sf::View&);
 void RotateArms(Boss*, float,float,float,bool,std::vector<sf::RectangleShape>&);

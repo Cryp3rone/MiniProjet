@@ -74,28 +74,28 @@ int main() {
 
 			for (std::pair<sf::Shape*,Collision*> collisionPair : player.collisions) {
 				for (std::pair<sf::RectangleShape*, Plateform*> plateformPair : world->plateforms) {
-					if (collisionPair.first == plateformPair.second->rectangle) {
+					if (collisionPair.first == &plateformPair.second->rectangle) {
 						plateformPair.second;
 					}
 				}
 			}
 
 			if (plateform) {
-				sf::RectangleShape* shape = plateform->rectangle;
+				sf::RectangleShape& shape = plateform->rectangle;
 				sf::FloatRect playerCollision = player.body.getGlobalBounds();
 
 				float left, top, width, height;
 				if (plateform->jumpDirection == 1) { // Partie droite
-					left = shape->getPosition().x - 5;
-					top = shape->getPosition().y;
+					left = shape.getPosition().x - 5;
+					top = shape.getPosition().y;
 					width = 15;
-					height = shape->getSize().y;
+					height = shape.getSize().y;
 				}
 				else {
-					left = shape->getPosition().x + shape->getSize().x - 10;
-					top = shape->getPosition().y;
+					left = shape.getPosition().x + shape.getSize().x - 10;
+					top = shape.getPosition().y;
 					width = 25;
-					height = shape->getSize().y;
+					height = shape.getSize().y;
 				}
 
 				sf::FloatRect check = sf::FloatRect(left, top, width, height);
@@ -133,7 +133,6 @@ int main() {
 
 		if (firstFrame) {
 			world = GenerateLevel();
-			CreateBoss(world);
 			CreateEnnemies(world);
 			firstFrame = false;
 		}

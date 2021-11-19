@@ -4,6 +4,7 @@
 #include "HealthBar.h"
 #include "Timer.h"
 
+
 enum BossState {
 	NONE,
 	ANGRY

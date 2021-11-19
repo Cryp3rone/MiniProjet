@@ -52,13 +52,12 @@ void OnCollisionDetection(Player& player, World* world, std::list<Bullet>& bulle
 
 	for (std::pair<sf::RectangleShape*, Plateform*> pair : world->plateforms) {
 		Plateform* plateform = pair.second;
-		sf::RectangleShape* rectangle = plateform->rectangle;
+		sf::RectangleShape& rectangle = plateform->rectangle;
 		if (plateform->type != FLOOR) { // On skip la collision du bas
-			if (rectangle->getGlobalBounds().intersects(player.body.getGlobalBounds())) { // Il est en collision avec une plateforme
+			if (rectangle.getGlobalBounds().intersects(player.body.getGlobalBounds())) { // Il est en collision avec une plateforme
 				Collision* coll = new Collision;
-				if (!HasCollision(rectangle,player,*coll)) {
-					std::cout << "enter" << std::endl;
-					CreateCollision(player,*coll, rectangle, nullptr,world);
+				if (!HasCollision(&rectangle,player,*coll)) {
+					CreateCollision(player,*coll, &rectangle, nullptr,world);
 					OnCollisionEnter(player, *coll, false, false, world);
 				}
 				else 
@@ -66,12 +65,12 @@ void OnCollisionDetection(Player& player, World* world, std::list<Bullet>& bulle
 			}
 			else {
 				Collision* coll = new Collision;
-				if (HasCollision(rectangle, player, *coll) && coll->isOnCollision && coll->rectangleCol != nullptr && coll->rectangleCol == rectangle)
+				if (HasCollision(&rectangle, player, *coll) && coll->isOnCollision && coll->rectangleCol != nullptr && coll->rectangleCol == &rectangle)
 					OnCollisionLeave(player, *coll, world);
 			}
 
 			for (Bullet& bullet : bullets) {
-				if (bullet.body.getGlobalBounds().intersects(plateform->rectangle->getGlobalBounds()))
+				if (bullet.body.getGlobalBounds().intersects(plateform->rectangle.getGlobalBounds()))
 					eraseBullets.push_back(&bullet);
 			}
 		}
@@ -212,6 +211,7 @@ void OnCollisionLeave(Player& player, Collision& collision, World* world) {
 			else
 				it++;
 		}
+		
 	}
 	else {
 		for (auto it = player.collisions.begin(); it != player.collisions.end();) {
@@ -220,10 +220,11 @@ void OnCollisionLeave(Player& player, Collision& collision, World* world) {
 			else
 				it++;
 		}
+
 	}
 	
-	delete collision.circleCol;
-	delete collision.rectangleCol;
+	//delete collision.circleCol;
+	//delete collision.rectangleCol;
 
 	world->groundY = originalGroundY;
 }

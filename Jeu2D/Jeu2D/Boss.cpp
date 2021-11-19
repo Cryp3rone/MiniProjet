@@ -4,16 +4,16 @@
 #include <cmath>
 #include "Shoot.h";
 
-void CreateBoss(World* world) {
+void CreateBoss(World* world,int beginPos) {
 	Boss* boss = new Boss;
 
-	sf::CircleShape head = CreateCircleShape(sf::CircleShape(80), sf::Color::Black, sf::Vector2f(900, 200),3,sf::Color::Magenta,world);
-	sf::RectangleShape leftarm_01 = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(120, 20)), sf::Color::Black, sf::Vector2f(900.f,200.f), 3, sf::Color::Magenta, false, world);
-	sf::RectangleShape leftarm_02 = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(120, 15)), sf::Color::Black, sf::Vector2f(815.f, 390.f), 3, sf::Color::Magenta, false, world); //leftarm_01.setOrigin(sf::Vector2f(head.getPosition().x + head.getRadius(),head.getPosition().y + head.getRadius()));
+	sf::CircleShape head = CreateCircleShape(sf::CircleShape(80), sf::Color::Black, sf::Vector2f(beginPos, 200),3,sf::Color::Magenta,world);
+	sf::RectangleShape leftarm_01 = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(120, 20)), sf::Color::Black, sf::Vector2f(beginPos,200.f), 3, sf::Color::Magenta, false, world);
+	sf::RectangleShape leftarm_02 = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(120, 15)), sf::Color::Black, sf::Vector2f(beginPos - 85, 390.f), 3, sf::Color::Magenta, false, world); //leftarm_01.setOrigin(sf::Vector2f(head.getPosition().x + head.getRadius(),head.getPosition().y + head.getRadius()));
 
-	sf::RectangleShape rightarm_01 = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(120, 20)), sf::Color::Black, sf::Vector2f(1060.f, 315.f), 3, sf::Color::Magenta, false, world);
-	sf::RectangleShape rightarm_02 = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(120, 15)), sf::Color::Black, sf::Vector2f(1150.f, 410.f), 3, sf::Color::Magenta, false, world);
-	
+	sf::RectangleShape rightarm_01 = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(120, 20)), sf::Color::Black, sf::Vector2f(beginPos + 160, 315.f), 3, sf::Color::Magenta, false, world);
+	sf::RectangleShape rightarm_02 = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(120, 15)), sf::Color::Black, sf::Vector2f(beginPos + 250, 410.f), 3, sf::Color::Magenta, false, world);
+
 	head.setOrigin(40, 40);
 
 	leftarm_01.setOrigin(-head.getRadius() ,leftarm_01.getSize().y / 2.f); // Je centre son origine au centre du rectangle
