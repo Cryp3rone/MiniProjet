@@ -10,5 +10,5 @@ struct World {
 	std::vector<sf::FloatRect> voidArea;
 	sf::RectangleShape endFlag;
 	float groundY;
-	Boss boss;
+	Boss* boss;
 };

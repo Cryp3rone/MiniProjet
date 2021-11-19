@@ -27,8 +27,9 @@ Player newPlayer()
 	p.isJumping = false;
 	p.lastJumpDirection = 0;
 	p.lastPosition = sf::Vector2f(0.f, 0.f);
-	p.maxAmmo = 3;
+	p.maxAmmo = 10;
 	p.ammo = p.maxAmmo;
+	p.canJump = true;
 	return p;
 }
 
@@ -78,7 +79,6 @@ void MovePlayer(Player& player, float dt) {
 
 void JumpPlayer(Player& player,float dt, sf::Vector2f& velocity,World* world) {
 	if (player.canJump) {
-
 		if (player.collision.isOnCollision && player.velocity.x != 0) {
 			if (player.collision.rectangleCol) {
 				Plateform* plateform = GetPlateformByShape(*player.collision.rectangleCol,world);

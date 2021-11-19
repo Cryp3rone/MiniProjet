@@ -12,7 +12,7 @@ void CreateEnnemies(World* world) {
 	int posX=300;
 	int offset = 0;
 	int pos;
-	for (Plateform* platform:world->plateforms) {
+	/*for (Plateform* platform:world->plateforms) {
 		for (size_t i = 0; i < 40; i++) {
 			if (platform->type == ENNEMI) {
 				CreateCEnnemy(world,&CreateCircleShape(sf::CircleShape(15, 3), sf::Color::Black, sf::Vector2f(platform->rectangle.getPosition().x, 450), 3, sf::Color::Color::Red, world),
@@ -34,7 +34,7 @@ void CreateEnnemies(World* world) {
 				break;
 		}
 	}
-
+	*/
 	
 
 	
@@ -83,7 +83,7 @@ void RefreshEnnemies(World* world, sf::RenderWindow& window) {
 
 void UpdateEnnemies(World* world, float deltaTime) {
 	for (Ennemy& ennemy : world->ennemies) {
-		if (ennemy.canMoove) 
+		if (ennemy.canMoove)
 			MooveEnnemy(ennemy, deltaTime);
 	}
 }
@@ -131,8 +131,11 @@ void DestroyEnnemies(World* world) {
 		auto it = world->ennemies.begin();
 
 		while (it != world->ennemies.end()) {
-			if (&(*it) == ennemy) 
-				it = world->ennemies.erase(it);	
+			if (&(*it) == ennemy) {
+				delete &(*it).circle;
+				delete& (*it).rectangle; //Attention ptetre pas faire ca si on veut recharger le jeu
+				it = world->ennemies.erase(it);
+			}
 			else 
 				it++;
 		}

@@ -1,8 +1,18 @@
 #include <iostream>
+#include "Timer.h";
 
-bool Wait(float& timer, int secondsToWait,float dt) {
-	if (timer < secondsToWait) 
-		timer += dt;
+Timer* InitTimer(int secondsToWait, float dt) {
+	Timer* timer = new Timer;
+	timer->timerSeconds = 0;
+	timer->secondsToWait = secondsToWait;
+	timer->deltaTime = dt;
+
+	return timer;
+}
+
+bool Wait(Timer& timer) {
+	if (timer.timerSeconds < timer.secondsToWait) 
+		timer.timerSeconds += timer.deltaTime;
 	
-	return timer >= secondsToWait;
+	return timer.timerSeconds >= timer.secondsToWait;
 }

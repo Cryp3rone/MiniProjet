@@ -13,3 +13,5 @@ sf::RectangleShape CreateRectangleShape(sf::RectangleShape shape, sf::Color colo
 
 void RefreshWorld(World* level,sf::RenderWindow& window);
 void ActualizeGroundY(Player&, World*);
+
+void UnloadLevel(World*,Player&);

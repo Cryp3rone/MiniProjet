@@ -189,6 +189,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerStr.h" />
     <ClInclude Include="Shoot.h" />
+    <ClInclude Include="ShootStr.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="WorldStr.h" />
   </ItemGroup>

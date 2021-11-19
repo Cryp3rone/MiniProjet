@@ -2,7 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "LevelGenerator.h"
 #include "PlayerStr.h"
-#include "Shoot.h"
+#include "ShootStr.h"
 #include "GameState.h"
 #include <list>
 

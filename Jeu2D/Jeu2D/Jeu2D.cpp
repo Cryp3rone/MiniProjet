@@ -51,7 +51,6 @@ int main() {
 	std::list<Bullet> bullets;
 	std::list<Bonus> listBonus;
 	GameState game = PLAY;
-
 	//TEST BONUS
 	listBonus.push_back(CreateBonus(enumBonus::AMMO, 3.f));
 
@@ -105,14 +104,15 @@ int main() {
 		while (window.pollEvent(event)) {
 			switch (event.type) {
 				case sf::Event::Closed:
+					//UnloadLevel(world,player);
 					window.close();
 					break;
 				case sf::Event::MouseButtonPressed:
-					Shoot(player, window.mapPixelToCoords(sf::Mouse::getPosition(window)), bullets, dt);
+					Shoot(player, window.mapPixelToCoords(sf::Mouse::getPosition(window)), bullets,PLAYER, dt);
 					break;
 				case sf::Event::KeyPressed:
 					if (event.key.code == sf::Keyboard::Space && CanStopJump(player)) 
-						player.canJump = false;
+						player.canJump = false;					
 					
 					break;
 			}
@@ -133,7 +133,8 @@ int main() {
 			ActualizeGroundY(player,world);
 			UpdateEnnemies(world, elapsedTime.asSeconds());
 			UpdatePlayer(player, elapsedTime.asSeconds(), velocity, camera, world,bullets,game);
-			UpdateBoss(&world->boss,player,dt);
+			if(world->boss)
+				UpdateBoss(world,world->boss,player,bullets,dt);
 
 			
 			if (player.health == 0)
@@ -147,7 +148,8 @@ int main() {
 		if (game == PLAY) {
 			RefreshWorld(world, window);
 			RefreshEnnemies(world, window);
-			RefreshBoss(&world->boss,window,camera);
+			if(world->boss)
+				RefreshBoss(world->boss,window,camera);
 
 			window.setView(camera);
 			window.draw(player.body);

@@ -180,3 +180,25 @@ sf::CircleShape CreateCircleShape(sf::CircleShape shape, sf::Color color, sf::Ve
 
 	return shape;
 }
+
+
+void UnloadLevel(World* world, Player& player) {
+	for (Plateform* plateform : world->plateforms)
+		delete plateform;
+	for (Ennemy ennemy : world->ennemies) {
+		delete ennemy.circle;
+		delete ennemy.rectangle;
+	}
+	if (player.collision.isOnCollision) {
+		delete player.collision.circleCol;
+		delete player.collision.rectangleCol;
+	}
+
+	if (world->boss) {
+		delete world->boss->canonTimer;
+		delete world->boss->rotateTimer;
+	}
+
+	delete world->boss;
+	delete world;
+}

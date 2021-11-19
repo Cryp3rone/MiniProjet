@@ -2,6 +2,7 @@
 #include "Boss.h"
 #include "Timer.h"
 #include <cmath>
+#include "Shoot.h";
 
 void CreateBoss(World* world) {
 	Boss* boss = new Boss;
@@ -53,40 +54,78 @@ void CreateBoss(World* world) {
 	boss->speed = 3;
 	boss->originalLeftAngle = leftarm_01.getRotation();
 	boss->originalRightAngle = rightarm_01.getRotation();
-	boss->waitTimer = 0;
-	boss->wait = true;
+	boss->wait = false;
 	boss->rotateLeftArm = true; // true = LeftArm ; false = RightArm
 	boss->health = 6;
 	boss->maxHealth = 6;
 	boss->weaknessCollision = CreateCircleShape(sf::CircleShape(65), sf::Color::Black, sf::Vector2f(875, 195), 3, sf::Color::Blue, world);
-
+	boss->canon = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(30, 45)), sf::Color::Black, sf::Vector2f(925.f, 165.f), 3, sf::Color::Magenta, false, world);
+	boss->canonTimer = nullptr;
+	boss->rotateTimer = nullptr;
 	sf::RectangleShape background = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(300, 25)), sf::Color::Black, sf::Vector2f(830.f, 410.f), 3, sf::Color::Red, false, world);
 	sf::RectangleShape health = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(80, 25)), sf::Color::Red, sf::Vector2f(830.f, 410.f), 0, sf::Color::Magenta, false, world);
 	boss->bar = {background,health};
-	
-	world->boss = *boss;
+	boss->state = NONE;
+
+	world->boss = boss;
 }
 
-void UpdateBoss(Boss* boss,Player& player,float dt) {
-	if (boss->canMoove) {
-		float angle = dt * 3.141592f * 2.f * boss->speed;
-		switch (boss->rotateLeftArm) {
+void UpdateBoss(World* world,Boss* boss,Player& player,std::list<Bullet>& bullets,float dt) {
+	if (boss) {
+		if (boss->canMoove) {
+			float angle = dt * 3.141592f * 2.f * boss->speed;
+			switch (boss->rotateLeftArm) {
 			case true:
-				RotateArms(boss, angle, 163.f, boss->originalLeftAngle, true,boss->leftArm);
+				RotateArms(boss, angle, 163.f, boss->originalLeftAngle, true, boss->leftArm);
 				break;
 
 			case false:
-				RotateArms(boss, angle,20.f,boss->originalRightAngle,false, boss->rightArm);
+				RotateArms(boss, angle, 20.f, boss->originalRightAngle, false, boss->rightArm);
 				break;
-		}
+			}
+			
+			if (boss->wait) {
+				if (!boss->rotateTimer) 
+					boss->rotateTimer = InitTimer(3, dt);		
+				else {
+					if (Wait(*boss->rotateTimer)) {
+						boss->wait = false;
+						boss->rotateTimer = nullptr;
+						boss->speed = 10;
+					}
+				}
+			}
 
-		if (boss->wait) {
-			if (Wait(boss->waitTimer,3,dt)) {
-				boss->wait = false;
-				boss->waitTimer = 0;
-				boss->speed = 10;
+			if ((int)boss->canon.getPosition().y == 120.f) {
+				if (!world->boss->canonTimer) { // Appeler qu'une fois ? 
+					world->boss->canonTimer = InitTimer(2, dt);
+				}
+				else {
+					if (Wait(*world->boss->canonTimer)) {
+						Shoot(sf::Vector2f(925.f, 165.f), player.body.getPosition() - boss->canon.getPosition(), bullets,BOSS, dt); // Voir si elles peuvent traverser le corps du boss ou pas
+						world->boss->canonTimer = nullptr; 
+					}
+				}
+			}
+
+		}
+		else {
+			if (boss->state == ANGRY) {
+				boss->canon.move(0, -20 * dt);
+
+				if ((int)boss->canon.getPosition().y == 120) 
+					boss->canMoove = true;
 			}
 		}
+
+		if (boss->health <= 0)
+			DestroyBoss(world);
+
+		if (boss->health <= 3 && boss->state == NONE) {
+			boss->state = ANGRY;
+			boss->canMoove = false;
+		}
+
 	}
 }
 
@@ -102,7 +141,6 @@ void RotateArms(Boss* boss,float angle,float beginAngle,float endAngle,bool posi
 			if (positive ? arm.getRotation() >= endAngle : arm.getRotation() <= endAngle)
 				arm.rotate(positive ? -angle : angle);
 			else {
-			//	if (Wait(boss->waitTimer, 3, dt)) {}
 				boss->rotateLeftArm = !boss->rotateLeftArm;
 				boss->speed = 3;
 			}
@@ -112,20 +150,31 @@ void RotateArms(Boss* boss,float angle,float beginAngle,float endAngle,bool posi
 }
 
 void RefreshBoss(Boss* boss,sf::RenderWindow& window,sf::View& view) {
-	window.draw(boss->head);
-	for (sf::RectangleShape rectangle : boss->rightArm) 
-		window.draw(rectangle);
-	for (sf::RectangleShape rectangle : boss->leftArm) 
-		window.draw(rectangle);
-	
-	sf::Vertex lines[16];
-	std::copy(boss->weaknessArea.begin(), boss->weaknessArea.end(), lines);
-	window.draw(lines, boss->weaknessArea.size(), sf::Lines);
+	if (boss) {
+		for (sf::RectangleShape rectangle : boss->rightArm)
+			window.draw(rectangle);
+		for (sf::RectangleShape rectangle : boss->leftArm)
+			window.draw(rectangle);
 
-	boss->bar.background.setPosition(sf::Vector2f(view.getCenter().x - boss->bar.background.getSize().x / 2.f, 50.f));
-	boss->bar.health.setSize(sf::Vector2f((boss->bar.background.getSize().x / boss->maxHealth) * boss->health,boss->bar.health.getSize().y));
-	boss->bar.health.setPosition(sf::Vector2f(view.getCenter().x - boss->bar.background.getSize().x / 2.f, 50.f));
+		boss->bar.background.setPosition(sf::Vector2f(view.getCenter().x - boss->bar.background.getSize().x / 2.f, 50.f));
+		boss->bar.health.setSize(sf::Vector2f((boss->bar.background.getSize().x / boss->maxHealth) * boss->health, boss->bar.health.getSize().y));
+		boss->bar.health.setPosition(sf::Vector2f(view.getCenter().x - boss->bar.background.getSize().x / 2.f, 50.f));
 
-	window.draw(boss->bar.background);
-	window.draw(boss->bar.health);
+		window.draw(boss->bar.background);
+		window.draw(boss->bar.health);
+
+		window.draw(boss->canon);
+
+		window.draw(boss->head);
+
+		sf::Vertex lines[16];
+		std::copy(boss->weaknessArea.begin(), boss->weaknessArea.end(), lines);
+		window.draw(lines, boss->weaknessArea.size(), sf::Lines);
+	}
+}
+
+void DestroyBoss(World* world) {
+	delete world->boss->canonTimer;
+	delete world->boss->rotateTimer;
+	world->boss = nullptr; // Attention a demander s'il faut pas préférer delete
 }

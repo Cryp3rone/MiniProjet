@@ -2,6 +2,12 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include "HealthBar.h"
+#include "Timer.h"
+
+enum BossState {
+	NONE,
+	ANGRY
+};
 
 struct Boss {
 	sf::CircleShape head;
@@ -9,6 +15,9 @@ struct Boss {
 	std::vector<sf::RectangleShape> leftArm;
 	std::vector<sf::Vertex> weaknessArea;
 	sf::CircleShape weaknessCollision;
+	sf::RectangleShape canon;
+	Timer* canonTimer;
+	Timer* rotateTimer;
 	HealthBar bar;
 	int health;
 	int maxHealth;
@@ -16,8 +25,8 @@ struct Boss {
 	bool canMoove;
 	float speed;
 	bool wait;
-	float waitTimer;
 	float originalLeftAngle;
 	float originalRightAngle;
 	bool rotateLeftArm;
+	BossState state;
 };
