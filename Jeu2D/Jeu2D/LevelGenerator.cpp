@@ -11,33 +11,34 @@ World* GenerateLevel() {
 	// ATTENTION FAIRE SPAWN QUE DES sf::RectangleShape pour les plateformes
 
 	int pFType;// si PF Volante ou non
-	int pos = 800; //position par default
-	int offset = 20;//décalage par default 
-	int sizeL = 40;// taill par default d'une PF
-	int jumpH = 50;// taill temporaire du saut du joueur
+	int pos		= 800; //position par default
+	int offset	= 20;//décalage par default 
+	int sizeL	= 40;// taill par default d'une PF
+	int jumpH	= 50;// taill temporaire du saut du joueur
 	//int randH;//futur var pour gestion du c
-	int H = 400;//taill final de la PF après gestion de la hauteur de saut de joueur (In proges)
-	int preceH = 0;//contien la hauteur de la PF avant celle qui spawn
-	int growsize = 0;
+	int H		= 400;//taill final de la PF après gestion de la hauteur de saut de joueur (In proges)
+	int preceH	= 0;//contien la hauteur de la PF avant celle qui spawn
+	int growsize= 0;
 
-	int floorSize = 0;
-	int floorPos = 500;
-	int holeSize = 0;
-	int holePos = 0;
-	int holeOfset = 20;
+	int floorSize	= 0;
+	int floorPos	= 0;
+	int holeSize	= 0;
+	int holePos		= 0;
+	int holeOfset	= 20;
 	bool mustChange = false;
+	int offsetVerticalEnemy = 0;
 	//H si la taill de la plateform avant est a hauteur de saut alors ont peut sauter plus haut 
 	//et si la tail de la plateform d'avant est supérieur a la hauteur de saut alors la plateform seras plus bas et a hauter de saut
 	
 	srand(time(NULL));
 	
-	for (size_t i = 0; i < 20; i++) //entre le nombre de PF que tu veux faire spawn
+	for (size_t i = 0; i < 50; i++) //entre le nombre de PF que tu veux faire spawn
 	{
 		
 		pFType = rand() % 9;
 		sizeL = rand() % 210 + 50;
 		offset = rand() % 150 + 100;
-		
+		offsetVerticalEnemy = rand() % 200 + 120;
 		int wallJumpOffSett = rand() % 180 + 120;
 
 		if ((pos+jumpH) >=H)
@@ -48,23 +49,34 @@ World* GenerateLevel() {
 		switch (pFType)
 		{
 		case(0):
+			
+			CreateCEnnemy(level, CreateCircleShape(new sf::CircleShape(15, 3), sf::Color::Black, sf::Vector2f(pos, H - 26),3, sf::Color::Color::Red, level),
+				50, sf::Vector2f(pos, H - 26), true, sf::Vector2f(pos, H - 26), sf::Vector2f(pos + sizeL - 30, H - 26), HORIZONTAL);
 			CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(sizeL, 500)), sf::Color::Black, sf::Vector2f(pos, H), 3, sf::Color::Yellow, true, level), 0, NORMAL, level);
 			H = 300 + (rand() % (350 - 300 + 1));
 			pos += sizeL + offset;
 			break;
 		case(1):
+			CreateCEnnemy(level, CreateCircleShape(new sf::CircleShape(15, 3), sf::Color::Black, sf::Vector2f(pos, H - 26), 3, sf::Color::Color::Red, level),
+				50, sf::Vector2f(pos, H - 26), true, sf::Vector2f(pos, H - 26), sf::Vector2f(pos + sizeL - 30, H - 26), HORIZONTAL);
 			CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(sizeL, 30)), sf::Color::Black, sf::Vector2f(pos, H), 3, sf::Color::Yellow, true, level), 0, NORMAL, level);
 			pos += sizeL + offset;
 			H = 300 + (rand() % (350 - 300 + 1));
 			break;
 		case(2):
+			CreateCEnnemy(level, CreateCircleShape(new sf::CircleShape(15, 3), sf::Color::Black, sf::Vector2f(pos, H - offsetVerticalEnemy), 3, sf::Color::Color::Red, level),
+			150, sf::Vector2f(pos, H - offsetVerticalEnemy), true, sf::Vector2f(pos, H - offsetVerticalEnemy), sf::Vector2f(pos, H-30), VERTICAL);
+			
 			CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(sizeL, 1000)), sf::Color::Black, sf::Vector2f(pos, H), 3, sf::Color::Yellow, true, level), 0, ENNEMI, level);
 			H = 300 + (rand() % (350 - 300 + 1));
 			preceH = H;
 			pos += sizeL + offset;
 			break;
 		case(3):
+			CreateCEnnemy(level, CreateCircleShape(new sf::CircleShape(15, 3), sf::Color::Black, sf::Vector2f(pos, H - offsetVerticalEnemy), 3, sf::Color::Color::Red, level),
+				150, sf::Vector2f(pos, H - offsetVerticalEnemy), true, sf::Vector2f(pos, H - offsetVerticalEnemy), sf::Vector2f(pos, H - 30), VERTICAL);
 			CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(sizeL, 30)), sf::Color::Black, sf::Vector2f(pos, H), 3, sf::Color::Yellow, true, level), 0, ENNEMI, level);
+			
 			pos += sizeL + offset;
 			H = 300 + (rand() % (350 - 300 + 1));
 			break;

@@ -22,15 +22,12 @@ void CreateEnnemies(World* world) {
 				switch (ennemyTyp)
 				{
 				case(0):
-					CreateCEnnemy(world, CreateCircleShape(new sf::CircleShape(15, 3), sf::Color::Black, sf::Vector2f(platform->rectangle.getPosition().x+20, platform->rectangle.getPosition().y), 3, sf::Color::Color::Red, world),
-						50, sf::Vector2f(1500, 400), true, sf::Vector2f(1500, 480), sf::Vector2f(1700, 480), HORIZONTAL);
-					std::cout << "ennemy 1" << std::endl;
+					
+					
 					//posX += offset;
 					break;
 				case(1):
-					CreateCEnnemy(world, CreateCircleShape(new sf::CircleShape(15, 3), sf::Color::Black, sf::Vector2f(platform->rectangle.getPosition().x+10, platform->rectangle.getPosition().y), 3, sf::Color::Color::Red, world),
-						150, sf::Vector2f(650, 300), true, sf::Vector2f(650, 200), sf::Vector2f(650, 475), VERTICAL);
-					std::cout << "pos"<< platform->rectangle.getPosition().y << std::endl;
+
 					//posX += offset;
 					break;
 				default:
