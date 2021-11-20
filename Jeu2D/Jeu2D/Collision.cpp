@@ -45,7 +45,7 @@ void CreateCollision(Player& player,Collision& coll, sf::RectangleShape* rectang
 }
 
 void OnCollisionDetection(Player& player, World* world, std::list<Bullet>& bullets, GameState& state) {
-	if (world->endFlag.getGlobalBounds().intersects(player.body.getGlobalBounds()))
+	if (world->endFlag.getGlobalBounds().intersects(player.body.getGlobalBounds()) && !world->boss)
 		state = WIN;
 
 	std::vector<Bullet*> eraseBullets;

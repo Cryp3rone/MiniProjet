@@ -20,8 +20,8 @@ void CreateBoss(World* world,int beginPos) {
 	leftarm_01.rotate(130);
 	leftarm_01.setPosition(head.getPosition().x + head.getOrigin().x, head.getPosition().y + head.getOrigin().y);
 
-	leftarm_02.rotate(90);
-	leftarm_02.setPosition(leftarm_01.getSize().x,0);
+	leftarm_02.rotate(-40);
+	leftarm_02.setPosition(leftarm_01.getSize().x - 20,13);
 
 	rightarm_01.setOrigin(-head.getRadius(), rightarm_01.getSize().y / 2.f); // Je centre son origine au centre du rectangle
 	rightarm_01.rotate(45);
@@ -52,7 +52,7 @@ void CreateBoss(World* world,int beginPos) {
 	boss->rightArm.push_back(rightarm_02);
 
 
-	boss->canMoove = true;
+	boss->canMoove = false;
 	boss->speed = 3;
 	boss->originalLeftAngle = leftarm_01.getRotation();
 	boss->originalRightAngle = rightarm_01.getRotation();
@@ -60,8 +60,8 @@ void CreateBoss(World* world,int beginPos) {
 	boss->rotateLeftArm = true; // true = LeftArm ; false = RightArm
 	boss->health = 6;
 	boss->maxHealth = 6;
-	boss->weaknessCollision = CreateCircleShape(sf::CircleShape(65), sf::Color::Black, sf::Vector2f(875, 195), 3, sf::Color::Blue, world);
-	boss->canon = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(30, 45)), sf::Color::Black, sf::Vector2f(925.f, 165.f), 3, sf::Color::Magenta, false, world);
+	boss->weaknessCollision = CreateCircleShape(sf::CircleShape(65), sf::Color::Black, sf::Vector2f(beginPos - 25, 195), 3, sf::Color::Blue, world);
+	boss->canon = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(30, 45)), sf::Color::Black, sf::Vector2f(beginPos + 25, 165.f), 3, sf::Color::Magenta, false, world);
 	boss->canonTimer = nullptr;
 	boss->rotateTimer = nullptr;
 	sf::RectangleShape background = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(300, 25)), sf::Color::Black, sf::Vector2f(830.f, 410.f), 3, sf::Color::Red, false, world);
@@ -160,28 +160,29 @@ void RefreshBoss(Boss* boss,sf::RenderWindow& window,sf::View& view) {
 
 		window.draw(boss->leftArm[0]);
 		sf::RenderStates leftState;
-		rightState.transform = boss->leftArm[0].getTransform();
+		leftState.transform = boss->leftArm[0].getTransform();
 		window.draw(boss->leftArm[1], leftState);
 
-		boss->bar.background.setPosition(sf::Vector2f(view.getCenter().x - boss->bar.background.getSize().x / 2.f, 50.f));
-		boss->bar.health.setSize(sf::Vector2f((boss->bar.background.getSize().x / boss->maxHealth) * boss->health, boss->bar.health.getSize().y));
-		boss->bar.health.setPosition(sf::Vector2f(view.getCenter().x - boss->bar.background.getSize().x / 2.f, 50.f));
-
-		window.draw(boss->bar.background);
-		window.draw(boss->bar.health);
-
 		window.draw(boss->canon);
-
 		window.draw(boss->head);
 
 		sf::Vertex lines[16];
 		std::copy(boss->weaknessArea.begin(), boss->weaknessArea.end(), lines);
 		window.draw(lines, boss->weaknessArea.size(), sf::Lines);
+
+		if (boss->head.getPosition().x >= view.getCenter().x - view.getSize().x / 2.f && boss->head.getPosition().x <= view.getCenter().x + view.getSize().x / 2.f) {
+			boss->bar.background.setPosition(sf::Vector2f(view.getCenter().x - boss->bar.background.getSize().x / 2.f, 50.f));
+			boss->bar.health.setSize(sf::Vector2f((boss->bar.background.getSize().x / boss->maxHealth) * boss->health, boss->bar.health.getSize().y));
+			boss->bar.health.setPosition(sf::Vector2f(view.getCenter().x - boss->bar.background.getSize().x / 2.f, 50.f));
+
+			window.draw(boss->bar.background);
+			window.draw(boss->bar.health);
+		}
 	}
 }
 
 void DestroyBoss(World* world) {
 	delete world->boss->canonTimer;
 	delete world->boss->rotateTimer;
-	world->boss = nullptr; // Attention a demander s'il faut pas préférer delete
+	world->boss = nullptr; 
 }

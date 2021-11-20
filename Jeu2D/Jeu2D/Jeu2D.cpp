@@ -61,7 +61,7 @@ int main() {
 	sound.setBuffer(buffer);
 	sound.setLoop(true);
 	sound.setVolume(20.f);
-	sound.play();
+	//sound.play();
 
 	// Inputs
 	while (window.isOpen()) {
