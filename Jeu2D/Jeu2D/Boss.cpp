@@ -5,9 +5,8 @@
 #include "Shoot.h";
 
 void CreateBoss(World* world,int beginPos) {
-	Boss* boss = new Boss;
-
 	sf::CircleShape head = CreateCircleShape(sf::CircleShape(80), sf::Color::Black, sf::Vector2f(beginPos, 200),3,sf::Color::Magenta,world);
+	
 	sf::RectangleShape leftarm_01 = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(120, 20)), sf::Color::Black, sf::Vector2f(beginPos,200.f), 3, sf::Color::Magenta, false, world);
 	sf::RectangleShape leftarm_02 = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(120, 15)), sf::Color::Black, sf::Vector2f(beginPos - 85, 390.f), 3, sf::Color::Magenta, false, world); //leftarm_01.setOrigin(sf::Vector2f(head.getPosition().x + head.getRadius(),head.getPosition().y + head.getRadius()));
 
@@ -29,7 +28,20 @@ void CreateBoss(World* world,int beginPos) {
 
 	rightarm_02.rotate(45);
 	rightarm_02.setPosition(rightarm_01.getSize().x,0);
+
+	Boss* boss = new Boss(head, true, 3, leftarm_01.getRotation(), leftarm_02.getRotation(), false, true, 6, 6, CreateCircleShape(sf::CircleShape(65), sf::Color::Black, sf::Vector2f(beginPos - 25, 195), 3, sf::Color::Blue, world),CreateRectangleShape(sf::RectangleShape(sf::Vector2f(30, 45)), sf::Color::Black, sf::Vector2f(beginPos + 25, 165.f), 3, sf::Color::Magenta, false, world), nullptr, nullptr, { CreateRectangleShape(sf::RectangleShape(sf::Vector2f(300, 25)), sf::Color::Black, sf::Vector2f(830.f, 410.f), 3, sf::Color::Red, false, world),CreateRectangleShape(sf::RectangleShape(sf::Vector2f(80, 25)), sf::Color::Red, sf::Vector2f(830.f, 410.f), 0, sf::Color::Magenta, false, world) },NONE);
 	
+	DrawWeaknessArea(head, boss);
+
+	boss->leftArm.push_back(leftarm_01);
+	boss->leftArm.push_back(leftarm_02);
+	boss->rightArm.push_back(rightarm_01);
+	boss->rightArm.push_back(rightarm_02);
+
+	world->boss = boss;
+}
+
+void DrawWeaknessArea(sf::CircleShape head,Boss* boss) {
 	bool back = true;
 	for (int i = 11;i < 20;i++) {
 		sf::Vertex vertex(-head.getOrigin() + head.getPosition() + head.getPoint(i));
@@ -42,39 +54,11 @@ void CreateBoss(World* world,int beginPos) {
 			back = !back;
 		}
 	}
-
-	boss->head = head;	
-	
-
-	boss->leftArm.push_back(leftarm_01);
-	boss->leftArm.push_back(leftarm_02);
-	boss->rightArm.push_back(rightarm_01);
-	boss->rightArm.push_back(rightarm_02);
-
-
-	boss->canMoove = false;
-	boss->speed = 3;
-	boss->originalLeftAngle = leftarm_01.getRotation();
-	boss->originalRightAngle = rightarm_01.getRotation();
-	boss->wait = false;
-	boss->rotateLeftArm = true; // true = LeftArm ; false = RightArm
-	boss->health = 6;
-	boss->maxHealth = 6;
-	boss->weaknessCollision = CreateCircleShape(sf::CircleShape(65), sf::Color::Black, sf::Vector2f(beginPos - 25, 195), 3, sf::Color::Blue, world);
-	boss->canon = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(30, 45)), sf::Color::Black, sf::Vector2f(beginPos + 25, 165.f), 3, sf::Color::Magenta, false, world);
-	boss->canonTimer = nullptr;
-	boss->rotateTimer = nullptr;
-	sf::RectangleShape background = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(300, 25)), sf::Color::Black, sf::Vector2f(830.f, 410.f), 3, sf::Color::Red, false, world);
-	sf::RectangleShape health = CreateRectangleShape(sf::RectangleShape(sf::Vector2f(80, 25)), sf::Color::Red, sf::Vector2f(830.f, 410.f), 0, sf::Color::Magenta, false, world);
-	boss->bar = {background,health};
-	boss->state = NONE;
-
-	world->boss = boss;
 }
 
 void UpdateBoss(World* world,Boss* boss,Player& player,std::list<Bullet>& bullets,float dt) {
 	if (boss) {
-		if (boss->canMoove) {
+		if (boss->canRotate) {
 			float angle = dt * 3.141592f * 2.f * boss->speed;
 			switch (boss->rotateLeftArm) {
 			case true:
@@ -116,7 +100,7 @@ void UpdateBoss(World* world,Boss* boss,Player& player,std::list<Bullet>& bullet
 				boss->canon.move(0, -20 * dt);
 
 				if ((int)boss->canon.getPosition().y == 120) 
-					boss->canMoove = true;
+					boss->canRotate = true;
 			}
 		}
 
@@ -125,7 +109,7 @@ void UpdateBoss(World* world,Boss* boss,Player& player,std::list<Bullet>& bullet
 
 		if (boss->health <= 3 && boss->state == NONE) {
 			boss->state = ANGRY;
-			boss->canMoove = false;
+			boss->canRotate = false;
 		}
 
 	}

@@ -11,3 +11,4 @@ void RefreshBoss(Boss*,sf::RenderWindow&,sf::View&);
 void RotateArms(Boss*, float,float,float,bool,std::vector<sf::RectangleShape>&);
 
 void DestroyBoss(World* world);
+void DrawWeaknessArea(sf::CircleShape,Boss* boss);
