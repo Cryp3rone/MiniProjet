@@ -25,6 +25,7 @@ Player newPlayer()
 	coll.circleCol = nullptr;
 	p.collision = coll;
 	p.isJumping = false;
+	p.canJump = true;
 
 	p.maxAmmo = 3;
 	p.ammo = p.maxAmmo;
@@ -38,6 +39,14 @@ void UpdatePlayer(Player& player, float dt, sf::Vector2f& velocity, sf::View& vi
 	OnCollisionDetection(player, world,bullets,state);
 	DestroyEnnemies(world);
 	view.setCenter(sf::Vector2f(player.body.getPosition().x, 300.f));
+
+	if (player.body.getPosition().y >= 600) {
+		player.health -= 100;
+		state = LOOSE;
+	}
+
+	if (player.health <= 0)
+		state = LOOSE;
 } 
 
 void MovePlayer(Player& player, float dt) {

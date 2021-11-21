@@ -1,5 +1,6 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <list>
 #include <windows.h>
 #include "LevelGenerator.h"
@@ -36,7 +37,7 @@ int main() {
 
 	sf::Text text;
 	text.setFont(font);
-	text.setPosition(camera.getCenter().x  - 180, camera.getCenter().y  - 130);
+	text.setPosition(camera.getCenter().x, camera.getCenter().y  - 130);
 	text.setString("GAME \n OVER ");
 	text.setFillColor(sf::Color::Yellow);
 	text.setScale(4.f, 4.f);
@@ -55,6 +56,17 @@ int main() {
 
 	//TEST BONUS
 	listBonus.push_back(CreateBonus(enumBonus::AMMO, 3.f));
+
+	sf::SoundBuffer buffer;
+	if (buffer.loadFromFile(getAssetsPath() + "\\music.ogg")) {
+		std::cout << "error";
+	}
+
+	sf::Sound sound;
+	sound.setBuffer(buffer);
+	sound.setLoop(true);
+	sound.setVolume(20.f);
+	sound.play();
 
 	// Inputs
 	while (window.isOpen()) {
@@ -121,7 +133,8 @@ int main() {
 			{
 				sf::CircleShape ammo = sf::CircleShape(12.f);
 				ammo.setFillColor(sf::Color::Green);
-				ammo.setPosition(sf::Vector2f(30.f * i, 20.f));
+				ammo.setPosition(sf::Vector2f(30.f*i, 20.f));
+				ammo.setPosition(sf::Vector2f((camera.getCenter().x - camera.getSize().x / 2.f + ammo.getPosition().x), camera.getCenter().y - camera.getSize().y / 2.f + ammo.getPosition().y));
 				window.draw(ammo);
 			}
 

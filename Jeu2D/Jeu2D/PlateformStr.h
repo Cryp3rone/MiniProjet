@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 
 enum PlateformType {
+	FLOOR,
 	NORMAL,
 	ENNEMI,
 	WALL_JUMP

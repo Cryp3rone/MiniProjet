@@ -9,7 +9,8 @@ struct World {
 	std::vector<Plateform*> plateforms;
 	std::list<Ennemy> ennemies;
 	std::vector<Ennemy*> eraseEnnemies;
-	sf::RectangleShape endFlag;
+	sf::RectangleShape endFlag; 
+	std::vector<sf::FloatRect> voidArea;
 	float groundY;
 };
 

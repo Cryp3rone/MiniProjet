@@ -25,6 +25,7 @@
     <ClCompile Include="Plateform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Bonus.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Collision.h">
@@ -63,6 +64,8 @@
     <ClInclude Include="PlateformStr.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Bonus.h" />
+    <ClInclude Include="BonusStr.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">

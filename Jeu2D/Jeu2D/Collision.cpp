@@ -7,7 +7,7 @@
 
 Plateform* GetPlateformByShape(sf::RectangleShape compare,World* world) {
 	for (Plateform* plateformPtr : world->plateforms) {
-		if (plateformPtr->rectangle.getPosition().x == compare.getPosition().x && plateformPtr->rectangle.getPosition().y == compare.getPosition().y) 
+		if (plateformPtr->rectangle.getPosition().x == compare.getPosition().x && plateformPtr->rectangle.getPosition().y == compare.getPosition().y)
 			return plateformPtr;	
 	}
 
@@ -34,17 +34,17 @@ void OnCollisionDetection(Player& player, World* world, std::list<Bullet>& bulle
 		state = WIN;
 
 	for (Plateform* plateform : world->plateforms) {
-		sf::RectangleShape& rectangle = plateform->rectangle;
-		if (rectangle.getOutlineColor() != sf::Color::Blue) { // On skip la collision du bas
-			if (rectangle.getGlobalBounds().intersects(player.body.getGlobalBounds())) {
+		sf::RectangleShape* rectangle = &plateform->rectangle;
+		if (rectangle->getOutlineColor() != sf::Color::Blue) { // On skip la collision du bas
+			if (rectangle->getGlobalBounds().intersects(player.body.getGlobalBounds())) {
 				if (!player.collision.isOnCollision) {
-					CreateCollision(player, &rectangle, nullptr,world);
+					CreateCollision(player, rectangle, nullptr,world);
 					OnCollisionEnter(player, player.collision, false, false, world);
 				}
 				OnCollisionStay(player, player.collision, false, false, world);
 			}
 			else {
-				if (player.collision.isOnCollision && player.collision.rectangleCol != nullptr && player.collision.rectangleCol == &rectangle)
+				if (player.collision.isOnCollision && player.collision.rectangleCol != nullptr && player.collision.rectangleCol == rectangle)
 					OnCollisionLeave(player, player.collision, world);
 			}
 		}
@@ -83,6 +83,12 @@ void OnCollisionDetection(Player& player, World* world, std::list<Bullet>& bulle
 			}
 		}
 	}
+
+	for (sf::FloatRect& voidCollision : world->voidArea) {
+		sf::FloatRect body = player.body.getGlobalBounds();
+		if (voidCollision.intersects(player.body.getGlobalBounds()))
+			world->groundY = 1000;
+	}
 }
 
 void OnCollisionEnter(Player& player,Collision& collision, bool isEnnemy,bool isBullet,World* world) {
@@ -102,8 +108,8 @@ void OnCollisionEnter(Player& player,Collision& collision, bool isEnnemy,bool is
 		else 
 			player.mooveX = false;	
 	}
-	else
-		player.health = 0;
+	else 
+		player.health = -20;
 
 	if (isBullet) 
 		world->eraseEnnemies.push_back(collision.circleCol ? &GetEnnemyWithShape(collision.circleCol, world) : &GetEnnemyWithShape(collision.rectangleCol, world));

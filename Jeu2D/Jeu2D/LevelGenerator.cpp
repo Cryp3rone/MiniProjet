@@ -21,7 +21,7 @@ World* GenerateLevel() {
 	int growsize= 0;
 
 	int floorSize	= 0;
-	int floorPos	= 0;
+	int floorPos	= 200;
 	int holeSize	= 0;
 	int holePos		= 0;
 	int holeOfset	= 20;
@@ -32,7 +32,7 @@ World* GenerateLevel() {
 	
 	srand(time(NULL));
 	
-	for (size_t i = 0; i < 50; i++) //entre le nombre de PF que tu veux faire spawn
+	for (size_t i = 0; i < 2; i++) //entre le nombre de PF que tu veux faire spawn
 	{
 		
 		pFType = rand() % 9;
@@ -119,7 +119,7 @@ World* GenerateLevel() {
 		floorSize	= rand() % 600 + 400;
 		holeSize	= rand() % 100 + 50;
 		offset		= rand() % 200 + 100;
-		CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(floorSize, 125)), sf::Color::Black, sf::Vector2f(floorPos, 475), 3, sf::Color::Blue, false, level), 0, NORMAL, level);
+		CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(floorSize, 125)), sf::Color::Black, sf::Vector2f(floorPos, 475), 3, sf::Color::Blue, false, level), 0, FLOOR, level);
 		floorPos += holeSize + offset + floorSize;
 
 	}
@@ -132,7 +132,21 @@ World* GenerateLevel() {
 	CreatePlateform(CreateRectangleShape(sf::RectangleShape(sf::Vector2f(80, 30)), sf::Color::Black, sf::Vector2f(pos, 475), 3, sf::Color::Green, false, level), 0, NORMAL, level);
 	
 	
+	sf::RectangleShape* lastShape = nullptr;
+	for (Plateform* plateform : level->plateforms) {
+		if (plateform->type == FLOOR) {
+			if (lastShape) { // 40 représente dans le calcul le rayon du joueur
+				float distanceX = plateform->rectangle.getPosition().x - (lastShape->getPosition().x + lastShape->getSize().x) - 40;
+				if (distanceX < 0)
+					distanceX *= -1;
 
+				sf::FloatRect collision = sf::FloatRect(lastShape->getPosition().x + lastShape->getSize().x + 40, lastShape->getPosition().y, distanceX, 1000);
+				level->voidArea.push_back(collision);
+			}
+
+			lastShape = &plateform->rectangle;
+		}
+	}
 
 	level->groundY = originalGroundY;
 	//affiche le sol après comme ça il passe devant les autres platformes
