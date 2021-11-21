@@ -30,13 +30,17 @@ int main() {
 
 	sf::Clock clock;
 
-	sf::View camera(sf::Vector2f(window.getSize().x / 2, window.getSize().y / 2), sf::Vector2f(window.getSize().x,window.getSize().y));
+	sf::View camera(sf::Vector2f(window.getSize().x / 2 + 1000, window.getSize().y / 2), sf::Vector2f(window.getSize().x,window.getSize().y));
 	sf::Font font;
 	font.loadFromFile(getAssetsPath() + "\\GeometricBlack.ttf");
 
 	sf::Text text;
 	text.setFont(font);
-	text.setPosition(camera.getCenter().x  - 180, camera.getCenter().y  - 130);
+	sf::FloatRect textRect = text.getLocalBounds();
+
+	text.setPosition(camera.getCenter().x / 2.0f, camera.getCenter().y / 2.0f);
+	text.setOrigin(text.getLocalBounds().left / 2.0f, text.getLocalBounds().top / 2.0f);
+
 	text.setString("GAME \n OVER ");
 	text.setFillColor(sf::Color::Yellow);
 	text.setScale(4.f, 4.f);
@@ -61,7 +65,7 @@ int main() {
 	sound.setBuffer(buffer);
 	sound.setLoop(true);
 	sound.setVolume(20.f);
-	//sound.play();
+	sound.play();
 
 	// Inputs
 	while (window.isOpen()) {
@@ -187,7 +191,6 @@ int main() {
 		else {
 			text.setString("VICTOIRE");
 			text.setFillColor(sf::Color::Green);
-			text.setPosition(camera.getCenter().x - 50, camera.getCenter().y - 50);
 			window.draw(text);
 		}
 		window.display();

@@ -69,7 +69,7 @@ void OnCollisionDetection(Player& player, World* world, std::list<Bullet>& bulle
 		}
 
 		for (Bullet& bullet : bullets) {
-			if (bullet.body.getGlobalBounds().intersects(plateform->rectangle.getGlobalBounds()))
+			if (bullet.body.getGlobalBounds().intersects(plateform->rectangle.getGlobalBounds()) && plateform->type != FLOOR)
 				eraseBullets.push_back(&bullet);
 		}
 	}
@@ -140,19 +140,26 @@ void OnCollisionDetection(Player& player, World* world, std::list<Bullet>& bulle
 			}
 		}
 		
-		if (bullet.type == PLAYER &&  bullet.body.getGlobalBounds().intersects(world->boss->head.getGlobalBounds()))
-			eraseBullets.push_back(&bullet);
+		if (world->boss) {
+			if (bullet.type == PLAYER && bullet.body.getGlobalBounds().intersects(world->boss->head.getGlobalBounds()))
+				eraseBullets.push_back(&bullet);
 
-		for (sf::RectangleShape& rectangle : world->boss->leftArm) {
-			if (bullet.type == PLAYER &&  bullet.body.getGlobalBounds().intersects(rectangle.getGlobalBounds()))
-				eraseBullets.push_back(&bullet);
+			for (sf::RectangleShape& rectangle : world->boss->leftArm) {
+				if (bullet.type == PLAYER && bullet.body.getGlobalBounds().intersects(rectangle.getGlobalBounds()))
+					eraseBullets.push_back(&bullet);
+			}
+
+			for (sf::RectangleShape& rectangle : world->boss->rightArm) {
+				if (bullet.type == PLAYER && bullet.body.getGlobalBounds().intersects(rectangle.getGlobalBounds()))
+					eraseBullets.push_back(&bullet);
+			}
 		}
-		
-		for (sf::RectangleShape& rectangle : world->boss->rightArm) {
-			if (bullet.type == PLAYER && bullet.body.getGlobalBounds().intersects(rectangle.getGlobalBounds()))
-				eraseBullets.push_back(&bullet);
-		}
-		
+	}
+
+	if (world->boss && (player.body.getGlobalBounds().intersects(world->boss->head.getGlobalBounds()) || player.body.getGlobalBounds().intersects(world->boss->leftArm[0].getGlobalBounds())
+		|| player.body.getGlobalBounds().intersects(world->boss->leftArm[1].getGlobalBounds()) || player.body.getGlobalBounds().intersects(world->boss->rightArm[0].getGlobalBounds())
+		|| player.body.getGlobalBounds().intersects(world->boss->rightArm[1].getGlobalBounds()))) {
+		player.health -= 100;
 	}
 
 	DestroyBullets(eraseBullets,bullets);

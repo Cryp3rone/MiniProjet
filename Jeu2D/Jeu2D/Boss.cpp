@@ -29,9 +29,7 @@ void CreateBoss(World* world,int beginPos) {
 	rightarm_02.rotate(45);
 	rightarm_02.setPosition(rightarm_01.getSize().x,0);
 
-	Boss* boss = new Boss(head, true, 3, leftarm_01.getRotation(), rightarm_01.getRotation(), false, true, 6, 6, CreateCircleShape(sf::CircleShape(65), sf::Color::Black, sf::Vector2f(beginPos - 25, 195), 3, sf::Color::Blue, world),CreateRectangleShape(sf::RectangleShape(sf::Vector2f(30, 45)), sf::Color::Black, sf::Vector2f(beginPos + 25, 165.f), 3, sf::Color::Magenta, false, world), nullptr, nullptr, { CreateRectangleShape(sf::RectangleShape(sf::Vector2f(300, 25)), sf::Color::Black, sf::Vector2f(830.f, 410.f), 3, sf::Color::Red, false, world),CreateRectangleShape(sf::RectangleShape(sf::Vector2f(80, 25)), sf::Color::Red, sf::Vector2f(830.f, 410.f), 0, sf::Color::Magenta, false, world) },NONE);
-
-	std::cout << "canRotate: " << boss->canRotate << std::endl;
+	Boss* boss = new Boss(head, true, 7.5f, leftarm_01.getRotation(), rightarm_01.getRotation(), false, true, 6, 6, CreateCircleShape(sf::CircleShape(65), sf::Color::Black, sf::Vector2f(beginPos - 25, 195), 3, sf::Color::Blue, world),CreateRectangleShape(sf::RectangleShape(sf::Vector2f(30, 45)), sf::Color::Black, sf::Vector2f(beginPos + 25, 165.f), 3, sf::Color::Magenta, false, world), nullptr, nullptr, { CreateRectangleShape(sf::RectangleShape(sf::Vector2f(300, 25)), sf::Color::Black, sf::Vector2f(830.f, 410.f), 3, sf::Color::Red, false, world),CreateRectangleShape(sf::RectangleShape(sf::Vector2f(80, 25)), sf::Color::Red, sf::Vector2f(830.f, 410.f), 0, sf::Color::Magenta, false, world) },NONE);
 	DrawWeaknessArea(head, boss);
 
 	boss->leftArm.push_back(leftarm_01);
@@ -73,7 +71,7 @@ void UpdateBoss(World* world,Boss* boss,Player& player,std::list<Bullet>& bullet
 			
 			if (boss->wait) {
 				if (!boss->rotateTimer) 
-					boss->rotateTimer = InitTimer(3, dt);		
+					boss->rotateTimer = InitTimer(1.5f, dt);		
 				else {
 					if (Wait(*boss->rotateTimer)) {
 						boss->wait = false;
@@ -89,12 +87,20 @@ void UpdateBoss(World* world,Boss* boss,Player& player,std::list<Bullet>& bullet
 				}
 				else {
 					if (Wait(*world->boss->canonTimer)) {
-						Shoot(sf::Vector2f(925.f, 165.f), player.body.getPosition() - boss->canon.getPosition(), bullets,BOSS, dt); // Voir si elles peuvent traverser le corps du boss ou pas
+						Shoot(sf::Vector2f(boss->canon.getPosition().x,boss->canon.getPosition().y), player.body.getPosition() - boss->canon.getPosition(), bullets,BOSS, dt); // Voir si elles peuvent traverser le corps du boss ou pas
 						world->boss->canonTimer = nullptr; 
 					}
 				}
 			}
 
+		}
+		else {
+			if (boss->state == ANGRY) {
+				boss->canon.move(0, -20 * dt);
+
+				if ((int)boss->canon.getPosition().y == 120)
+					boss->canRotate = true;
+			}
 		}
 
 		if (boss->health <= 0)
@@ -111,7 +117,7 @@ void UpdateBoss(World* world,Boss* boss,Player& player,std::list<Bullet>& bullet
 void RotateArms(Boss* boss,float angle,float beginAngle,float endAngle,bool positive,std::vector<sf::RectangleShape>& arms) {
 	//for (sf::RectangleShape& arm : arms) {
 	sf::RectangleShape& arm = arms[0];
-		if (boss->speed == 3) {
+		if (boss->speed == 7.5f) {
 			if (positive ? arm.getRotation() <= beginAngle : arm.getRotation() >= beginAngle)
 				arm.rotate(positive ? angle : -angle);
 			else
@@ -122,7 +128,7 @@ void RotateArms(Boss* boss,float angle,float beginAngle,float endAngle,bool posi
 				arm.rotate(positive ? -angle : angle);
 			else {
 				boss->rotateLeftArm = !boss->rotateLeftArm;
-				boss->speed = 3;
+				boss->speed = 7.5f;
 			}
 		}
 

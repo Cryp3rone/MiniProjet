@@ -32,7 +32,7 @@ World* GenerateLevel() {
 
 	srand(time(NULL));
 
-	for (size_t i = 0; i < 20; i++) { //entre le nombre de PF que tu veux faire spawn
+	for (size_t i = 0; i < 1; i++) { //entre le nombre de PF que tu veux faire spawn
 
 		pFType = rand() % 9;
 		sizeL = rand() % 210 + 50;
