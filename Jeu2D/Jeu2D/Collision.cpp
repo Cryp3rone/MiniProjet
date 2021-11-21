@@ -123,8 +123,7 @@ void OnCollisionDetection(Player& player, World* world, std::list<Bullet>& bulle
 			}
 
 			if (!isOnFloor)
-				world->groundY = 1000;
-			
+				world->groundY = 1000;	
 		}
 			
 	}
@@ -202,7 +201,7 @@ void OnCollisionStay(Player& player, Collision& collision, bool isEnnemy, bool i
 			player.mooveX = true;
 	}
 	else {
-		if (world->groundY != checkRect.top && (int)player.body.getPosition().y != (int)checkY) 
+		if (world->groundY != checkRect.top && (int)player.body.getPosition().y != (int)checkY)
 			player.mooveX = false;
 	}
 }
@@ -233,6 +232,7 @@ void OnCollisionLeave(Player& player, Collision& collision, World* world) {
 	//delete collision.circleCol;
 	//delete collision.rectangleCol;
 
+	player.lastDirection = sf::Vector2f(0, 0);
 	world->groundY = originalGroundY;
 }
 
