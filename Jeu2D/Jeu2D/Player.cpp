@@ -9,51 +9,48 @@
 Player newPlayer()
 {
 	Player p;
+
 	p.body = sf::CircleShape(20.f);
 	p.body.setPosition(600.f, originalGroundY - 20);
 	p.body.setFillColor(sf::Color::Black);
 	p.body.setOrigin(p.body.getRadius(), p.body.getRadius());
 	p.body.setOutlineThickness(3.f);
 	p.body.setOutlineColor(sf::Color::Red);
+
 	p.health = 100.f;
-	Collision coll;
-	coll.isOnCollision = false;
-	coll.rectangleCol = nullptr;
-	coll.circleCol = nullptr;
-	p.collision = coll;
+
 	p.isJumping = false;
 	p.lastJumpDirection = 0;
 	p.lastPosition = sf::Vector2f(0.f, 0.f);
+	p.maxAmmo = 10;
+	p.ammo = p.maxAmmo;
+	p.canJump = true;
 	return p;
 }
 
-void UpdatePlayer(Player& player, float dt, sf::Vector2f& velocity, sf::View& view,World* world, std::list<Bullet> bullets,GameState& state) {
+void UpdatePlayer(Player& player, float dt, sf::Vector2f& velocity, sf::View& view,World* world, std::list<Bullet>& bullets,GameState& state) {
 	player.velocity = velocity;
 
-	MovePlayer(player, dt, view);
+	MovePlayer(player, dt);
 	JumpPlayer(player,dt,velocity,world);
 	OnCollisionDetection(player, world,bullets,state);
 	DestroyEnnemies(world);
+
+	if (player.body.getPosition().y >= 600) // Le joueur a dépassé la caméra
+		state = LOOSE;
+
 	view.setCenter(sf::Vector2f(player.body.getPosition().x, 300.f));
+	player.lastPosition = player.body.getPosition();
 }
 
-	/*if (player.body.getPosition().x != player.lastPosition.x || player.body.getPosition().y != player.lastPosition.y) {
-		view.move(player.lastPosition.x, 300);
-	}*/
-
-	//player.lastPosition = player.body.getPosition();
-
-void MovePlayer(Player& player, float dt, sf::View& view) {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+void MovePlayer(Player& player, float dt) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
 		player.direction = sf::Vector2f(-1.f, 0.f);
 
 		if (player.direction.x != player.lastDirection.x || (player.direction.x == player.lastDirection.x && player.mooveX)) { // On regarde si le joueur change de direction ou si il est dans la m�me direction et qu'il peut se d�placer
 			if (-speed * dt + player.body.getPosition().x >= 5.f) // On place une bordure a 5 pour empecher le joueur d'aller au dela du niveau
 				player.body.move(sf::Vector2f(-speed * dt, 0.f));
-			
-		/*	if ((-speed * dt) + view.getCenter().x >= 600.f)
-				view.move(sf::Vector2f(-speed * dt, 0.f));
-				*/
+
 			if (player.direction.x != player.lastDirection.x) {
 				player.mooveX = true;
 				player.lastDirection = player.direction;
@@ -61,15 +58,11 @@ void MovePlayer(Player& player, float dt, sf::View& view) {
 		}
 	}
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
 		player.direction = sf::Vector2f(1.f, 0.f);
 
 		if (player.direction.x != player.lastDirection.x || (player.direction.x == player.lastDirection.x && player.mooveX)) { // On regarde si le joueur change de direction ou si il est dans la m�me direction et qu'il peut se d�placer
 			player.body.move(sf::Vector2f(speed * dt, 0.f));
-
-		/*if ((-speed * dt) + player.body.getPosition().x >= 600.f)
-				view.move(sf::Vector2f(speed * dt, 0.f));
-				*/
 
 			if (player.direction.x != player.lastDirection.x) {
 				player.mooveX = true;
@@ -81,22 +74,25 @@ void MovePlayer(Player& player, float dt, sf::View& view) {
 
 void JumpPlayer(Player& player,float dt, sf::Vector2f& velocity,World* world) {
 	if (player.canJump) {
+		for (std::pair<sf::Shape*,Collision*> pair : player.collisions) {
+			if (pair.second->isOnCollision && player.velocity.x != 0) {
+				if (pair.second->rectangleCol) {
+					Plateform* plateform = GetPlateformByShape(*pair.second->rectangleCol, world);
 
-		if (player.collision.isOnCollision && player.velocity.x != 0) {
-			if (player.collision.rectangleCol) {
-				Plateform* plateform = GetPlateformByShape(*player.collision.rectangleCol,world);
+					if (plateform) {
+						switch (player.lastJumpDirection != 0 && plateform->jumpDirection != player.lastJumpDirection) {
+						case true:
+							if (player.velocity.x < 0 && plateform->jumpDirection == -1)
+								velocity.x = 0;
+							else if (player.velocity.x > 0 && plateform->jumpDirection == 1)
+								velocity.x = 0;
 
-				switch (player.lastJumpDirection != 0 && plateform->jumpDirection != player.lastJumpDirection) {
-					case true:
-						if (player.velocity.x < 0 && plateform->jumpDirection == -1) 
-							velocity.x = 0;
-						else if (player.velocity.x > 0 && plateform->jumpDirection == 1) 
-							velocity.x = 0;
+							break;
+						}
 
-						break;
+						player.lastJumpDirection = plateform->jumpDirection;
+					}
 				}
-
-				player.lastJumpDirection = plateform->jumpDirection;
 			}
 		}
 
@@ -109,6 +105,8 @@ void JumpPlayer(Player& player,float dt, sf::Vector2f& velocity,World* world) {
 				player.body.move(velocity);
 				player.isJumping = true;
 			}
+
+
 		}
 		else {
 			player.body.move(velocity);
@@ -134,9 +132,20 @@ bool isOnFloor(Player& p) {
 }
 
 bool CanStopJump(Player& player) {
-	return player.isJumping && player.collision.isOnCollision && player.collision.plateform && player.collision.plateform->type == WALL_JUMP /*&& player.collision.plateform->collision.intersects(player.body.getGlobalBounds())*/;
+
+	for (std::pair<sf::Shape*, Collision*> pair : player.collisions) {
+		if (player.isJumping && pair.second->isOnCollision && pair.second->plateform && pair.second->plateform->type == WALL_JUMP)
+			return true;
+	}
+
+	return false;
 }
 
 bool CanWallJump(Player& player) {
-	return !player.canJump && player.isJumping && player.collision.isOnCollision && player.collision.plateform && player.collision.plateform->type == WALL_JUMP /*&& player.collision.plateform->collision.intersects(player.body.getGlobalBounds())*/;
+	for (std::pair<sf::Shape*, Collision*> pair : player.collisions) {
+		if (!player.canJump && !player.isJumping && pair.second->isOnCollision && pair.second->plateform && pair.second->plateform->type == WALL_JUMP)
+			return true;
+	}
+
+	return false;
 }

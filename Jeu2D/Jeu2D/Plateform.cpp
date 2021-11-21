@@ -3,16 +3,15 @@
 #include <SFML/Graphics.hpp>
 #include "PlateformStr.h"
 #include "LevelGenerator.h"
+// Faire une map
 
-void CreatePlateform(sf::RectangleShape form,int jumpDirection, PlateformType type,int width,int height,World* world) {
+void CreatePlateform(sf::RectangleShape* form,int jumpDirection, PlateformType type,World* world) {
 	Plateform* plateform = new Plateform;
 
-	plateform->rectangle = form;
+	plateform->rectangle = *form;
 	plateform->jumpDirection = jumpDirection;
 	plateform->type = type;
-	plateform->collision = sf::FloatRect(form.getPosition(),sf::Vector2f(width,height));
+	world->plateforms[form] = plateform;
+	
 
-	world->plateforms.push_back(plateform);
-
-	// NE PAS OUBLIER A delete
 }
