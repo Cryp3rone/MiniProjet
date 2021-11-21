@@ -38,7 +38,6 @@ int main() {
 	text.setFont(font);
 	sf::FloatRect textRect = text.getLocalBounds();
 
-	text.setPosition(camera.getCenter().x / 2.0f, camera.getCenter().y / 2.0f);
 	text.setOrigin(text.getLocalBounds().left / 2.0f, text.getLocalBounds().top / 2.0f);
 
 	text.setString("GAME \n OVER ");
@@ -186,11 +185,14 @@ int main() {
 			
 
 		}
-		else if(game == LOOSE)
+		else if (game == LOOSE) {
+			text.setPosition(camera.getCenter().x / 2.0f + 400, camera.getCenter().y / 2.0f);
 			window.draw(text);
+		}
 		else {
 			text.setString("VICTOIRE");
 			text.setFillColor(sf::Color::Green);
+			text.setPosition(camera.getCenter().x / 2.0f + 500, camera.getCenter().y / 2.0f);
 			window.draw(text);
 		}
 		window.display();
