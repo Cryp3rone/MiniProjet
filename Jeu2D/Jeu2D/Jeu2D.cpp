@@ -75,10 +75,12 @@ int main() {
 			for (std::pair<sf::Shape*,Collision*> collisionPair : player.collisions) {
 				for (std::pair<sf::RectangleShape*, Plateform*> plateformPair : world->plateforms) {
 					if (collisionPair.first == &plateformPair.second->rectangle) {
-						plateformPair.second;
+						plateform = plateformPair.second;
 					}
 				}
 			}
+
+			std::cout << "enterWall: " << plateform << std::endl;
 
 			if (plateform) {
 				sf::RectangleShape& shape = plateform->rectangle;

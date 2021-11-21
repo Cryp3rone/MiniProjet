@@ -32,7 +32,7 @@ World* GenerateLevel() {
 
 	srand(time(NULL));
 
-	for (size_t i = 0; i < /*20*/ 1; i++) { //entre le nombre de PF que tu veux faire spawn
+	for (size_t i = 0; i < 20; i++) { //entre le nombre de PF que tu veux faire spawn
 
 		pFType = rand() % 9;
 		sizeL = rand() % 210 + 50;
@@ -151,8 +151,9 @@ World* GenerateLevel() {
 }
 
 void RefreshWorld(World* level, sf::RenderWindow& window) {
-	for (std::pair<sf::RectangleShape*, Plateform*> pair : level->plateforms) 
+	for (std::pair<sf::RectangleShape*, Plateform*> pair : level->plateforms) {
 		window.draw(*pair.first);
+	}
 }
 
 void ActualizeGroundY(Player& player, World* world) {

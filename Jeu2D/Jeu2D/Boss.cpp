@@ -29,8 +29,9 @@ void CreateBoss(World* world,int beginPos) {
 	rightarm_02.rotate(45);
 	rightarm_02.setPosition(rightarm_01.getSize().x,0);
 
-	Boss* boss = new Boss(head, true, 3, leftarm_01.getRotation(), leftarm_02.getRotation(), false, true, 6, 6, CreateCircleShape(sf::CircleShape(65), sf::Color::Black, sf::Vector2f(beginPos - 25, 195), 3, sf::Color::Blue, world),CreateRectangleShape(sf::RectangleShape(sf::Vector2f(30, 45)), sf::Color::Black, sf::Vector2f(beginPos + 25, 165.f), 3, sf::Color::Magenta, false, world), nullptr, nullptr, { CreateRectangleShape(sf::RectangleShape(sf::Vector2f(300, 25)), sf::Color::Black, sf::Vector2f(830.f, 410.f), 3, sf::Color::Red, false, world),CreateRectangleShape(sf::RectangleShape(sf::Vector2f(80, 25)), sf::Color::Red, sf::Vector2f(830.f, 410.f), 0, sf::Color::Magenta, false, world) },NONE);
-	
+	Boss* boss = new Boss(head, true, 3, leftarm_01.getRotation(), rightarm_01.getRotation(), false, true, 6, 6, CreateCircleShape(sf::CircleShape(65), sf::Color::Black, sf::Vector2f(beginPos - 25, 195), 3, sf::Color::Blue, world),CreateRectangleShape(sf::RectangleShape(sf::Vector2f(30, 45)), sf::Color::Black, sf::Vector2f(beginPos + 25, 165.f), 3, sf::Color::Magenta, false, world), nullptr, nullptr, { CreateRectangleShape(sf::RectangleShape(sf::Vector2f(300, 25)), sf::Color::Black, sf::Vector2f(830.f, 410.f), 3, sf::Color::Red, false, world),CreateRectangleShape(sf::RectangleShape(sf::Vector2f(80, 25)), sf::Color::Red, sf::Vector2f(830.f, 410.f), 0, sf::Color::Magenta, false, world) },NONE);
+
+	std::cout << "canRotate: " << boss->canRotate << std::endl;
 	DrawWeaknessArea(head, boss);
 
 	boss->leftArm.push_back(leftarm_01);
@@ -95,14 +96,6 @@ void UpdateBoss(World* world,Boss* boss,Player& player,std::list<Bullet>& bullet
 			}
 
 		}
-		else {
-			if (boss->state == ANGRY) {
-				boss->canon.move(0, -20 * dt);
-
-				if ((int)boss->canon.getPosition().y == 120) 
-					boss->canRotate = true;
-			}
-		}
 
 		if (boss->health <= 0)
 			DestroyBoss(world);
@@ -116,7 +109,8 @@ void UpdateBoss(World* world,Boss* boss,Player& player,std::list<Bullet>& bullet
 }
 
 void RotateArms(Boss* boss,float angle,float beginAngle,float endAngle,bool positive,std::vector<sf::RectangleShape>& arms) {
-	for (sf::RectangleShape& arm : arms) {
+	//for (sf::RectangleShape& arm : arms) {
+	sf::RectangleShape& arm = arms[0];
 		if (boss->speed == 3) {
 			if (positive ? arm.getRotation() <= beginAngle : arm.getRotation() >= beginAngle)
 				arm.rotate(positive ? angle : -angle);
@@ -132,7 +126,7 @@ void RotateArms(Boss* boss,float angle,float beginAngle,float endAngle,bool posi
 			}
 		}
 
-	}
+	//}
 }
 
 void RefreshBoss(Boss* boss,sf::RenderWindow& window,sf::View& view) {

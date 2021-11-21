@@ -7,7 +7,7 @@
 
 Plateform* GetPlateformByShape(sf::RectangleShape compare,World* world) {
 	for (std::pair<sf::RectangleShape*,Plateform*> pair : world->plateforms) {
-		if (pair.first == &compare) 
+		if (pair.first->getPosition().x == compare.getPosition().x && pair.first->getPosition().y == compare.getPosition().y) 
 			return pair.second;	
 	}
 
@@ -37,6 +37,8 @@ void CreateCollision(Player& player,Collision& coll, sf::RectangleShape* rectang
 			coll.plateform = GetPlateformByShape(*coll.rectangleCol, world);	
 	}
 
+	std::cout << "plateform" << coll.plateform->jumpDirection << std::endl;
+
 	if (coll.rectangleCol)
 		player.collisions[coll.rectangleCol] = &coll;
 	else
@@ -53,26 +55,24 @@ void OnCollisionDetection(Player& player, World* world, std::list<Bullet>& bulle
 	for (std::pair<sf::RectangleShape*, Plateform*> pair : world->plateforms) {
 		Plateform* plateform = pair.second;
 		sf::RectangleShape& rectangle = plateform->rectangle;
-		if (plateform->type != FLOOR) { // On skip la collision du bas
-			if (rectangle.getGlobalBounds().intersects(player.body.getGlobalBounds())) { // Il est en collision avec une plateforme
-				Collision* coll = new Collision;
-				if (!HasCollision(&rectangle,player,*coll)) {
-					CreateCollision(player,*coll, &rectangle, nullptr,world);
-					OnCollisionEnter(player, *coll, false, false, world);
-				}
-				else 
-					OnCollisionStay(player, *coll, false, false, world);
+		if (rectangle.getGlobalBounds().intersects(player.body.getGlobalBounds())) { // Il est en collision avec une plateforme
+			Collision* coll = new Collision;
+			if (!HasCollision(&rectangle,player,*coll)) {
+				CreateCollision(player,*coll, &rectangle, nullptr,world);
+				OnCollisionEnter(player, *coll, false, false, world);
 			}
-			else {
-				Collision* coll = new Collision;
-				if (HasCollision(&rectangle, player, *coll) && coll->isOnCollision && coll->rectangleCol != nullptr && coll->rectangleCol == &rectangle)
-					OnCollisionLeave(player, *coll, world);
-			}
+			else 
+				OnCollisionStay(player, *coll, false, false, world);
+		}
+		else {
+			Collision* coll = new Collision;
+			if (HasCollision(&rectangle, player, *coll) && coll->isOnCollision && coll->rectangleCol != nullptr && coll->rectangleCol == &rectangle)
+				OnCollisionLeave(player, *coll, world);
+		}
 
-			for (Bullet& bullet : bullets) {
-				if (bullet.body.getGlobalBounds().intersects(plateform->rectangle.getGlobalBounds()))
-					eraseBullets.push_back(&bullet);
-			}
+		for (Bullet& bullet : bullets) {
+			if (bullet.body.getGlobalBounds().intersects(plateform->rectangle.getGlobalBounds()))
+				eraseBullets.push_back(&bullet);
 		}
 	}
 
@@ -198,6 +198,8 @@ void OnCollisionStay(Player& player, Collision& collision, bool isEnnemy, bool i
 			player.mooveX = false;
 	}
 
+	if (collision.plateform->type == FLOOR) // Permet d'éviter de tomber quand on est sur le sol
+		world->groundY = originalGroundY;
 }
 
 
