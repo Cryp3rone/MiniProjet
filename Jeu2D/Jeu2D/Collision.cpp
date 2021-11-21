@@ -37,8 +37,6 @@ void CreateCollision(Player& player,Collision& coll, sf::RectangleShape* rectang
 			coll.plateform = GetPlateformByShape(*coll.rectangleCol, world);	
 	}
 
-	std::cout << "plateform" << coll.plateform->jumpDirection << std::endl;
-
 	if (coll.rectangleCol)
 		player.collisions[coll.rectangleCol] = &coll;
 	else
@@ -117,8 +115,18 @@ void OnCollisionDetection(Player& player, World* world, std::list<Bullet>& bulle
 
 	for (sf::FloatRect& voidCollision : world->voidArea) {
 		sf::FloatRect body = player.body.getGlobalBounds();
-		if (voidCollision.intersects(player.body.getGlobalBounds())) 
-			world->groundY = 1000;
+		bool isOnFloor = false;
+		if (voidCollision.intersects(player.body.getGlobalBounds())) {
+			for (std::pair<sf::Shape*,Collision*> pair : player.collisions) { // On vérifie s'il est pas sur une plateforme et que cette plateforme n'est pas le sol
+				if (pair.second->plateform && pair.second->plateform->type == FLOOR)
+					isOnFloor = true;
+			}
+
+			if (!isOnFloor)
+				world->groundY = 1000;
+			
+		}
+			
 	}
 
 	for (Bullet& bullet : bullets) {
@@ -197,9 +205,6 @@ void OnCollisionStay(Player& player, Collision& collision, bool isEnnemy, bool i
 		if (world->groundY != checkRect.top && (int)player.body.getPosition().y != (int)checkY) 
 			player.mooveX = false;
 	}
-
-	if (collision.plateform->type == FLOOR) // Permet d'éviter de tomber quand on est sur le sol
-		world->groundY = originalGroundY;
 }
 
 
