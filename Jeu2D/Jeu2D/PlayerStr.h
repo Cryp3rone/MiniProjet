@@ -17,4 +17,6 @@ struct Player
 	sf::Vector2f velocity;
 	int lastJumpDirection;
 	sf::Vector2f lastPosition;
+	int maxAmmo = 3;
+	int ammo = maxAmmo;
 };
