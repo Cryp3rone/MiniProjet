@@ -11,29 +11,30 @@ void CreateEnnemies(World* world) {
 	int ennemyTyp=0;
 	int posX=300;
 	int offset = 0;
-
-	for (size_t i = 0; i < 40; i++)
-	{
-		ennemyTyp = rand() % 2;
-		offset = rand() % 600 + 300;
-		switch(ennemyTyp)
-		{
-		case(0):
-
-			CreateCEnnemy(world, CreateCircleShape(new sf::CircleShape(15, 3), sf::Color::Black, sf::Vector2f(posX, 450), 3, sf::Color::Color::Red, world),
-				50, sf::Vector2f(1500, 450), true, sf::Vector2f(1500, 450), sf::Vector2f(1700, 450), HORIZONTAL);
-			posX += offset;
-			break;
-		case(1):
-			CreateCEnnemy(world, CreateCircleShape(new sf::CircleShape(15, 3), sf::Color::Black, sf::Vector2f(posX, 300), 3, sf::Color::Color::Red, world),
-				150, sf::Vector2f(650, 300), true, sf::Vector2f(650, 300), sf::Vector2f(650, 450), VERTICAL);
-			posX += offset;
-			break;
-		default:
-			break;
+	int pos;
+	/*for (Plateform* platform:world->plateforms) {
+		for (size_t i = 0; i < 40; i++) {
+			if (platform->type == ENNEMI) {
+				CreateCEnnemy(world,&CreateCircleShape(sf::CircleShape(15, 3), sf::Color::Black, sf::Vector2f(platform->rectangle.getPosition().x, 450), 3, sf::Color::Color::Red, world),
+					50, sf::Vector2f(1500, 450), true, sf::Vector2f(1500, 450), sf::Vector2f(1700, 450), HORIZONTAL);
+				posX += offset;
+			}
 		}
 	}
-
+	for (size_t i = 0; i < 40; i++) {
+		ennemyTyp = rand() % 2;
+		offset = rand() % 600 + 300;
+		switch(ennemyTyp) {
+			case 0:
+				break;
+			case 1:
+				CreateCEnnemy(world, &CreateCircleShape(sf::CircleShape(15, 3), sf::Color::Black, sf::Vector2f(posX, 300), 3, sf::Color::Color::Red, world),
+					150, sf::Vector2f(650, 300), true, sf::Vector2f(650, 300), sf::Vector2f(650, 450), VERTICAL);
+				posX += offset;
+				break;
+		}
+	}
+	*/
 	
 
 	
@@ -71,17 +72,18 @@ Ennemy CreateEnnemy(World* world, float speed, sf::Vector2f position, bool canMo
 }
 
 void RefreshEnnemies(World* world, sf::RenderWindow& window) {
-	for (Ennemy& ennemy : (*world).ennemies) {
-		if (ennemy.circle != nullptr)
+/*	for (Ennemy& ennemy : (*world).ennemies) {
+		if (ennemy.circle)
 			window.draw(*(ennemy).circle);
 		else
 			window.draw(*(ennemy).rectangle);
 	}
+	*/
 }
 
 void UpdateEnnemies(World* world, float deltaTime) {
 	for (Ennemy& ennemy : world->ennemies) {
-		if (ennemy.canMoove) 
+		if (ennemy.canMoove)
 			MooveEnnemy(ennemy, deltaTime);
 	}
 }
@@ -129,8 +131,11 @@ void DestroyEnnemies(World* world) {
 		auto it = world->ennemies.begin();
 
 		while (it != world->ennemies.end()) {
-			if (&(*it) == ennemy) 
-				it = world->ennemies.erase(it);	
+			if (&(*it) == ennemy) {
+				delete &(*it).circle;
+				delete& (*it).rectangle; //Attention ptetre pas faire ca si on veut recharger le jeu
+				it = world->ennemies.erase(it);
+			}
 			else 
 				it++;
 		}

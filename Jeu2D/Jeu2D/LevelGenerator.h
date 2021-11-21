@@ -3,17 +3,16 @@
 #include <list>
 #include <SFML/Graphics.hpp>
 #include "EnnemyStr.h"
-
-struct World {
-	std::vector<sf::RectangleShape> rectangles;
-	std::list<Ennemy> ennemies;
-	std::vector<Ennemy*> eraseEnnemies;
-	sf::RectangleShape endFlag;
-	float groundY;
-};
+#include "BossStr.h"
+#include "PlayerStr.h"
+#include "WorldStr.h"
 
 World* GenerateLevel();
-sf::CircleShape* CreateCircleShape(sf::CircleShape* shape, sf::Color color, sf::Vector2f position, float thickness, sf::Color thicknessColor, World* level);
-sf::RectangleShape CreateRectangleShape(sf::RectangleShape shape, sf::Color color, sf::Vector2f position, float thickness, sf::Color thicknessColor, World* level);
+sf::CircleShape CreateCircleShape(sf::CircleShape shape, sf::Color color, sf::Vector2f position, float thickness, sf::Color thicknessColor, World* level);
+sf::RectangleShape CreateRectangleShape(sf::RectangleShape shape, sf::Color color, sf::Vector2f position, float thickness, sf::Color thicknessColor,bool, World* level);
+sf::RectangleShape* CreateRectangleShape(sf::RectangleShape* shape, sf::Color color, sf::Vector2f position, float thickness, sf::Color thicknessColor, bool, World* level);
 
 void RefreshWorld(World* level,sf::RenderWindow& window);
+void ActualizeGroundY(Player&, World*);
+
+void UnloadLevel(World*,Player&);
