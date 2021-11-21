@@ -7,7 +7,7 @@
 
 Plateform* GetPlateformByShape(sf::RectangleShape compare,World* world) {
 	for (std::pair<sf::RectangleShape*,Plateform*> pair : world->plateforms) {
-		if (pair.first == &compare) 
+		if (pair.first->getPosition().x == compare.getPosition().x && pair.first->getPosition().y == compare.getPosition().y) 
 			return pair.second;	
 	}
 
@@ -45,35 +45,32 @@ void CreateCollision(Player& player,Collision& coll, sf::RectangleShape* rectang
 }
 
 void OnCollisionDetection(Player& player, World* world, std::list<Bullet>& bullets, GameState& state) {
-	if (world->endFlag.getGlobalBounds().intersects(player.body.getGlobalBounds()))
+	if (world->endFlag.getGlobalBounds().intersects(player.body.getGlobalBounds()) && !world->boss)
 		state = WIN;
 
 	std::vector<Bullet*> eraseBullets;
 
 	for (std::pair<sf::RectangleShape*, Plateform*> pair : world->plateforms) {
 		Plateform* plateform = pair.second;
-		sf::RectangleShape* rectangle = plateform->rectangle;
-		if (plateform->type != FLOOR) { // On skip la collision du bas
-			if (rectangle->getGlobalBounds().intersects(player.body.getGlobalBounds())) { // Il est en collision avec une plateforme
-				Collision* coll = new Collision;
-				if (!HasCollision(rectangle,player,*coll)) {
-					std::cout << "enter" << std::endl;
-					CreateCollision(player,*coll, rectangle, nullptr,world);
-					OnCollisionEnter(player, *coll, false, false, world);
-				}
-				else 
-					OnCollisionStay(player, *coll, false, false, world);
+		sf::RectangleShape& rectangle = plateform->rectangle;
+		if (rectangle.getGlobalBounds().intersects(player.body.getGlobalBounds())) { // Il est en collision avec une plateforme
+			Collision* coll = new Collision;
+			if (!HasCollision(&rectangle,player,*coll)) {
+				CreateCollision(player,*coll, &rectangle, nullptr,world);
+				OnCollisionEnter(player, *coll, false, false, world);
 			}
-			else {
-				Collision* coll = new Collision;
-				if (HasCollision(rectangle, player, *coll) && coll->isOnCollision && coll->rectangleCol != nullptr && coll->rectangleCol == rectangle)
-					OnCollisionLeave(player, *coll, world);
-			}
+			else 
+				OnCollisionStay(player, *coll, false, false, world);
+		}
+		else {
+			Collision* coll = new Collision;
+			if (HasCollision(&rectangle, player, *coll) && coll->isOnCollision && coll->rectangleCol != nullptr && coll->rectangleCol == &rectangle)
+				OnCollisionLeave(player, *coll, world);
+		}
 
-			for (Bullet& bullet : bullets) {
-				if (bullet.body.getGlobalBounds().intersects(plateform->rectangle->getGlobalBounds()))
-					eraseBullets.push_back(&bullet);
-			}
+		for (Bullet& bullet : bullets) {
+			if (bullet.body.getGlobalBounds().intersects(plateform->rectangle.getGlobalBounds()) && plateform->type != FLOOR)
+				eraseBullets.push_back(&bullet);
 		}
 	}
 
@@ -118,8 +115,17 @@ void OnCollisionDetection(Player& player, World* world, std::list<Bullet>& bulle
 
 	for (sf::FloatRect& voidCollision : world->voidArea) {
 		sf::FloatRect body = player.body.getGlobalBounds();
-		if (voidCollision.intersects(player.body.getGlobalBounds())) 
-			world->groundY = 1000;
+		bool isOnFloor = false;
+		if (voidCollision.intersects(player.body.getGlobalBounds())) {
+			for (std::pair<sf::Shape*,Collision*> pair : player.collisions) { // On vérifie s'il est pas sur une plateforme et que cette plateforme n'est pas le sol
+				if (pair.second->plateform && pair.second->plateform->type == FLOOR)
+					isOnFloor = true;
+			}
+
+			if (!isOnFloor)
+				world->groundY = 1000;	
+		}
+			
 	}
 
 	for (Bullet& bullet : bullets) {
@@ -134,19 +140,26 @@ void OnCollisionDetection(Player& player, World* world, std::list<Bullet>& bulle
 			}
 		}
 		
-		if (bullet.body.getGlobalBounds().intersects(world->boss->head.getGlobalBounds()))
-			eraseBullets.push_back(&bullet);
+		if (world->boss) {
+			if (bullet.type == PLAYER && bullet.body.getGlobalBounds().intersects(world->boss->head.getGlobalBounds()))
+				eraseBullets.push_back(&bullet);
 
-		for (sf::RectangleShape& rectangle : world->boss->leftArm) {
-			if (bullet.body.getGlobalBounds().intersects(rectangle.getGlobalBounds()))
-				eraseBullets.push_back(&bullet);
+			for (sf::RectangleShape& rectangle : world->boss->leftArm) {
+				if (bullet.type == PLAYER && bullet.body.getGlobalBounds().intersects(rectangle.getGlobalBounds()))
+					eraseBullets.push_back(&bullet);
+			}
+
+			for (sf::RectangleShape& rectangle : world->boss->rightArm) {
+				if (bullet.type == PLAYER && bullet.body.getGlobalBounds().intersects(rectangle.getGlobalBounds()))
+					eraseBullets.push_back(&bullet);
+			}
 		}
-		
-		for (sf::RectangleShape& rectangle : world->boss->rightArm) {
-			if (bullet.body.getGlobalBounds().intersects(rectangle.getGlobalBounds()))
-				eraseBullets.push_back(&bullet);
-		}
-		
+	}
+
+	if (world->boss && (player.body.getGlobalBounds().intersects(world->boss->head.getGlobalBounds()) || player.body.getGlobalBounds().intersects(world->boss->leftArm[0].getGlobalBounds())
+		|| player.body.getGlobalBounds().intersects(world->boss->leftArm[1].getGlobalBounds()) || player.body.getGlobalBounds().intersects(world->boss->rightArm[0].getGlobalBounds())
+		|| player.body.getGlobalBounds().intersects(world->boss->rightArm[1].getGlobalBounds()))) {
+		player.health -= 100;
 	}
 
 	DestroyBullets(eraseBullets,bullets);
@@ -195,10 +208,9 @@ void OnCollisionStay(Player& player, Collision& collision, bool isEnnemy, bool i
 			player.mooveX = true;
 	}
 	else {
-		if (world->groundY != checkRect.top && (int)player.body.getPosition().y != (int)checkY) 
+		if (world->groundY != checkRect.top && (int)player.body.getPosition().y != (int)checkY)
 			player.mooveX = false;
 	}
-
 }
 
 
@@ -212,6 +224,7 @@ void OnCollisionLeave(Player& player, Collision& collision, World* world) {
 			else
 				it++;
 		}
+		
 	}
 	else {
 		for (auto it = player.collisions.begin(); it != player.collisions.end();) {
@@ -220,11 +233,13 @@ void OnCollisionLeave(Player& player, Collision& collision, World* world) {
 			else
 				it++;
 		}
+
 	}
 	
-	delete collision.circleCol;
-	delete collision.rectangleCol;
+	//delete collision.circleCol;
+	//delete collision.rectangleCol;
 
+	player.lastDirection = sf::Vector2f(0, 0);
 	world->groundY = originalGroundY;
 }
 

@@ -8,7 +8,7 @@
 void CreatePlateform(sf::RectangleShape* form,int jumpDirection, PlateformType type,World* world) {
 	Plateform* plateform = new Plateform;
 
-	plateform->rectangle = form;
+	plateform->rectangle = *form;
 	plateform->jumpDirection = jumpDirection;
 	plateform->type = type;
 	world->plateforms[form] = plateform;

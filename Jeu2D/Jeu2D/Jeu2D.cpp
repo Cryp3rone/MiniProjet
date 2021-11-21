@@ -30,13 +30,16 @@ int main() {
 
 	sf::Clock clock;
 
-	sf::View camera(sf::Vector2f(window.getSize().x / 2, window.getSize().y / 2), sf::Vector2f(window.getSize().x,window.getSize().y));
+	sf::View camera(sf::Vector2f(window.getSize().x / 2 + 1000, window.getSize().y / 2), sf::Vector2f(window.getSize().x,window.getSize().y));
 	sf::Font font;
 	font.loadFromFile(getAssetsPath() + "\\GeometricBlack.ttf");
 
 	sf::Text text;
 	text.setFont(font);
-	text.setPosition(camera.getCenter().x  - 180, camera.getCenter().y  - 130);
+	sf::FloatRect textRect = text.getLocalBounds();
+
+	text.setOrigin(text.getLocalBounds().left / 2.0f, text.getLocalBounds().top / 2.0f);
+
 	text.setString("GAME \n OVER ");
 	text.setFillColor(sf::Color::Yellow);
 	text.setScale(4.f, 4.f);
@@ -74,28 +77,30 @@ int main() {
 
 			for (std::pair<sf::Shape*,Collision*> collisionPair : player.collisions) {
 				for (std::pair<sf::RectangleShape*, Plateform*> plateformPair : world->plateforms) {
-					if (collisionPair.first == plateformPair.second->rectangle) {
-						plateformPair.second;
+					if (collisionPair.first == &plateformPair.second->rectangle) {
+						plateform = plateformPair.second;
 					}
 				}
 			}
 
+			std::cout << "enterWall: " << plateform << std::endl;
+
 			if (plateform) {
-				sf::RectangleShape* shape = plateform->rectangle;
+				sf::RectangleShape& shape = plateform->rectangle;
 				sf::FloatRect playerCollision = player.body.getGlobalBounds();
 
 				float left, top, width, height;
 				if (plateform->jumpDirection == 1) { // Partie droite
-					left = shape->getPosition().x - 5;
-					top = shape->getPosition().y;
+					left = shape.getPosition().x - 5;
+					top = shape.getPosition().y;
 					width = 15;
-					height = shape->getSize().y;
+					height = shape.getSize().y;
 				}
 				else {
-					left = shape->getPosition().x + shape->getSize().x - 10;
-					top = shape->getPosition().y;
+					left = shape.getPosition().x + shape.getSize().x - 10;
+					top = shape.getPosition().y;
 					width = 25;
-					height = shape->getSize().y;
+					height = shape.getSize().y;
 				}
 
 				sf::FloatRect check = sf::FloatRect(left, top, width, height);
@@ -133,7 +138,6 @@ int main() {
 
 		if (firstFrame) {
 			world = GenerateLevel();
-			CreateBoss(world);
 			CreateEnnemies(world);
 			firstFrame = false;
 		}
@@ -181,12 +185,14 @@ int main() {
 			
 
 		}
-		else if(game == LOOSE)
+		else if (game == LOOSE) {
+			text.setPosition(camera.getCenter().x / 2.0f + 400, camera.getCenter().y / 2.0f);
 			window.draw(text);
+		}
 		else {
 			text.setString("VICTOIRE");
 			text.setFillColor(sf::Color::Green);
-			text.setPosition(camera.getCenter().x - 50, camera.getCenter().y - 50);
+			text.setPosition(camera.getCenter().x / 2.0f + 500, camera.getCenter().y / 2.0f);
 			window.draw(text);
 		}
 		window.display();
