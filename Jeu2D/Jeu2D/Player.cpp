@@ -104,6 +104,7 @@ void JumpPlayer(Player& player,float dt, sf::Vector2f& velocity,World* world) {
 				velocity.y = jumpForce;
 				player.body.move(velocity);
 				player.isJumping = true;
+				player.lastDirection = sf::Vector2f(0, 0);
 			}
 
 
@@ -132,10 +133,9 @@ bool isOnFloor(Player& p) {
 }
 
 bool CanStopJump(Player& player) {
-
 	for (std::pair<sf::Shape*, Collision*> pair : player.collisions) {
-		if (player.isJumping && pair.second->isOnCollision && pair.second->plateform && pair.second->plateform->type == WALL_JUMP)
-			return true;
+		if (player.isJumping && pair.second->isOnCollision && pair.second->plateform && pair.second->plateform->type == WALL_JUMP) 
+			return true;	
 	}
 
 	return false;
@@ -143,8 +143,8 @@ bool CanStopJump(Player& player) {
 
 bool CanWallJump(Player& player) {
 	for (std::pair<sf::Shape*, Collision*> pair : player.collisions) {
-		if (!player.canJump && !player.isJumping && pair.second->isOnCollision && pair.second->plateform && pair.second->plateform->type == WALL_JUMP)
-			return true;
+		if (!player.canJump && player.isJumping && pair.second->isOnCollision && pair.second->plateform && pair.second->plateform->type == WALL_JUMP) 
+			return true;	
 	}
 
 	return false;
