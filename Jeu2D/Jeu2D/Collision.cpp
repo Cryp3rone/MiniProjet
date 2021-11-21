@@ -37,7 +37,7 @@ void CreateCollision(Player& player,Collision& coll, sf::RectangleShape* rectang
 			coll.plateform = GetPlateformByShape(*coll.rectangleCol, world);	
 	}
 
-	std::cout << "plateform" << coll.plateform->jumpDirection << std::endl;
+	//std::cout << "plateform" << coll.plateform->jumpDirection << std::endl;
 
 	if (coll.rectangleCol)
 		player.collisions[coll.rectangleCol] = &coll;
@@ -111,6 +111,24 @@ void OnCollisionDetection(Player& player, World* world, std::list<Bullet>& bulle
 		else {
 			Collision* coll = new Collision;
 			if ((HasCollision(ennemy.circle,player,*coll) && coll->circleCol && coll->circleCol == ennemy.circle) || (HasCollision(ennemy.rectangle,player,*coll) && coll->rectangleCol && coll->rectangleCol == ennemy.rectangle))
+				OnCollisionLeave(player, *coll, world);
+		}
+	}
+
+	for (Bonus& bonus : world->listBonus) {
+		sf::FloatRect checkRect = bonus.body.getGlobalBounds();
+		if (checkRect.intersects(player.body.getGlobalBounds())) {
+			Collision* coll = new Collision;
+			if (&bonus.body && !HasCollision(&bonus.body, player, *coll)) {
+				CreateCollision(player, *coll, nullptr, &bonus.body ? &bonus.body : nullptr, world); // Modifier 
+				OnCollisionEnter(player, *coll, false, false, world);
+			}
+			else
+				OnCollisionStay(player, *coll, false, false, world);
+		}
+		else {
+			Collision* coll = new Collision;
+			if ((HasCollision(&bonus.body, player, *coll) && coll->circleCol && coll->circleCol == &bonus.body))
 				OnCollisionLeave(player, *coll, world);
 		}
 	}

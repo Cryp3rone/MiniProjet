@@ -22,7 +22,7 @@ Player newPlayer()
 	p.isJumping = false;
 	p.lastJumpDirection = 0;
 	p.lastPosition = sf::Vector2f(0.f, 0.f);
-	p.maxAmmo = 10;
+	p.maxAmmo = 6;
 	p.ammo = p.maxAmmo;
 	p.canJump = true;
 	return p;

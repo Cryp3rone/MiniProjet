@@ -49,10 +49,7 @@ int main() {
 	float speed = 100.f;
 	Player player = newPlayer();
 	std::list<Bullet> bullets;
-	std::list<Bonus> listBonus;
 	GameState game = PLAY;
-	//TEST BONUS
-	listBonus.push_back(CreateBonus(enumBonus::AMMO, 3.f));
 
 	sf::SoundBuffer buffer;
 	buffer.loadFromFile(getAssetsPath() + "\\music.ogg");
@@ -177,7 +174,7 @@ int main() {
 			for (Bullet& bullet: bullets)
 				window.draw(bullet.body);
 
-			for (Bonus& bonus : listBonus)
+			for (Bonus& bonus : world->listBonus)
 				window.draw(bonus.body);
 			
 

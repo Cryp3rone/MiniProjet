@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "LevelGenerator.h"
 #include "Boss.h"
+#include "Bonus.h"
 
 
 World* GenerateLevel() {
@@ -47,16 +48,19 @@ World* GenerateLevel() {
 		switch (pFType) {
 			case(0):
 				CreatePlateform(CreateRectangleShape(new sf::RectangleShape(sf::Vector2f(sizeL, 500)), sf::Color::Black, sf::Vector2f(pos, H), 3, sf::Color::Yellow, true, level), 0, NORMAL, level);
+				level->listBonus.push_back(CreateBonus(enumBonus::AMMO, 3.f, sf::Vector2f(pos + sizeL / 2.f, H - 35.f)));
 				H = 300 + (rand() % (350 - 300 + 1));
 				pos += sizeL + offset;
 				break;
 			case(1):
 				CreatePlateform(CreateRectangleShape(new sf::RectangleShape(sf::Vector2f(sizeL, 30)), sf::Color::Black, sf::Vector2f(pos, H), 3, sf::Color::Yellow, true, level), 0, NORMAL, level);
+				level->listBonus.push_back(CreateBonus(enumBonus::JUMP, 8.f, sf::Vector2f(pos + sizeL / 2.f, H - 35.f)));
 				pos += sizeL + offset;
 				H = 300 + (rand() % (350 - 300 + 1));
 				break;
 			case(2):
 				CreatePlateform(CreateRectangleShape(new sf::RectangleShape(sf::Vector2f(sizeL, 1000)), sf::Color::Black, sf::Vector2f(pos, H), 3, sf::Color::Yellow, true, level), 0, ENNEMI, level);
+				level->listBonus.push_back(CreateBonus(enumBonus::SPEED, 10.f, sf::Vector2f(pos + sizeL / 2.f, H - 35.f)));
 				H = 300 + (rand() % (350 - 300 + 1));
 				preceH = H;
 				pos += sizeL + offset;
